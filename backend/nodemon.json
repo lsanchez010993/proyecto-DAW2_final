@@ -1,0 +1,9 @@
+{
+  "ignore": [
+    "uploads/*",
+    "*.test.js",
+    "docs/*",
+    ".env"
+  ],
+  "ext": "js"
+}
