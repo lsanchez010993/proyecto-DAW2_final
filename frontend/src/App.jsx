@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Navbar from './components/Navbar'; 
+import Home from './pages/Home';
+import DetalleLibro from './pages/DetalleLibro';
+import CarritoPage from './pages/CarritoPage';
+import LoginPage from './pages/LoginPage'; // [NUEVO IMPORT]
+import { CarritoProvider } from './context/CarritoContext';
+import RegisterPage from './pages/RegisterPage'; // [NUEVO]
+import { AuthProvider } from "./context/AuthContext"; // <--- IMPORTAR
+import CrearLibro from './pages/CrearLibro';
+import AdminUsuarios from './pages/AdminUsuarios';
+import AdminLibros from './pages/AdminLibros';
+import EditarLibro from './pages/EditarLibro';
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AuthProvider> 
+    <BrowserRouter>
+      <CarritoProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/libro/:id" element={<DetalleLibro />} />
+          <Route path="/carrito" element={<CarritoPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/crear-libro" element={<CrearLibro />} />
+          
+          
+          <Route path="/registro" element={<RegisterPage />} />
+          <Route path="/admin/usuarios" element={<AdminUsuarios />} />
+          <Route path="/admin/libros" element={<AdminLibros />} />
+          <Route path="/editar-libro/:id" element={<EditarLibro />} />
+        </Routes>
+      </CarritoProvider>
+    </BrowserRouter>
+    </AuthProvider>
+  );
 }
-
-export default App
+export default App;
