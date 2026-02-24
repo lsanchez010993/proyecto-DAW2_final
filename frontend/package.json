@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --host",
     "start": "vite preview --host --port $PORT"
-    //jg
+
   },
   "dependencies": {
     "axios": "^1.13.5",
