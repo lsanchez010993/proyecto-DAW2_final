@@ -1,25 +1,39 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; 
 
 function AdminLibros() {
   const [libros, setLibros] = useState([]);
+  const { usuario } = useAuth(); 
 
   // 1. Cargar libros al iniciar
   useEffect(() => {
-    fetchLibros();
-  }, []);
+    
+    if (usuario) {
+      fetchLibros();
+    }
+  }, [usuario]);
 
   const fetchLibros = async () => {
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
       const res = await axios.get(`${URL}/api/libros?limit=100`);
 
-   
       if (res.data.data) {
-        setLibros(res.data.data);
+        let librosObtenidos = res.data.data;
+
+        // ---  FILTRADO POR ROL ---
+        // Si el usuario tiene rol 'editorial', filtar el array para dejar solo sus libros
+        if (usuario.rol === 'editorial') {
+          librosObtenidos = librosObtenidos.filter(
+      
+            (libro) => libro.creador === usuario._id || libro.usuario === usuario._id
+          );
+        }
+
+        setLibros(librosObtenidos);
       } else {
-        
         setLibros([]);
       }
     } catch (error) {
@@ -50,13 +64,14 @@ function AdminLibros() {
     <div className="container mt-5">
       {/* Cabecera */}
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">Administrar libros</h2>
+        <h2 className="fw-bold">
+          {usuario?.rol === 'editorial' ? 'Mi catálogo' : 'Administrar libros'}
+        </h2>
         <Link to="/crear-libro" className="btn btn-success fw-bold">
           + Nuevo Libro
         </Link>
       </div>
 
-      
       <div className="text-end mb-2">
         <a href="#" className="text-primary text-decoration-none small">
           Ver listado
@@ -70,7 +85,9 @@ function AdminLibros() {
       >
         {libros.length === 0 ? (
           <p className="text-center text-muted mt-5">
-            No hay libros cargados aún.
+            {usuario?.rol === 'editorial' 
+              ? "Aún no has subido ningún libro." 
+              : "No hay libros cargados aún."}
           </p>
         ) : (
           <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">

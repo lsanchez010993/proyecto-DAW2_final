@@ -142,18 +142,7 @@ router.put(
           .json({ message: "No tienes permiso para editar este libro." });
       }
 
-      // 3. SEGURIDAD: Verificar propiedad
-     
-      if (
-        libroOriginal.usuario &&
-        libroOriginal.usuario.toString() !== req.usuario.id
-      ) {
-        return res
-          .status(403)
-          .json({
-            message: "No tienes permiso para editar este libro (no es tuyo).",
-          });
-      }
+
 
       // 4. PREPARAR DATOS
       const pFisico = parseFloat(precio_fisico);
@@ -180,7 +169,7 @@ router.put(
         { new: true, runValidators: true },
       );
 
-      console.log("✅ ¡ÉXITO! Libro actualizado.");
+      console.log("¡ÉXITO! Libro actualizado.");
       res.json(libroActualizado);
     } catch (error) {
       console.error("Error backend:", error);

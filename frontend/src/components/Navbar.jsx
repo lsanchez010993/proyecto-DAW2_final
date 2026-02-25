@@ -31,8 +31,6 @@ function Navbar() {
             <li className="nav-item">
               <Link className="nav-link" to="/">Inicio</Link>
             </li>
-          
-        
           </ul>
 
           {/* 2. MENÚ DERECHO */}
@@ -48,42 +46,47 @@ function Navbar() {
             {usuario ? (
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                 
                   Benvingut, {usuario.nombre}
                 </a>
                 
                 <ul className="dropdown-menu dropdown-menu-end">
                   
-                  
-                      {/* // CONDICIÓN: ¿ES ADMIN?  */}
-                    
+                  {/* === 1. CONDICIÓN: ¿ES ADMIN? === */}
                   {usuario.rol === 'admin' ? (
                     <>
-                      {/* --- MENÚ DE ADMINISTRADOR  */}
                       <li><Link className="dropdown-item" to="/admin/usuarios">Administrar usuarios</Link></li>
-                      
                       <li><Link className="dropdown-item" to="/admin/libros">Administrar libros</Link></li>
-                      
                       <li><hr className="dropdown-divider" /></li>
-                      
-                      {/* Sección Historial */}
                       <li><h6 className="dropdown-header">Historial (administrar)</h6></li>
                       <li className="ps-3"><Link className="dropdown-item" to="/admin/compras">↳ Compras</Link></li>
                       <li className="ps-3"><Link className="dropdown-item" to="/admin/descargas">↳ Descargas</Link></li>
                     </>
+                  
+                  // {/* === 2. CONDICIÓN: ¿ES EDITORIAL? === */}
+                  ) : usuario.rol === 'editorial' ? (
+                    <>
+                      <li><Link className="dropdown-item" to="/perfil">Editar perfil</Link></li>
+                      {/* Enlazamos "Nuestro catálogo" a la vista de administrar libros para que puedan subir/editar */}
+                      <li><Link className="dropdown-item" to="/admin/libros">Nuestro catalogo</Link></li>
+                      <li><hr className="dropdown-divider" /></li>
+                      <li><h6 className="dropdown-header">Historial</h6></li>
+                      <li className="ps-3"><Link className="dropdown-item" to="/historial/compras">↳ Compras</Link></li>
+                      <li className="ps-3"><Link className="dropdown-item" to="/historial/descargas">↳ Descargas</Link></li>
+                    </>
+                  
+                  // {/* === 3. CONDICIÓN: ES CLIENTE NORMAL === */}
                   ) : (
                     <>
-                      {/* --- MENÚ DE CLIENTE NORMAL --- */}
                       <li><Link className="dropdown-item" to="/perfil">Editar perfil</Link></li>
                       <li><Link className="dropdown-item" to="/favoritos">Favoritos</Link></li>
                       <li><hr className="dropdown-divider" /></li>
                       <li><h6 className="dropdown-header">Historial</h6></li>
-                      <li><Link className="dropdown-item" to="/historial/compras"> 📦 Compras</Link></li>
-                      <li><Link className="dropdown-item" to="/historial/descargas"> ⬇️ Descargas</Link></li>
+                      <li className="ps-3"><Link className="dropdown-item" to="/historial/compras">↳ Compras</Link></li>
+                      <li className="ps-3"><Link className="dropdown-item" to="/historial/descargas">↳ Descargas</Link></li>
                     </>
                   )}
 
-                  {/* PARTE COMÚN (Cerrar sesión) */}
+                  {/* PARTE COMÚN PARA TODOS (Cerrar sesión) */}
                   <li><hr className="dropdown-divider" /></li>
                   <li>
                     <button className="dropdown-item text-danger" onClick={handleCerrarSesion}>
