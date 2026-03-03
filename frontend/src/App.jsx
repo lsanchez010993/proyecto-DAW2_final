@@ -12,6 +12,7 @@ import CrearLibro from './pages/CrearLibro';
 import AdminUsuarios from './pages/AdminUsuarios';
 import AdminLibros from './pages/AdminLibros';
 import EditarLibro from './pages/EditarLibro';
+import EditarPerfil from './pages/EditarPerfil';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           
           <Route path="/registro" element={<RegisterPage />} />
           <Route path="/admin/usuarios" element={<AdminUsuarios />} />
+          <Route path="/perfil" element={<EditarPerfil />} />
           <Route path="/admin/libros" element={<AdminLibros />} />
           <Route path="/editar-libro/:id" element={<EditarLibro />} />
         </Routes>

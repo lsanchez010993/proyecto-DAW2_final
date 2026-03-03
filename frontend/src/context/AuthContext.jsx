@@ -1,8 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-
 const AuthContext = createContext();
-
 
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
@@ -11,7 +9,7 @@ export function AuthProvider({ children }) {
   // Al cargar la app
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario_quedelibros");
-    const tokenGuardado = localStorage.getItem("token_quedelibros");
+    const tokenGuardado = localStorage.getItem("token"); 
 
     if (usuarioGuardado && tokenGuardado) {
       setUsuario(JSON.parse(usuarioGuardado));
@@ -21,8 +19,6 @@ export function AuthProvider({ children }) {
 
   // Función para INICIAR SESIÓN
   const login = (datosRespuesta) => {
-    // datosRespuesta viene del backend: { token: "...", usuario: { nombre: "...", rol: "..." } }
-    
     const { token, usuario: datosUsuario } = datosRespuesta;
 
     // 1. Guardamos el USUARIO LIMPIO en el estado
@@ -40,8 +36,16 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
   };
 
+
+  // Función para ACTUALIZAR DATOS DEL PERFIL EN VIVO
+  const actualizarUsuario = (datosActualizados) => {
+    setUsuario(datosActualizados);
+    localStorage.setItem("usuario_quedelibros", JSON.stringify(datosActualizados));
+  };
+
   return (
-    <AuthContext.Provider value={{ usuario, login, logout, cargando }}>
+
+    <AuthContext.Provider value={{ usuario, login, logout, cargando, actualizarUsuario }}>
       {!cargando && children}
     </AuthContext.Provider>
   );

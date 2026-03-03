@@ -1,18 +1,11 @@
 const mongoose = require('mongoose');
 
 const usuarioSchema = mongoose.Schema({
-    
-   
-    nombre: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true // [NUEVO] ¡Ahora el Nick también debe ser único!
-    },
-
+    nombre: { type: String, required: true, trim: true, unique: true},
+    apellidos: { type: String, default: "" }, 
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true },
-    rol: { type: String, default: "cliente", enum: ["cliente", "admin"] },
+    rol: { type: String, default: "cliente", enum: ["cliente", "editorial", "admin"] }, 
     avatar: { type: String, default: "" },
 
     direccion: {

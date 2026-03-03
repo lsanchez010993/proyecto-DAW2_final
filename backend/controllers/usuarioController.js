@@ -78,8 +78,10 @@ const loginUsuario = async (req, res) => {
             usuario: {
                 _id: usuario._id,
                 nombre: usuario.nombre,
+                apellidos: usuario.apellidos,
                 email: usuario.email,
-                rol: usuario.rol
+                rol: usuario.rol,
+                gustos_literarios: usuario.gustos_literarios
             }
         });
 
