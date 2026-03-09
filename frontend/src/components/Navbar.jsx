@@ -66,7 +66,7 @@ function Navbar() {
                 </a>
 
                 <ul className="dropdown-menu dropdown-menu-end">
-                  {/* === 1. CONDICIÓN: ¿ES ADMIN? === */}
+                  {/* === ES ADMIN === */}
                   {usuario.rol === "admin" ? (
                     <>
                       <li>
@@ -103,7 +103,7 @@ function Navbar() {
                         </Link>
                       </li>
                     </>
-                  ) : // {/* === 2. CONDICIÓN: ¿ES EDITORIAL? === */}
+                  ) : // {/* === : EDITORIAL === */}
                   usuario.rol === "editorial" ? (
                     <>
                       <li>
@@ -111,7 +111,7 @@ function Navbar() {
                           Editar perfil
                         </Link>
                       </li>
-                      {/* Enlazamos "Nuestro catálogo" a la vista de administrar libros para que puedan subir/editar */}
+
                       <li>
                         <Link className="dropdown-item" to="/admin/libros">
                           Nuestro catalogo
@@ -138,7 +138,7 @@ function Navbar() {
                       </li>
                     </>
                   ) : (
-                    // {/* === 3. CONDICIÓN: ES CLIENTE NORMAL === */}
+                    // {/* === ES CLIENTE === */}
                     <>
                       <li>
                         <Link className="dropdown-item" to="/perfil">
@@ -195,7 +195,7 @@ function Navbar() {
                   role="button"
                   data-bs-toggle="dropdown"
                 >
-                  👤 Iniciar sesión
+                  Iniciar sesión
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
