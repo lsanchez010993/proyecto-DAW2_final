@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast'; 
 
 function LoginPage() {
   // 1. ESTADOS PARA LOS INPUTS
@@ -35,7 +36,7 @@ function LoginPage() {
       
 
       const mensajeError = error.response?.data?.mensaje || "Error al iniciar sesión";
-      alert("Error: " + mensajeError);
+      toast.success("Error: " + mensajeError);
     }
   };
 
@@ -92,7 +93,7 @@ function LoginPage() {
         <button 
             type="button" 
             className="btn btn-light w-100 d-flex align-items-center justify-content-center border py-2"
-            onClick={() => alert("Función de Google próximamente")}
+            onClick={() => toast.success("Función de Google próximamente")}
         >
             <svg className="me-2" width="18" height="18" viewBox="0 0 18 18">
                 <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>

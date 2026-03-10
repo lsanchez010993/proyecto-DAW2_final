@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import toast from 'react-hot-toast';
 
 function EditarPerfil() {
   const { usuario, actualizarUsuario } = useAuth();
@@ -107,9 +108,9 @@ function EditarPerfil() {
       );
 
       actualizarUsuario(res.data);
-      alert("¡Perfil y dirección actualizados correctamente!");
+      toast.success("¡Perfil y dirección actualizados correctamente!");
     } catch (error) {
-      alert(error.response?.data?.message || "Error al guardar");
+      toast.success(error.response?.data?.message || "Error al guardar");
     }
   };
 
@@ -117,7 +118,7 @@ function EditarPerfil() {
   const submitPassword = async (e) => {
     e.preventDefault();
     if (passData.nueva !== passData.confirmar) {
-      return alert("La nueva contraseña y la confirmación no coinciden");
+      return toast.success("La nueva contraseña y la confirmación no coinciden");
     }
 
     try {
@@ -128,11 +129,11 @@ function EditarPerfil() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert("¡Contraseña actualizada con éxito!");
+      toast.success("¡Contraseña actualizada con éxito!");
       setShowModal(false);
       setPassData({ actual: "", nueva: "", confirmar: "" });
     } catch (error) {
-      alert(error.response?.data?.message || "Error al cambiar la contraseña");
+      toast.success(error.response?.data?.message || "Error al cambiar la contraseña");
     }
   };
 

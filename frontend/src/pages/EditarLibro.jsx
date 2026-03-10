@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 function EditarLibro() {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ function EditarLibro() {
         });
       } catch (error) {
         console.error(error);
-        alert("Error al cargar el libro");
+        toast.success("Error al cargar el libro");
       }
     };
     fetchLibro();
@@ -82,11 +83,11 @@ function EditarLibro() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert("¡Libro actualizado correctamente!");
+      toast.success("¡Libro actualizado correctamente!");
       navigate("/admin/libros"); 
     } catch (error) {
       console.error(error);
-      alert("Error al actualizar el libro");
+      toast.success("Error al actualizar el libro");
     }
   };
 

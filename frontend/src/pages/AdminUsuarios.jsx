@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function AdminUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
@@ -38,11 +39,12 @@ function AdminUsuarios() {
             usuario._id === id ? { ...usuario, rol: nuevoRol } : usuario
         ));
 
-        alert("¡Rol actualizado correctamente!");
+        toast.success("¡Rol actualizado correctamente!");
+      
 
     } catch (error) {
         console.error(error);
-        alert("Error al cambiar el rol");
+        toast.success("Error al cambiar el rol");
     }
   };
 
@@ -59,7 +61,7 @@ function AdminUsuarios() {
         
         fetchUsuarios(); 
       } catch (error) {
-        alert("Error al eliminar usuario");
+        toast.success("Error al eliminar usuario");
       }
     }
   };
@@ -68,7 +70,7 @@ function AdminUsuarios() {
   const verHistorial = (usuario) => {
     const compras = usuario.compras_realizadas?.length || 0;
     const descargas = usuario.historial_descargas_gratuitas?.length || 0;
-    alert(`📚 Historial de ${usuario.nombre}:\n\n- 🛒 Compras: ${compras}\n- ⬇️ Descargas: ${descargas}`);
+    toast.success(`📚 Historial de ${usuario.nombre}:\n\n- 🛒 Compras: ${compras}\n- ⬇️ Descargas: ${descargas}`);
   };
 
   return (

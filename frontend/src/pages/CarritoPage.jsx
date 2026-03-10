@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCarrito } from '../context/CarritoContext';
+import toast from 'react-hot-toast';
 
 function CarritoPage() {
   const { carrito, cantidadTotal } = useCarrito();
@@ -54,7 +55,7 @@ function CarritoPage() {
 
       <div className="d-flex justify-content-end align-items-center mt-4">
         <h3 className="me-4">Total: <span className="text-primary">{precioTotal} €</span></h3>
-        <button className="btn btn-success btn-lg" onClick={() => alert("¡Compra realizada con éxito! (Simulación)")}>
+        <button className="btn btn-success btn-lg" onClick={() => toast.success("¡Compra realizada con éxito! (Simulación)")}>
           Finalizar Compra
         </button>
       </div>

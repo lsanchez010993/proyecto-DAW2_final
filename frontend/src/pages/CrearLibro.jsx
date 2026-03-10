@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function CrearLibro() {
   const navigate = useNavigate();
@@ -54,13 +55,13 @@ function CrearLibro() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      alert('¡Libro creado con éxito!');
+      toast.success('¡Libro creado con éxito!');
       navigate('/'); 
 
     } catch (error) {
       console.error(error);
       
-      alert(error.response?.data?.message || 'Error al crear el libro');
+      toast.success(error.response?.data?.message || 'Error al crear el libro');
     }
   };
 

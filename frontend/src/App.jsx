@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Toaster } from 'react-hot-toast'; //
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import DetalleLibro from "./pages/DetalleLibro";
@@ -20,6 +21,7 @@ function App() {
       <BrowserRouter>
         <CarritoProvider>
           <Navbar />
+          <Toaster position="top-center" reverseOrder={false} />
           <div className="container mt-4 mb-5">
             <Routes>
               <Route path="/" element={<Home />} />

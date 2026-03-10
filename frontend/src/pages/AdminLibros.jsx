@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; 
+import toast from 'react-hot-toast';
+
 
 function AdminLibros() {
   const [libros, setLibros] = useState([]);
@@ -38,6 +40,7 @@ function AdminLibros() {
       }
     } catch (error) {
       console.error("Error cargando libros", error);
+      
     }
   };
 
@@ -55,7 +58,8 @@ function AdminLibros() {
         // recargar la lista
         fetchLibros();
       } catch (error) {
-        alert("Error al eliminar el libro");
+     
+        toast.success("¡Error al eliminar el libro!");
       }
     }
   };

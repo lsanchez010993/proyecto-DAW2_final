@@ -1,4 +1,5 @@
 import { createContext, useState, useContext } from 'react';
+import toast from 'react-hot-toast';
 
 const CarritoContext = createContext();
 
@@ -18,7 +19,8 @@ export const CarritoProvider = ({ children }) => {
       
       return [...prevCarrito, { ...libro, cantidad: 1 }];
     });
-    alert("¡Libro añadido al carrito! "); 
+   
+    toast.success("¡Libro añadido al carrito!");
   };
 
  
