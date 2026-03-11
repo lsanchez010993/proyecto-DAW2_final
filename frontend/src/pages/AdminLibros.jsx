@@ -59,7 +59,7 @@ function AdminLibros() {
         fetchLibros();
       } catch (error) {
      
-        toast.success("¡Error al eliminar el libro!");
+        toast.error("¡Error al eliminar el libro!");
       }
     }
   };

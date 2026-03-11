@@ -1,0 +1,22 @@
+.tarjetaCrear {
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 15px;
+    border: none;
+}
+
+.inputRedondeado {
+    border-radius: 50px !important;
+}
+
+.areaTexto {
+    border-radius: 15px !important;
+}
+.imagenPreview {
+    height: 180px;
+    width: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    object-fit: cover;
+    border: 3px solid #f8f9fa;
+}

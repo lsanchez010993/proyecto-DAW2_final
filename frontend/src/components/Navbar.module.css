@@ -1,0 +1,63 @@
+.navPrincipal {
+    padding: 0 !important; /* Forzamos el padding 0 de la navbar */
+}
+
+.contenedorInterno {
+    padding-left: 2cm;
+    padding-right: 2cm;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.logo {
+    height: 40px;
+    border-radius: 5px;
+}
+
+.librosContenedor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    user-select: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.librosBase {
+    height: 100px;
+    width: 155px;
+    display: block;
+    object-fit: fill;
+    margin-top: -10px;
+    margin-bottom: -20px;
+    margin-right: 10px;
+    z-index: 10;
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+}
+
+/* La clase especial para la segunda imagen */
+.librosInvertidos {
+        height: 100px;
+    width: 155px;
+    display: block;
+    object-fit: fill;
+    margin-top: -10px;
+    margin-bottom: -20px;
+    margin-left: 10px;
+    z-index: 10;
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+    transform: scaleX(-1);
+}
+
+
+
+/* Ajuste para móviles: si la pantalla es pequeña, bajamos a 0.5cm */
+@media (max-width: 768px) {
+    .contenedorInterno {
+        padding-left: 0.5cm;
+        padding-right: 0.5cm;
+    }
+    .librosContenedor {
+        display: none; /* Ocultamos el adorno en móvil para que no estorbe */
+    }
+}

@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import logo from "../images/logo.jpg";
+import librosImg from "../assets/libros-nav.png";
+import styles from "./Navbar.module.css";
 
 function Navbar() {
   const { cantidadTotal } = useCarrito();
@@ -14,17 +16,13 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          <img
-            src={logo}
-            alt="Logo QuéDeLibros"
-            height="40"
-            className="d-inline-block align-text-top rounded"
-          />
+    <nav
+      className={`navbar navbar-expand-lg navbar-dark bg-dark ${styles.navPrincipal}`}
+    >
+      <div className={`container-fluid ${styles.contenedorInterno}`}>
+        <Link className="navbar-brand py-0" to="/">
+          <img src={logo} alt="Logo" className={styles.logo}/>
         </Link>
-
         <button
           className="navbar-toggler"
           type="button"
@@ -38,11 +36,20 @@ function Navbar() {
           {/* 1. MENÚ IZQUIERDO */}
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/">
+              <Link className="nav-link py-0" to="/">
                 Inicio
               </Link>
             </li>
           </ul>
+
+          <div className={styles.librosContenedor}>
+            <img src={librosImg} alt="Libros 1" className={styles.librosBase} />
+            <img
+              src={librosImg}
+              alt="Libros 2"
+              className={styles.librosInvertidos}
+            />
+          </div>
 
           {/* 2. MENÚ DERECHO */}
           <ul className="navbar-nav ms-auto align-items-center">

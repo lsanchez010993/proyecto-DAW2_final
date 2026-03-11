@@ -2,123 +2,129 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import styles from './css/CrearLibro.module.css'; // [1] Importamos estilos locales
 
 function CrearLibro() {
   const navigate = useNavigate();
-  
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    titulo: '',
-    autor: '',
-    isbn: '', 
-    sinopsis: '',
-    precio_fisico: '',
-    precio_digital: '',
-    stock: 10
+    titulo: '', autor: '', isbn: '', sinopsis: '',
+    precio_fisico: '', precio_digital: '', stock: 10
   });
-
+  
   const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null); // [NUEVO] Estado para la imagen previa
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // [MODIFICADO] Ahora gestiona el archivo y la vista previa
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setPreview(URL.createObjectURL(selectedFile)); // Generamos URL temporal
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     
-    try {
+    const peticion = async () => {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-      
       const data = new FormData();
-      data.append('titulo', formData.titulo);
-      data.append('autor', formData.autor);
-      data.append('isbn', formData.isbn); 
-      data.append('sinopsis', formData.sinopsis);
-      data.append('precio_fisico', formData.precio_fisico);
-      data.append('precio_digital', formData.precio_digital);
-      data.append('stock', formData.stock);
-
-      if (file) {
-        data.append('imagen', file);
-      }
+      Object.keys(formData).forEach(key => data.append(key, formData[key]));
+      if (file) data.append('imagen', file);
 
       const token = localStorage.getItem('token'); 
-
-      await axios.post(`${URL}/api/libros`, data, {
+      return axios.post(`${URL}/api/libros`, data, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+    };
 
-      toast.success('¡Libro creado con éxito!');
-      navigate('/'); 
-
-    } catch (error) {
-      console.error(error);
-      
-      toast.success(error.response?.data?.message || 'Error al crear el libro');
-    }
+    toast.promise(peticion(), {
+      loading: 'Subiendo libro...',
+      success: () => {
+        setLoading(false);
+        navigate('/'); 
+        return '¡Libro creado con éxito!';
+      },
+      error: (err) => {
+        setLoading(false);
+        return err.response?.data?.message || 'Error al crear el libro';
+      }
+    });
   };
 
   return (
     <div className="container mt-5">
-      <div className="card shadow p-4 mx-auto" style={{ maxWidth: '600px' }}>
-        <h2 className="text-center mb-4">📚 Añadir Nuevo Libro</h2>
-        
+      <div className={`card shadow p-4 ${styles.tarjetaCrear}`}>
+        <h2 className="text-center mb-4 fw-bold">📚 Añadir Nuevo Libro</h2>
         <form onSubmit={handleSubmit}>
           
-          <div className="mb-3">
-            <label className="form-label">Título</label>
-            <input type="text" name="titulo" className="form-control" required onChange={handleChange} />
-          </div>
+          {/* SECCIÓN DE PREVISUALIZACIÓN [NUEVO] */}
+          {preview && (
+            <div className="text-center mb-4 animate__animated animate__zoomIn">
+              <p className="small text-muted mb-2">Vista previa de la portada:</p>
+              <img 
+                src={preview} 
+                alt="Vista previa" 
+                className={styles.imagenPreview} 
+              />
+              <div className="mt-2">
+                <button 
+                  type="button" 
+                  className="btn btn-sm btn-outline-danger rounded-pill"
+                  onClick={() => { setFile(null); setPreview(null); }}
+                >
+                  Quitar imagen
+                </button>
+              </div>
+            </div>
+          )}
 
-         
           <div className="mb-3">
-            <label className="form-label">ISBN (Identificador Único)</label>
-            <input 
-                type="text" 
-                name="isbn" 
-                className="form-control" 
-                placeholder="Ej: 978-3-16-148410-0"
-                required 
-                onChange={handleChange} 
-            />
-          </div>
-      
-
-          <div className="mb-3">
-            <label className="form-label">Autor</label>
-            <input type="text" name="autor" className="form-control" required onChange={handleChange} />
+            <label className="small text-muted mb-1">Título</label>
+            <input type="text" name="titulo" className={`form-control ${styles.inputRedondeado}`} required onChange={handleChange} />
           </div>
 
           <div className="row">
             <div className="col-md-6 mb-3">
-              <label className="form-label">Precio Físico (€)</label>
-              <input type="number" step="0.01" name="precio_fisico" className="form-control" required onChange={handleChange} />
+              <label className="small text-muted mb-1">ISBN</label>
+              <input type="text" name="isbn" className={`form-control ${styles.inputRedondeado}`} required onChange={handleChange} />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Precio Digital (€)</label>
-              <input type="number" step="0.01" name="precio_digital" className="form-control" required onChange={handleChange} />
+              <label className="small text-muted mb-1">Autor</label>
+              <input type="text" name="autor" className={`form-control ${styles.inputRedondeado}`} required onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="small text-muted mb-1">Precio Físico (€)</label>
+              <input type="number" step="0.01" name="precio_fisico" className={`form-control ${styles.inputRedondeado}`} required onChange={handleChange} />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="small text-muted mb-1">Precio Digital (€)</label>
+              <input type="number" step="0.01" name="precio_digital" className={`form-control ${styles.inputRedondeado}`} required onChange={handleChange} />
             </div>
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Subir Portada (Imagen)</label>
-            <input type="file" className="form-control" accept="image/*" onChange={handleFileChange} />
+            <label className="small text-muted mb-1">Subir Portada</label>
+            <input type="file" className={`form-control ${styles.inputRedondeado}`} accept="image/*" onChange={handleFileChange} />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Sinopsis</label>
-            <textarea name="sinopsis" className="form-control" rows="3" onChange={handleChange}></textarea>
+          <div className="mb-4">
+            <label className="small text-muted mb-1">Sinopsis</label>
+            <textarea name="sinopsis" className={`form-control ${styles.areaTexto}`} rows="3" onChange={handleChange}></textarea>
           </div>
 
-          <button type="submit" className="btn btn-success w-100 fw-bold">Guardar Libro</button>
-          
+          <button type="submit" className="btn btn-dark w-100 rounded-pill fw-bold py-2 shadow" disabled={loading}>
+            {loading ? "Guardando..." : "Guardar Libro"}
+          </button>
         </form>
       </div>
     </div>

@@ -43,8 +43,8 @@ function AdminUsuarios() {
       
 
     } catch (error) {
-        console.error(error);
-        toast.success("Error al cambiar el rol");
+       
+        toast.error("Error al cambiar el rol");
     }
   };
 
@@ -61,7 +61,7 @@ function AdminUsuarios() {
         
         fetchUsuarios(); 
       } catch (error) {
-        toast.success("Error al eliminar usuario");
+        toast.error("Error al eliminar usuario");
       }
     }
   };

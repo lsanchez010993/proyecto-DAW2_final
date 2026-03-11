@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 function EditarLibro() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ function EditarLibro() {
         });
       } catch (error) {
         console.error(error);
-        toast.success("Error al cargar el libro");
+        toast.error("Error al cargar el libro");
       }
     };
     fetchLibro();
@@ -78,13 +78,12 @@ function EditarLibro() {
 
       const token = localStorage.getItem("token");
 
-   
       await axios.put(`${URL}/api/libros/${id}`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       toast.success("¡Libro actualizado correctamente!");
-      navigate("/admin/libros"); 
+      navigate("/admin/libros");
     } catch (error) {
       console.error(error);
       toast.success("Error al actualizar el libro");

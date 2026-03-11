@@ -36,7 +36,7 @@ function LoginPage() {
       
 
       const mensajeError = error.response?.data?.mensaje || "Error al iniciar sesión";
-      toast.success("Error: " + mensajeError);
+      toast.error("Error: " + mensajeError);
     }
   };
 
