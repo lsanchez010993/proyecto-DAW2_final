@@ -1,0 +1,32 @@
+.contenedorCategorias {
+    margin-top: 2rem;
+}
+
+.selectorPestanas {
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 50px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto; /* Permite scroll horizontal en móviles */
+    white-space: nowrap;
+    margin-bottom: 2.5rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.botonPestana {
+    border-radius: 50px;
+    padding: 8px 24px;
+    font-weight: bold;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.activa {
+    background-color: #212529 !important;
+    color: white !important;
+}
+
+.gratis {
+    border: 2px solid #ffc107; /* Un borde dorado para destacar lo gratis */
+}

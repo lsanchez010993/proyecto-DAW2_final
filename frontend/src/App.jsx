@@ -14,6 +14,7 @@ import AdminUsuarios from "./pages/AdminUsuarios";
 import AdminLibros from "./pages/AdminLibros";
 import EditarLibro from "./pages/EditarLibro";
 import EditarPerfil from "./pages/EditarPerfil";
+import Categorias from "./pages/Categorias";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Toaster position="top-center" reverseOrder={false} />
           <div className="container mt-4 mb-5">
             <Routes>
+              <Route path="/categorias" element={<Categorias />} />
               <Route path="/" element={<Home />} />
               <Route path="/libro/:id" element={<DetalleLibro />} />
               <Route path="/carrito" element={<CarritoPage />} />

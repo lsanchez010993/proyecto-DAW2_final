@@ -3,7 +3,7 @@ import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import logo from "../images/logo.jpg";
 import librosImg from "../assets/libros-nav.png";
-import styles from "./Navbar.module.css";
+import styles from "./css/Navbar.module.css";
 
 function Navbar() {
   const { cantidadTotal } = useCarrito();

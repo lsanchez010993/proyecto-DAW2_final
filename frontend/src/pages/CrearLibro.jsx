@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import styles from './css/CrearLibro.module.css'; // [1] Importamos estilos locales
+import styles from './css/CrearLibro.module.css';
 
 function CrearLibro() {
   const navigate = useNavigate();
@@ -13,30 +13,56 @@ function CrearLibro() {
   });
   
   const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null); // [NUEVO] Estado para la imagen previa
+  const [preview, setPreview] = useState(null);
+  
+
+  const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
+  const listaCategorias = [
+    "Ciencia Ficción", "Fantasía", "Misterio y Thriller", "Romance", "Terror",
+    "Novela Histórica", "Biografía", "Desarrollo Personal", "Poesía",
+    "Cómic y Manga", "Clásicos", "Aventura"
+  ];
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // [MODIFICADO] Ahora gestiona el archivo y la vista previa
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setPreview(URL.createObjectURL(selectedFile)); // Generamos URL temporal
+      setPreview(URL.createObjectURL(selectedFile));
+    }
+  };
+
+
+  const toggleCategoria = (cat) => {
+    if (categoriasSeleccionadas.includes(cat)) {
+      setCategoriasSeleccionadas(categoriasSeleccionadas.filter((c) => c !== cat));
+    } else {
+      setCategoriasSeleccionadas([...categoriasSeleccionadas, cat]);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+
+    if (categoriasSeleccionadas.length === 0) {
+      return toast.error("Por favor, selecciona al menos una categoría.");
+    }
+
     setLoading(true);
     
     const peticion = async () => {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
       const data = new FormData();
+      
       Object.keys(formData).forEach(key => data.append(key, formData[key]));
       if (file) data.append('imagen', file);
+
+
+      data.append('categorias', JSON.stringify(categoriasSeleccionadas));
 
       const token = localStorage.getItem('token'); 
       return axios.post(`${URL}/api/libros`, data, {
@@ -64,19 +90,13 @@ function CrearLibro() {
         <h2 className="text-center mb-4 fw-bold">📚 Añadir Nuevo Libro</h2>
         <form onSubmit={handleSubmit}>
           
-          {/* SECCIÓN DE PREVISUALIZACIÓN [NUEVO] */}
           {preview && (
             <div className="text-center mb-4 animate__animated animate__zoomIn">
               <p className="small text-muted mb-2">Vista previa de la portada:</p>
-              <img 
-                src={preview} 
-                alt="Vista previa" 
-                className={styles.imagenPreview} 
-              />
+              <img src={preview} alt="Vista previa" className={styles.imagenPreview} />
               <div className="mt-2">
                 <button 
-                  type="button" 
-                  className="btn btn-sm btn-outline-danger rounded-pill"
+                  type="button" className="btn btn-sm btn-outline-danger rounded-pill"
                   onClick={() => { setFile(null); setPreview(null); }}
                 >
                   Quitar imagen
@@ -109,6 +129,25 @@ function CrearLibro() {
             <div className="col-md-6 mb-3">
               <label className="small text-muted mb-1">Precio Digital (€)</label>
               <input type="number" step="0.01" name="precio_digital" className={`form-control ${styles.inputRedondeado}`} required onChange={handleChange} />
+            </div>
+          </div>
+
+          {/*Interfaz visual de categorías */}
+          <div className="mb-4">
+            <label className="small text-muted mb-2 d-block">Categorías del libro (Selecciona una o varias)</label>
+            <div className="d-flex flex-wrap gap-2">
+              {listaCategorias.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => toggleCategoria(cat)}
+                  className={`btn btn-sm rounded-pill ${styles.categoriaBtn} ${
+                    categoriasSeleccionadas.includes(cat) ? "btn-dark" : "btn-outline-secondary"
+                  }`}
+                >
+                  {categoriasSeleccionadas.includes(cat) && "✓ "} {cat}
+                </button>
+              ))}
             </div>
           </div>
 

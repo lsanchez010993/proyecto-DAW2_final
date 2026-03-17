@@ -20,3 +20,11 @@
     object-fit: cover;
     border: 3px solid #f8f9fa;
 }
+
+.categoriaBtn {
+    transition: all 0.2s transform ease;
+}
+
+.categoriaBtn:hover {
+    transform: translateY(-2px);
+}

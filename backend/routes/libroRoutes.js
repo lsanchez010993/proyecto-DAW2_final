@@ -64,7 +64,13 @@ router.post(
         precio_fisico,
         precio_digital,
         stock,
+        categorias,
       } = req.body;
+
+      let categoriasArray = [];
+      if (categorias) {
+        categoriasArray = JSON.parse(categorias);
+      }
 
       const precioFisicoNum = parseFloat(precio_fisico) || 0;
       const precioDigitalNum = parseFloat(precio_digital) || 0;
@@ -81,6 +87,7 @@ router.post(
         autor,
         isbn,
         sinopsis,
+        categorias: categoriasArray,
         portada_url: req.file
           ? req.file.path
           : "https://via.placeholder.com/300",
@@ -114,7 +121,6 @@ router.put(
   uploadCloud.single("imagen"),
   async (req, res) => {
     try {
-      
       const {
         titulo,
         autor,
@@ -123,28 +129,27 @@ router.put(
         precio_fisico,
         precio_digital,
         stock,
+        categorias,
       } = req.body;
 
       // 2. Buscar libro original
       const libroOriginal = await Libro.findById(req.params.id);
       if (!libroOriginal)
         return res.status(404).json({ message: "Libro no encontrado" });
-      
+
       const esDueño =
         libroOriginal.usuario &&
         libroOriginal.usuario.toString() === req.usuario.id;
       const esAdmin = req.usuario.rol === "admin";
 
-    
       if (!esDueño && !esAdmin) {
         return res
           .status(403)
           .json({ message: "No tienes permiso para editar este libro." });
       }
 
-
-
       // 4. PREPARAR DATOS
+
       const pFisico = parseFloat(precio_fisico);
       const pDigital = parseFloat(precio_digital);
       const stockNum = parseInt(stock);
@@ -154,6 +159,7 @@ router.put(
         autor,
         isbn,
         sinopsis,
+        categorias: categorias ? JSON.parse(categorias) : [], 
         precio: {
           fisico: isNaN(pFisico) ? 0 : pFisico,
           digital: isNaN(pDigital) ? 0 : pDigital,
@@ -189,27 +195,29 @@ router.put(
 );
 
 // ==========================================
-// RUTA 5: Eliminar un libro 
+// RUTA 5: Eliminar un libro
 // ==========================================
-router.delete('/:id', verificarToken, async (req, res) => {
-    try {
-        const libro = await Libro.findById(req.params.id);
-        if (!libro) return res.status(404).json({ message: 'Libro no encontrado' });
+router.delete("/:id", verificarToken, async (req, res) => {
+  try {
+    const libro = await Libro.findById(req.params.id);
+    if (!libro) return res.status(404).json({ message: "Libro no encontrado" });
 
-        //  DUEÑO O ADMIN 
-        const esDueño = libro.usuario && libro.usuario.toString() === req.usuario.id;
-        const esAdmin = req.usuario.rol === 'admin';
+    //  DUEÑO O ADMIN
+    const esDueño =
+      libro.usuario && libro.usuario.toString() === req.usuario.id;
+    const esAdmin = req.usuario.rol === "admin";
 
-        if (!esDueño && !esAdmin) {
-            return res.status(403).json({ message: "No puedes borrar libros que no son tuyos." });
-        }
-        
-
-        await Libro.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Libro eliminado correctamente' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!esDueño && !esAdmin) {
+      return res
+        .status(403)
+        .json({ message: "No puedes borrar libros que no son tuyos." });
     }
+
+    await Libro.findByIdAndDelete(req.params.id);
+    res.json({ message: "Libro eliminado correctamente" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = router;

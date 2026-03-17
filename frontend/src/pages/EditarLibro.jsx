@@ -71,7 +71,7 @@ function EditarLibro() {
       data.append("precio_digital", formData.precio_digital);
       data.append("stock", formData.stock);
 
-      // Solo añado una imagen si el usuario seleccionó la cambia
+      // Solo añado una imagen si el usuario la cambia
       if (file) {
         data.append("imagen", file);
       }
