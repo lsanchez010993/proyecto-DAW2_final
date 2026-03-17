@@ -13,7 +13,11 @@ const libroSchema = new mongoose.Schema({
   isbn: {
     type: String,
     required: true,
-    unique: true, // No puede haber dos libros con el mismo ISBN
+    unique: true, 
+  },
+  editorial: {
+    type: String,
+    required: true 
   },
   sinopsis: {
     type: String,
@@ -37,14 +41,14 @@ const libroSchema = new mongoose.Schema({
 
   contenido_gratuito: {
     disponible: { type: Boolean, default: false },
-    enlace_descarga: { type: String }, // URL al PDF/ePub
+    enlace_descarga: { type: String }, 
   },
   fecha_publicacion: {
     type: Date,
     default: Date.now,
   },
   categorias: {
-    type: [String], // Es un array de textos
+    type: [String], 
     default: [],
   },
 });

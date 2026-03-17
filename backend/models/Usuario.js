@@ -7,6 +7,7 @@ const usuarioSchema = mongoose.Schema({
     password: { type: String, required: true },
     rol: { type: String, default: "cliente", enum: ["cliente", "editorial", "admin"] }, 
     avatar: { type: String, default: "" },
+    nombre_editorial: { type: String, default: "" },
 
     direccion: {
         calle: { type: String, default: "" },

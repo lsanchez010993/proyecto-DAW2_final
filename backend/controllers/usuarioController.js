@@ -81,7 +81,9 @@ const loginUsuario = async (req, res) => {
                 apellidos: usuario.apellidos,
                 email: usuario.email,
                 rol: usuario.rol,
-                gustos_literarios: usuario.gustos_literarios
+                gustos_literarios: usuario.gustos_literarios,
+                direccion: usuario.direccion, 
+                nombre_editorial: usuario.nombre_editorial 
             }
         });
 

@@ -38,7 +38,21 @@ function DetalleLibro() {
           <h3 className="text-muted">{libro.autor}</h3>
           <hr />
           <p className="lead">{libro.sinopsis}</p>
-          
+         
+          <p className="mb-3 text-secondary">
+            <span className="fw-bold">Editorial:</span> {libro.editorial || "Editorial Independiente"}
+          </p>
+
+          {/* [NUEVO] 2. Categorías en Píldoras */}
+          {libro.categorias && libro.categorias.length > 0 && (
+            <div className="mb-4 d-flex flex-wrap gap-2">
+              {libro.categorias.map((cat, index) => (
+                <span key={index} className="badge bg-dark rounded-pill px-3 py-2 fw-normal shadow-sm">
+                  {cat}
+                </span>
+              ))}
+            </div>
+          )}
           <div className="card bg-light p-3 mt-4">
             <h5>Opciones de Compra:</h5>
             <div className="d-flex gap-3 mt-2">

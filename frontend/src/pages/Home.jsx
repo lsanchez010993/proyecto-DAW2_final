@@ -63,6 +63,9 @@ function Home() {
               />
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{libro.titulo}</h5>
+                <p className="text-muted small mb-2" style={{ fontSize: "0.8rem" }}>
+                    {libro.editorial || "Independiente"}
+                  </p>
                 <p className="card-text text-muted">{libro.autor}</p>
                 <div className="mt-auto d-flex justify-content-between align-items-center">
                   <span className="h5 text-primary mb-0">

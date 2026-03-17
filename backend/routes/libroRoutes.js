@@ -3,6 +3,7 @@ const router = express.Router();
 const uploadCloud = require("../config/cloudinary");
 const Libro = require("../models/Libro");
 const verificarToken = require("../middleware/auth");
+const Usuario = require("../models/Usuario");
 
 // ==========================================
 // RUTA 1: Obtener libros CON PAGINACIÓN
@@ -66,7 +67,7 @@ router.post(
         stock,
         categorias,
       } = req.body;
-
+      const usuarioCreador = await Usuario.findById(req.usuario.id);
       let categoriasArray = [];
       if (categorias) {
         categoriasArray = JSON.parse(categorias);
@@ -87,6 +88,7 @@ router.post(
         autor,
         isbn,
         sinopsis,
+        editorial: usuarioCreador.nombre_editorial || "Editorial Independiente",
         categorias: categoriasArray,
         portada_url: req.file
           ? req.file.path
@@ -132,6 +134,7 @@ router.put(
         categorias,
       } = req.body;
 
+      const usuarioCreador = await Usuario.findById(req.usuario.id);
       // 2. Buscar libro original
       const libroOriginal = await Libro.findById(req.params.id);
       if (!libroOriginal)
@@ -159,7 +162,8 @@ router.put(
         autor,
         isbn,
         sinopsis,
-        categorias: categorias ? JSON.parse(categorias) : [], 
+        editorial: usuarioCreador.nombre_editorial || "Editorial Independiente",
+        categorias: categorias ? JSON.parse(categorias) : [],
         precio: {
           fisico: isNaN(pFisico) ? 0 : pFisico,
           digital: isNaN(pDigital) ? 0 : pDigital,

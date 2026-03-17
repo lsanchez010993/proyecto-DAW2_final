@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 
 function AdminUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
+  const [editandoEditorialId, setEditandoEditorialId] = useState(null);
+  const [nombreEditorialTemp, setNombreEditorialTemp] = useState("");
 
   // 1. Cargar usuarios al entrar
   useEffect(() => {
@@ -21,33 +23,49 @@ function AdminUsuarios() {
   };
 
   // 2. NUEVA FUNCIÓN: Cambiar Rol
-  const cambiarRol = async (id, nuevoRol) => {
-  
-    if(!window.confirm(`¿Quieres cambiar el rol de este usuario a "${nuevoRol}"?`)) return;
-
-    try {
-        const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-        const token = localStorage.getItem('token');
-
-        await axios.put(`${URL}/api/usuarios/${id}`, 
-            { rol: nuevoRol }, 
-            { headers: { 'Authorization': `Bearer ${token}` } }
-        );
-
+// 2. LÓGICA DE ROLES MEJORADA
+  const handleSeleccionRol = (user, nuevoRol) => {
+    if (nuevoRol === "editorial") {
+      // Si elige editorial, abrimos el cajón y cargamos el nombre si ya tenía uno
+      setEditandoEditorialId(user._id);
+      setNombreEditorialTemp(user.nombre_editorial || "");
+    } else {
+      // Si es otro rol, confirmamos y guardamos directamente (borrando la editorial)
       
-        setUsuarios(usuarios.map(usuario => 
-            usuario._id === id ? { ...usuario, rol: nuevoRol } : usuario
-        ));
-
-        toast.success("¡Rol actualizado correctamente!");
+        setEditandoEditorialId(null);
+        ejecutarCambioRol(user._id, nuevoRol, "");
       
-
-    } catch (error) {
-       
-        toast.error("Error al cambiar el rol");
     }
   };
 
+  const ejecutarCambioRol = async (id, nuevoRol, nombreEditorial) => {
+    try {
+      const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+      const token = localStorage.getItem('token');
+
+      await axios.put(`${URL}/api/usuarios/${id}`, 
+        { rol: nuevoRol, nombre_editorial: nombreEditorial }, 
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+
+      setUsuarios(usuarios.map(usuario => 
+        usuario._id === id ? { ...usuario, rol: nuevoRol, nombre_editorial: nombreEditorial } : usuario
+      ));
+
+      toast.success("¡Rol actualizado correctamente!");
+      setEditandoEditorialId(null); 
+      
+    } catch (error) {
+      toast.error("Error al actualizar el rol");
+    }
+  };
+
+  const guardarEditorial = (id) => {
+    if (!nombreEditorialTemp.trim()) {
+      return toast.error("El nombre de la editorial no puede estar vacío");
+    }
+    ejecutarCambioRol(id, "editorial", nombreEditorialTemp);
+  };
   // 3. Función para eliminar
   const eliminarUsuario = async (id, nombre) => {
     if (window.confirm(`¿Seguro que quieres eliminar al usuario ${nombre}?`)) {
@@ -70,12 +88,12 @@ function AdminUsuarios() {
   const verHistorial = (usuario) => {
     const compras = usuario.compras_realizadas?.length || 0;
     const descargas = usuario.historial_descargas_gratuitas?.length || 0;
-    toast.success(`📚 Historial de ${usuario.nombre}:\n\n- 🛒 Compras: ${compras}\n- ⬇️ Descargas: ${descargas}`);
+    toast.success(`Historial de ${usuario.nombre}:\n\n- Compras: ${compras}\n- Descargas: ${descargas}`);
   };
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">👥 Gestión de Usuarios</h2>
+      <h2 className="mb-4">Gestión de Usuarios</h2>
       
       <div className="table-responsive shadow-sm rounded">
         <table className="table table-hover align-middle mb-0 bg-white">
@@ -108,20 +126,74 @@ function AdminUsuarios() {
                 {/* Columna Email */}
                 <td>{user.email}</td>
 
-                {/* --- COLUMNA ROL  --- */}
-                <td>
+                
+                {/* --- COLUMNA ROL --- */}
+                <td style={{ minWidth: "220px" }}>
                   <select 
-                    className={`form-select form-select-sm fw-bold ${
-                        user.rol === 'admin' ? 'border-warning text-warning' : 
-                        user.rol === 'editorial' ? 'border-info text-info' : 'border-secondary text-secondary'
+                    className={`form-select form-select-sm fw-bold shadow-sm ${
+                        (editandoEditorialId === user._id || user.rol === 'editorial') ? 'border-info text-info' : 
+                        user.rol === 'admin' ? 'border-warning text-warning' : 'border-secondary text-secondary'
                     }`}
-                    value={user.rol}
-                    onChange={(e) => cambiarRol(user._id, e.target.value)}
+                   
+                    value={editandoEditorialId === user._id ? "editorial" : user.rol}
+                    onChange={(e) => handleSeleccionRol(user, e.target.value)}
                   >
-                    <option value="cliente"> Usuario</option>
-                    <option value="editorial"> Editor</option>
-                    <option value="admin"> Admin</option>
+                    <option value="cliente">Usuario</option>
+                    <option value="editorial">Editor</option>
+                    <option value="admin">Admin</option>
                   </select>
+
+                  {/* CAJÓN AUTOEDITABLE PARA LA EDITORIAL */}
+                  {editandoEditorialId === user._id && (
+                    <div className="mt-2 animate__animated animate__fadeIn">
+                      <div className="input-group input-group-sm shadow-sm rounded">
+                        <input
+                          type="text"
+                          className="form-control border-info"
+                          placeholder="Nombre de la editorial..."
+                          value={nombreEditorialTemp}
+                          onChange={(e) => setNombreEditorialTemp(e.target.value)}
+                          autoFocus
+                        />
+                        <button 
+                          className="btn btn-info text-white fw-bold px-3" 
+                          onClick={() => guardarEditorial(user._id)}
+                          title="Guardar"
+                        >
+                          ✓
+                        </button>
+                        <button 
+                          className="btn btn-outline-danger px-3 fw-bold" 
+                          onClick={() => setEditandoEditorialId(null)}
+                          title="Cancelar"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  
+             {/* Etiqueta visual */}
+                  {user.rol === 'editorial' && editandoEditorialId !== user._id && user.nombre_editorial && (
+                    <div className="mt-2 d-flex justify-content-end animate__animated animate__fadeIn">
+                      <span 
+                        className="badge bg-info text-dark rounded-pill shadow-sm d-flex align-items-center"
+                        style={{ cursor: "pointer", transition: "all 0.2s" }}
+                        onClick={() => {
+                         
+                          setEditandoEditorialId(user._id);
+                          setNombreEditorialTemp(user.nombre_editorial);
+                        }}
+                        title="Editar nombre de la editorial"
+                        onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+                        onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+                      >
+                        <span className="me-2">{user.nombre_editorial}</span>
+                        <span style={{ fontSize: "0.85rem" }}>✏️</span>
+                      </span>
+                    </div>
+                  )}
                 </td>
 
                 {/* Columna Historial */}

@@ -23,6 +23,7 @@ router.post("/login", loginUsuario);
 // ==========================================
 router.put("/perfil", verificarToken, async (req, res) => {
   try {
+    // [NUEVO] Extraemos nombre_editorial
     const { nombre, apellidos, email, preferencias, direccion } = req.body;
 
     const usuarioActualizado = await Usuario.findByIdAndUpdate(
@@ -33,6 +34,7 @@ router.put("/perfil", verificarToken, async (req, res) => {
         email,
         gustos_literarios: preferencias,
         direccion,
+       
       },
       { new: true, runValidators: true },
     ).select("-password");
@@ -101,19 +103,36 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-// Cambiar ROL de usuario
+
+
+// Cambiar ROL de usuario 
+
 router.put("/:id", async (req, res) => {
   try {
-    const { rol } = req.body;
+    // 1. Extraemos AMBOS datos del req.body que nos manda tu frontend perfecto
+    const { rol, nombre_editorial } = req.body; 
+    
+    // 2. Preparamos el objeto con los datos a actualizar en MongoDB
+    const datosActualizar = { rol: rol };
+    
+    // 3. Si es editorial, guardamos el nombre. Si le quitan el rol, se lo borramos.
+    if (rol === "editorial" && nombre_editorial) {
+      datosActualizar.nombre_editorial = nombre_editorial;
+    } else if (rol !== "editorial") {
+      datosActualizar.nombre_editorial = "";
+    }
+
+    // 4. Actualizamos la base de datos
     const usuarioActualizado = await Usuario.findByIdAndUpdate(
       req.params.id,
-      { rol: rol },
+      datosActualizar, // Pasamos el objeto completo con la editorial
       { new: true },
     );
+    
     res.json(usuarioActualizado);
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar rol" });
+    console.error(error);
+    res.status(500).json({ message: "Error al actualizar rol y editorial" });
   }
 });
-
 module.exports = router;
