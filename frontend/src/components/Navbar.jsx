@@ -44,11 +44,7 @@ function Navbar() {
 
           <div className={styles.librosContenedor}>
             <img src={librosImg} alt="Libros 1" className={styles.librosBase} />
-            <img
-              src={librosImg}
-              alt="Libros 2"
-              className={styles.librosInvertidos}
-            />
+            
           </div>
 
           {/* 2. MENÚ DERECHO */}

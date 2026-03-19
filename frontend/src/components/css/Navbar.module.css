@@ -24,30 +24,29 @@
 }
 
 .librosBase {
-    height: 100px;
-    width: 155px;
-    display: block;
-    object-fit: fill;
-    margin-top: -10px;
-    margin-bottom: 0pxpx;
-    margin-right: 3px;
-    z-index: 10;
-    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+
+  height: 50px; 
+  
+  /* OJO: 515px es una medida enorme para un logo, parece más la del banner. 
+     Si esta clase es solo para el logo, usa 'auto' o un tamaño real como '180px'. */
+  width: 380px; 
+  
+  display: block;
+  
+ 
+  object-fit: fill; 
+  
+  /* [NUEVO] MÁRGENES (Arriba/Abajo - Izquierda/Derecha) */
+  margin: 10px 20px 10px 10px; 
+  
+  z-index: 10;
+  filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+  
+  /* Opcional: Un pequeño redondeo a la caja blanca lo hace ver más moderno */
+  border-radius: 6px; 
 }
 
-/* La clase especial para la segunda imagen */
-.librosInvertidos {
-        height: 100px;
-    width: 155px;
-    display: block;
-    object-fit: fill;
-    margin-top: -10px;
-    margin-bottom: -20px;
-    margin-left: 5px;
-    z-index: 10;
-    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
-    transform: scaleX(-1);
-}
+
 
 
 

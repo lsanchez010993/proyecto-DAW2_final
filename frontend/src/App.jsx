@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Toaster } from 'react-hot-toast'; //
+import { Toaster } from 'react-hot-toast'; 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import DetalleLibro from "./pages/DetalleLibro";
@@ -15,17 +15,23 @@ import AdminLibros from "./pages/AdminLibros";
 import EditarLibro from "./pages/EditarLibro";
 import EditarPerfil from "./pages/EditarPerfil";
 import Categorias from "./pages/Categorias";
+import Editoriales from "./pages/Editoriales";
+import Footer from './components/Footer';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <CarritoProvider>
+          
           <Navbar />
           <Toaster position="top-center" reverseOrder={false} />
-          <div className="container mt-4 mb-5">
+          
+          {/* Contenedor principal: le damos una altura mínima para empujar el footer hacia abajo */}
+          <div className="container mt-4 mb-5" style={{ minHeight: "75vh" }}>
             <Routes>
               <Route path="/categorias" element={<Categorias />} />
+              <Route path="/editoriales" element={<Editoriales />} />
               <Route path="/" element={<Home />} />
               <Route path="/libro/:id" element={<DetalleLibro />} />
               <Route path="/carrito" element={<CarritoPage />} />
@@ -38,6 +44,10 @@ function App() {
               <Route path="/editar-libro/:id" element={<EditarLibro />} />
             </Routes>
           </div>
+
+         
+          <Footer /> 
+
         </CarritoProvider>
       </BrowserRouter>
     </AuthProvider>

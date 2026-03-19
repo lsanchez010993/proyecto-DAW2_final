@@ -20,8 +20,8 @@ function Categorias() {
       const data = await buscarLibrosGratuitos();
       setLibros(data);
     } else {
-      // Aquí iría la lógica para buscar en tu BD por categoría
-      // setLibros(await buscarEnMiBD(categoriaActual));
+      // Aquí ira la lógica para buscar en ls BD por categoría
+      
     }
     setCargando(false);
   };

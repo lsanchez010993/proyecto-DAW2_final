@@ -1,0 +1,47 @@
+/* Editoriales.module.css */
+
+.tarjetaNube {
+  background-color: #f8f9fa;
+  border: none;
+  border-radius: 1rem;
+}
+
+.botonPildora {
+  transition: all 0.2s ease;
+}
+
+.botonPildora:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.estadoVacio {
+  opacity: 0.5;
+  margin-top: 3rem;
+}
+
+.iconoLibros {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.tarjetaLibro {
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.tarjetaLibro:hover {
+  transform: scale(1.02);
+}
+
+.imagenPortada {
+  height: 220px;
+  object-fit: contain;
+  padding: 1rem;
+}
+
+.textoEditorial {
+  font-size: 0.8rem;
+}

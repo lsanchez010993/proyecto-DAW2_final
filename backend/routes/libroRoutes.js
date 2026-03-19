@@ -6,18 +6,30 @@ const verificarToken = require("../middleware/auth");
 const Usuario = require("../models/Usuario");
 
 // ==========================================
-// RUTA 1: Obtener libros CON PAGINACIÓN
+// RUTA 1: Obtener libros CON PAGINACIÓN Y FILTROS
 // ==========================================
 router.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 12;
-
     const skip = (page - 1) * limit;
 
-    const totalLibros = await Libro.countDocuments();
+ 
+    const editorialesQuery = req.query.editoriales;
+    
 
-    const libros = await Libro.find().skip(skip).limit(limit);
+    let filtroBusqueda = {};
+
+    if (editorialesQuery) {
+     
+      const arrayEditoriales = editorialesQuery.split(",");
+      
+      filtroBusqueda.editorial = { $in: arrayEditoriales };
+    }
+
+    
+    const totalLibros = await Libro.countDocuments(filtroBusqueda);
+    const libros = await Libro.find(filtroBusqueda).skip(skip).limit(limit);
 
     res.json({
       data: libros,
@@ -47,7 +59,22 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
+// ==========================================
+// RUTA NUEVA: Obtener editoriales únicas
+// ==========================================
+router.get("/editoriales/unicas", async (req, res) => {
+  try {
+    // .distinct() extrae una lista sin duplicados de ese campo exacto
+    const editoriales = await Libro.distinct("editorial");
+    
+    
+    const editorialesLimpias = editoriales.filter(ed => ed && ed.trim() !== "");
+    
+    res.json(editorialesLimpias);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener las editoriales", error: error.message });
+  }
+});
 // ==========================================
 // RUTA 3: Crear libro (PROTEGIDA)
 // ==========================================
