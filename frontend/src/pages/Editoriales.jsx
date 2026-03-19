@@ -119,7 +119,7 @@ function Editoriales() {
                       <div>
                         <h6 className="fw-bold mb-1">{libro.titulo}</h6>
                         <p className={`text-muted mb-2 ${styles.textoEditorial}`}>
-                          🏢 {libro.editorial}
+                          {libro.editorial}
                         </p>
                       </div>
                       <Link to={`/libro/${libro._id}`} className="btn btn-outline-dark btn-sm rounded-pill mt-3 w-100">
