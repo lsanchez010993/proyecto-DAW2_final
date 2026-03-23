@@ -1,5 +1,5 @@
 .navPrincipal {
-    padding: 0 !important; /* Forzamos el padding 0 de la navbar */
+    padding: 20 !important; 
 }
 
 .contenedorInterno {
@@ -9,8 +9,10 @@
     padding-bottom: 0;
 }
 .logo {
+
     height: 40px;
     border-radius: 5px;
+    
 }
 
 .librosContenedor {
@@ -23,40 +25,13 @@
     margin-right: auto;
 }
 
-.librosBase {
 
-  height: 50px; 
-  
-  /* OJO: 515px es una medida enorme para un logo, parece más la del banner. 
-     Si esta clase es solo para el logo, usa 'auto' o un tamaño real como '180px'. */
-  width: 380px; 
-  
-  display: block;
-  
- 
-  object-fit: fill; 
-  
-  /* [NUEVO] MÁRGENES (Arriba/Abajo - Izquierda/Derecha) */
-  margin: 10px 20px 10px 10px; 
-  
-  z-index: 10;
-  filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
-  
-  /* Opcional: Un pequeño redondeo a la caja blanca lo hace ver más moderno */
-  border-radius: 6px; 
-}
-
-
-
-
-
-/* Ajuste para móviles: si la pantalla es pequeña, bajamos a 0.5cm */
 @media (max-width: 768px) {
     .contenedorInterno {
         padding-left: 0.5cm;
         padding-right: 0.5cm;
     }
     .librosContenedor {
-        display: none; /* Ocultamos el adorno en móvil para que no estorbe */
+        display: none; 
     }
 }

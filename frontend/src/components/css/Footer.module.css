@@ -1,17 +1,14 @@
-/* Footer.module.css */
 
 .footerContainer {
   position: relative;
-  /* Sustituye la ruta por la ubicación real de tu imagen en la carpeta public o assets */
-  background-image: url('/ruta-a-tu-imagen-de-fondo.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: white;
-  margin-top: 4rem; /* Separa el footer del contenido de arriba */
+  margin-top: 4rem; 
 }
 
-/* Esta capa oscurece la imagen un 70% para que el texto blanco resalte perfectamente */
+
 .capaOscura {
   position: absolute;
   top: 0;
@@ -22,7 +19,7 @@
   z-index: 1;
 }
 
-/* Elevamos el contenido por encima de la capa oscura */
+
 .contenido {
   position: relative;
   z-index: 2;

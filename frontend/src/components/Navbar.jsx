@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import logo from "../images/logo.jpg";
-import librosImg from "../assets/libros-nav.png";
+import librosImg from "../assets/tomo-libros.png";
 import styles from "./css/Navbar.module.css";
 
 function Navbar() {
@@ -42,10 +42,7 @@ function Navbar() {
             </li>
           </ul>
 
-          <div className={styles.librosContenedor}>
-            <img src={librosImg} alt="Libros 1" className={styles.librosBase} />
-            
-          </div>
+       
 
           {/* 2. MENÚ DERECHO */}
           <ul className="navbar-nav ms-auto align-items-center">
