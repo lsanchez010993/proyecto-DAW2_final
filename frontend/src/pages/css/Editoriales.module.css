@@ -45,3 +45,43 @@
 .textoEditorial {
   font-size: 0.8rem;
 }
+/* Añadir al final de Editoriales.module.css */
+
+.panelLateral {
+  background-color: #f8f9fa;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  height: calc(100vh - 120px);
+  position: sticky;
+  top: 80px;
+}
+
+.listaResultados {
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+}
+
+.listaResultados::-webkit-scrollbar {
+  width: 6px;
+}
+.listaResultados::-webkit-scrollbar-thumb {
+  background-color: #ced4da;
+  border-radius: 4px;
+}
+
+.itemResultado {
+  display: block;
+  text-decoration: none;
+  color: #212529;
+  padding: 0.8rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.itemResultado:hover {
+  background-color: #e9ecef;
+  color: #000;
+}

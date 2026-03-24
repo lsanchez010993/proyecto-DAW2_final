@@ -108,8 +108,8 @@ function Autores() {
     }
   };
 
-  return (
-    <div className="container mt-4 animate__animated animate__fadeIn">
+return (
+  <div className="container-fluid px-4 mt-4 animate__animated animate__fadeIn">
       <div className="row">
         
         {/* =========================================
@@ -162,7 +162,7 @@ function Autores() {
             ========================================= */}
         <div className="col-md-9">
           
-          <div className={`shadow-sm p-3 mb-4 ${styles.tarjetaNube}`}>
+          <div className={`shadow-sm p-4 mb-4 ${styles.tarjetaNube}`}>
             <div className="d-flex flex-wrap justify-content-center gap-2">
               {/* Quitar el filtro de la letra */}
               <button
@@ -271,7 +271,7 @@ function Autores() {
                   Lista de autores
                 </h3>
                 
-                <div className="row g-3">
+                <div className="row g-4">
                   {cargandoTodos ? (
                     <p className="text-center w-100 mt-5">Cargando el directorio...</p>
                   ) : todosLosAutores.length === 0 ? (

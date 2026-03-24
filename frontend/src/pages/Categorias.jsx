@@ -169,7 +169,7 @@ function Categorias() {
 
           <h4 className="mb-4 border-bottom pb-2">
             {seleccionadas.length === 0
-              ? `Catálogo General:`
+              ? `Libros Disponibles:`
               : `Resultados Encontrados: (${libros.length} libros)`}
           </h4>
 
