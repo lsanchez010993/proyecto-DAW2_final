@@ -52,5 +52,7 @@ const libroSchema = new mongoose.Schema({
     default: [],
   },
 });
-
+// Índices de búsqueda para optimizar el rendimiento 
+libroSchema.index({ editorial: 1 });
+libroSchema.index({ categorias: 1 });
 module.exports = mongoose.model("Libro", libroSchema);

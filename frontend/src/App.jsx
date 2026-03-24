@@ -16,7 +16,9 @@ import EditarLibro from "./pages/EditarLibro";
 import EditarPerfil from "./pages/EditarPerfil";
 import Categorias from "./pages/Categorias";
 import Editoriales from "./pages/Editoriales";
+import Autores from "./pages/Autores";
 import Footer from './components/Footer';
+import MenuExplorar from './components/MenuExplorar';
 
 function App() {
   return (
@@ -29,9 +31,11 @@ function App() {
           
           {/* Contenedor principal: le damos una altura mínima para empujar el footer hacia abajo */}
           <div className="container mt-4 mb-5" style={{ minHeight: "75vh" }}>
+            <MenuExplorar />
             <Routes>
               <Route path="/categorias" element={<Categorias />} />
               <Route path="/editoriales" element={<Editoriales />} />
+              <Route path="/autores" element={<Autores />} />
               <Route path="/" element={<Home />} />
               <Route path="/libro/:id" element={<DetalleLibro />} />
               <Route path="/carrito" element={<CarritoPage />} />
