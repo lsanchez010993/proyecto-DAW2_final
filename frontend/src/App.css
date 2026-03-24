@@ -1,0 +1,3 @@
+html {
+  overflow-y: scroll; /* Fuerza la barra de scroll siempre, evitando saltos horizontales */
+}

@@ -268,7 +268,7 @@ function Autores() {
             (
               <>
                 <h3 className="mb-4 border-bottom pb-2">
-                  Catálogo Completo de Autores
+                  Lista de autores
                 </h3>
                 
                 <div className="row g-3">

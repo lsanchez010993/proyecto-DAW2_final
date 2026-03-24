@@ -2,10 +2,12 @@
   background-color: #f8f9fa;
   border-radius: 1rem;
   padding: 1.5rem;
-  height: calc(100vh - 120px); /* Ocupa casi toda la pantalla visible */
+  height: calc(100vh - 120px); 
   position: sticky;
-  top: 80px; /* Se queda fijo al hacer scroll hacia abajo */
+  top: 80px; 
 }
+
+
 
 .contenedorAbecedario {
   display: flex;
@@ -27,8 +29,8 @@
 }
 
 .listaAutores {
-
-  max-height: calc(100vh - 350px);
+ 
+  max-height: calc(100vh - 280px);
   overflow-y: auto;
   border-top: 1px solid #dee2e6;
   padding-top: 1rem;

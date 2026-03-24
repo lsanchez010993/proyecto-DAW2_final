@@ -16,8 +16,8 @@ router.get("/", async (req, res) => {
 
     const editorialesQuery = req.query.editoriales;
     const categoriasQuery = req.query.categorias;
-    const autorQuery = req.query.autor; // [NUEVO] Capturamos el autor de la URL
-
+    const autorQuery = req.query.autor;
+    const tituloQuery = req.query.titulo;
     let filtroBusqueda = {};
 
     if (editorialesQuery) {
@@ -30,11 +30,13 @@ router.get("/", async (req, res) => {
       filtroBusqueda.categorias = { $in: arrayCategorias };
     }
 
-    // [NUEVO] Si nos piden un autor, lo buscamos exactamente
     if (autorQuery) {
       filtroBusqueda.autor = autorQuery;
     }
-    
+    if (tituloQuery) {
+      filtroBusqueda.titulo = { $regex: new RegExp(tituloQuery, "i") };
+    }
+
     const totalLibros = await Libro.countDocuments(filtroBusqueda);
     const libros = await Libro.find(filtroBusqueda).skip(skip).limit(limit);
 
@@ -56,15 +58,16 @@ router.get("/", async (req, res) => {
 // ==========================================
 router.get("/autores/todos", async (req, res) => {
   try {
-   
     const autores = await Libro.distinct("autor");
-    
-   
-    const autoresLimpios = autores.filter(a => a && a.trim() !== "");
-    
-    res.json(autoresLimpios.sort()); 
+
+    const autoresLimpios = autores.filter((a) => a && a.trim() !== "");
+
+    res.json(autoresLimpios.sort());
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener todos los autores", error: error.message });
+    res.status(500).json({
+      message: "Error al obtener todos los autores",
+      error: error.message,
+    });
   }
 });
 // ==========================================
@@ -75,15 +78,17 @@ router.get("/autores/buscar", async (req, res) => {
     const query = req.query.q;
     if (!query) return res.json([]);
 
-    // expresión regular para buscar coincidencias 
+    // expresión regular para buscar coincidencias
     const regex = new RegExp(query, "i");
-    
+
     // Extraer nombres de autor que coincidan con la búsqueda
     const autores = await Libro.distinct("autor", { autor: regex });
-    
+
     res.json(autores.sort()); // devolver lista ordenada alfabéticamente
   } catch (error) {
-    res.status(500).json({ message: "Error al buscar autores", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al buscar autores", error: error.message });
   }
 });
 
@@ -97,12 +102,14 @@ router.get("/autores/letra", async (req, res) => {
 
     // Expresión regular: El símbolo ^ significa "que empiece por" esa letra
     const regex = new RegExp(`^${letra}`, "i");
-    
+
     const autores = await Libro.distinct("autor", { autor: regex });
-    
-    res.json(autores.sort()); 
+
+    res.json(autores.sort());
   } catch (error) {
-    res.status(500).json({ message: "Error al buscar por letra", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al buscar por letra", error: error.message });
   }
 });
 // ==========================================
@@ -124,15 +131,18 @@ router.get("/:id", async (req, res) => {
 // ==========================================
 router.get("/editoriales/unicas", async (req, res) => {
   try {
-   
     const editoriales = await Libro.distinct("editorial");
-    
-    
-    const editorialesLimpias = editoriales.filter(ed => ed && ed.trim() !== "");
-    
+
+    const editorialesLimpias = editoriales.filter(
+      (ed) => ed && ed.trim() !== "",
+    );
+
     res.json(editorialesLimpias);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener las editoriales", error: error.message });
+    res.status(500).json({
+      message: "Error al obtener las editoriales",
+      error: error.message,
+    });
   }
 });
 // ==========================================
