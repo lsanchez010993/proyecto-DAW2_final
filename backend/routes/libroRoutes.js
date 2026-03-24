@@ -16,6 +16,7 @@ router.get("/", async (req, res) => {
 
  
     const editorialesQuery = req.query.editoriales;
+    const categoriasQuery = req.query.categorias;
     
 
     let filtroBusqueda = {};
@@ -26,7 +27,11 @@ router.get("/", async (req, res) => {
       
       filtroBusqueda.editorial = { $in: arrayEditoriales };
     }
+if (categoriasQuery) {
+      const arrayCategorias = categoriasQuery.split(",");
 
+      filtroBusqueda.categorias = { $in: arrayCategorias };
+    }
     
     const totalLibros = await Libro.countDocuments(filtroBusqueda);
     const libros = await Libro.find(filtroBusqueda).skip(skip).limit(limit);

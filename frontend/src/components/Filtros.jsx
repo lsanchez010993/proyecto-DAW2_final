@@ -11,7 +11,6 @@ function Filtros() {
         <Link to="/categorias" className="btn btn-outline-dark">Categorías</Link>
         <Link to="/autores" className="btn btn-outline-dark">Autores</Link>
         <Link to="/editoriales" className="btn btn-outline-dark">Editoriales</Link>
-        
         <Link to="/recomendados" className="btn btn-outline-dark">Recomendados</Link>
         
       </div>
