@@ -53,6 +53,13 @@ const libroSchema = new mongoose.Schema({
   },
 });
 // Índices de búsqueda para optimizar el rendimiento 
+
+libroSchema.index({ titulo: 1 });
+libroSchema.index({ autor: 1 });
 libroSchema.index({ editorial: 1 });
-libroSchema.index({ categorias: 1 });
+libroSchema.index({ categorias: 1 }); 
+
+// 2. Índice Compuesto (Para cuando se cruzan filtros, ej: Fantasía + Libros Polvorientos)
+libroSchema.index({ categorias: 1, editorial: 1 });
+
 module.exports = mongoose.model("Libro", libroSchema);
