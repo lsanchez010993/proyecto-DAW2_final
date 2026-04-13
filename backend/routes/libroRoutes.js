@@ -6,9 +6,10 @@ const verificarToken = require("../middleware/auth");
 const Usuario = require("../models/Usuario");
 
 let cacheDirectorioAutores = null;
+let cacheLibrosPorCategoria = {};
 
 // ==========================================
-// RUTA 1: Obtener libros CON PAGINACIÓN Y FILTROS
+// Obtener libros CON PAGINACIÓN, FILTROS Y CACHÉ INTELIGENTE
 // ==========================================
 router.get("/", async (req, res) => {
   try {
@@ -20,18 +21,29 @@ router.get("/", async (req, res) => {
     const categoriasQuery = req.query.categorias;
     const autorQuery = req.query.autor;
     const tituloQuery = req.query.titulo;
+
+
+    const esPeticionEnFila = categoriasQuery && !editorialesQuery && !autorQuery && !tituloQuery && limit === 15 && page === 1;
+
+
+    if (esPeticionEnFila && cacheLibrosPorCategoria[categoriasQuery]) {
+      console.log(`Estantería  [${categoriasQuery}] cargada desde Caché`);
+      return res.json({
+        data: cacheLibrosPorCategoria[categoriasQuery],
+        paginacion: { totalLibros: 15, totalPaginas: 1, paginaActual: 1, librosPorPagina: 15 }
+      });
+    }
+
     let filtroBusqueda = {};
 
     if (editorialesQuery) {
       const arrayEditoriales = editorialesQuery.split(",");
       filtroBusqueda.editorial = { $in: arrayEditoriales };
     }
-
     if (categoriasQuery) {
       const arrayCategorias = categoriasQuery.split(",");
       filtroBusqueda.categorias = { $in: arrayCategorias };
     }
-
     if (autorQuery) {
       filtroBusqueda.autor = autorQuery;
     }
@@ -41,6 +53,12 @@ router.get("/", async (req, res) => {
 
     const totalLibros = await Libro.countDocuments(filtroBusqueda);
     const libros = await Libro.find(filtroBusqueda).skip(skip).limit(limit);
+
+   
+    if (esPeticionEnFila) {
+      console.log(`Estantería de [${categoriasQuery}] guardada en Caché `);
+      cacheLibrosPorCategoria[categoriasQuery] = libros;
+    }
 
     res.json({
       data: libros,
@@ -214,6 +232,7 @@ router.post(
 
       const libroGuardado = await nuevoLibro.save();
       cacheDirectorioAutores = null;
+      cacheLibrosPorCategoria = {}
       res.status(201).json(libroGuardado);
     } catch (error) {
       console.error("Error al crear libro:", error);
@@ -291,6 +310,7 @@ router.put(
         { new: true, runValidators: true },
       );
       cacheDirectorioAutores = null;
+      cacheLibrosPorCategoria = {}
       console.log("¡ÉXITO! Libro actualizado.");
       res.json(libroActualizado);
     } catch (error) {
@@ -331,6 +351,7 @@ router.delete("/:id", verificarToken, async (req, res) => {
 
     await Libro.findByIdAndDelete(req.params.id);
     cacheDirectorioAutores = null;
+    cacheLibrosPorCategoria = {}
     res.json({ message: "Libro eliminado correctamente" });
   } catch (error) {
     res.status(500).json({ message: error.message });
