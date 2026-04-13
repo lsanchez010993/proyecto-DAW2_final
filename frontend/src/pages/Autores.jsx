@@ -17,7 +17,7 @@ function Autores() {
   const [autoresPorLetra, setAutoresPorLetra] = useState([]);
   const [cargandoLetra, setCargandoLetra] = useState(false);
 
-  // [NUEVO] Estados para la vista inicial (Todos los autores)
+  // Estados para la vista inicial (Todos los autores)
   const [todosLosAutores, setTodosLosAutores] = useState([]);
   const [cargandoTodos, setCargandoTodos] = useState(false);
 
@@ -26,7 +26,12 @@ function Autores() {
   const [libros, setLibros] = useState([]);
   const [cargandoLibros, setCargandoLibros] = useState(false);
 
-  //  Cargar TODOS los autores al entrar a la página
+  // ==========================================
+  // ESTADOS DEL SCROLL INFINITO (Renderizado Perezoso)
+  // ==========================================
+  const [limiteVisibles, setLimiteVisibles] = useState(25);
+
+  // Cargar TODOS los autores al entrar a la página
   useEffect(() => {
     const fetchTodosLosAutores = async () => {
       setCargandoTodos(true);
@@ -108,14 +113,40 @@ function Autores() {
     }
   };
 
-return (
-  <div className="container-fluid px-4 mt-4 animate__animated animate__fadeIn">
+  // Resetear el límite del scroll infinito al cambiar de vista 
+  useEffect(() => {
+    setLimiteVisibles(25);
+  }, [letraSeleccionada, autorSeleccionado]);
+
+  // Detector de Scroll Infinito
+  useEffect(() => {
+    const manejarScroll = () => {
+      // no hace scroll infinito al mostrar los libros de un autor
+      if (autorSeleccionado) return;
+
+      // Si llega al final de la página, muestra otros 25 
+      if (window.innerHeight + document.documentElement.scrollTop + 200 >= document.documentElement.offsetHeight) {
+        setLimiteVisibles((prev) => prev + 25);
+      }
+    };
+
+    window.addEventListener("scroll", manejarScroll);
+    return () => window.removeEventListener("scroll", manejarScroll);
+  }, [autorSeleccionado]);
+
+  // Determinar qué lista renderizar y aplicar el límite visible
+  const listaActiva = letraSeleccionada ? autoresPorLetra : todosLosAutores;
+  const autoresVisibles = listaActiva.slice(0, limiteVisibles);
+
+  return (
+    <div className="container-fluid px-4 mt-4 ">
       <div className="row">
         
         {/* =========================================
             COLUMNA IZQUIERDA: Buscador AJAX
             ========================================= */}
-        <div className="col-md-3 mb-4">
+     
+        <div className="col-md-3 mb-4 h-100">
           <div className={`shadow-sm ${styles.panelLateral}`}>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h5 className="fw-bold m-0">Autores</h5>
@@ -164,7 +195,6 @@ return (
           
           <div className={`shadow-sm p-4 mb-4 ${styles.tarjetaNube}`}>
             <div className="d-flex flex-wrap justify-content-center gap-2">
-              {/* Quitar el filtro de la letra */}
               <button
                   onClick={() => {
                     setLetraSeleccionada(null);
@@ -197,9 +227,9 @@ return (
             </div>
           </div>
 
-          <div className="animate__animated animate__fadeIn">
+          <div>
             
-            {/* Libros de un autor seleccionado */}
+            {/* VISTA 1: Libros de un autor seleccionado */}
             {autorSeleccionado ? (
               <>
                 <h3 className="mb-4 border-bottom pb-2">
@@ -233,65 +263,42 @@ return (
               </>
             ) : 
             
-            /* Lista de autores de una letra */
-            letraSeleccionada ? (
-              <>
-                <h3 className="mb-4 border-bottom pb-2">
-                  Autores que empiezan por <span className="fw-bold">"{letraSeleccionada}"</span>
-                </h3>
-                
-                <div className="row g-3">
-                  {cargandoLetra ? (
-                    <p className="text-center w-100">Cargando autores...</p>
-                  ) : autoresPorLetra.length === 0 ? (
-                    <p className="text-center w-100 text-muted">No tenemos autores registrados con esta inicial.</p>
-                  ) : (
-                    autoresPorLetra.map((autor, index) => (
-                      <div key={index} className="col-md-4 col-sm-6">
-                        <div 
-                          className="card border-0 shadow-sm p-3 text-center h-100 d-flex justify-content-center" 
-                          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                          onClick={() => setAutorSeleccionado(autor)}
-                          onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
-                          onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
-                        >
-                          <h6 className="m-0 fw-bold">{autor}</h6>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </>
-            ) : 
-            
-            /* Vista inicial  */
+            /* VISTA 2: Lista de autores (Todos o Filtrados por letra) */
             (
               <>
                 <h3 className="mb-4 border-bottom pb-2">
-                  Lista de autores
+                  {letraSeleccionada 
+                    ? `Autores que empiezan por "${letraSeleccionada}"` 
+                    : "Directorio de Autores"}
                 </h3>
                 
                 <div className="row g-4">
-                  {cargandoTodos ? (
+                  {(letraSeleccionada ? cargandoLetra : cargandoTodos) ? (
                     <p className="text-center w-100 mt-5">Cargando el directorio...</p>
-                  ) : todosLosAutores.length === 0 ? (
-                    <p className="text-center w-100 text-muted mt-5">Aún no hay autores registrados en la tienda.</p>
+                  ) : listaActiva.length === 0 ? (
+                    <p className="text-center w-100 text-muted mt-5">Aún no hay autores registrados en esta sección.</p>
                   ) : (
-                    todosLosAutores.map((autor, index) => (
-                      <div key={index} className="col-md-4 col-sm-6 animate__animated animate__fadeInUp" style={{animationDelay: `${index * 0.05}s`}}>
-                        <div 
-                          className="card border-0 shadow-sm p-3 text-center h-100 d-flex justify-content-center" 
-                          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                          onClick={() => setAutorSeleccionado(autor)}
-                          onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
-                          onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
-                        >
-                          <h6 className="m-0 fw-bold">{autor}</h6>
+                    <>
+                      {/* Dibuja solo los autores limitados por el scroll */}
+                      {autoresVisibles.map((autor, index) => (
+                        <div key={index} className="col-md-4 col-sm-6 animate__animated animate__fadeIn">
+                          <div 
+                            className="card border-0 shadow-sm p-3 text-center h-100 d-flex justify-content-center" 
+                            style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                            onClick={() => setAutorSeleccionado(autor)}
+                            onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+                            onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+                          >
+                            <h6 className="m-0 fw-bold">{autor}</h6>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))}
+                    </>
                   )}
                 </div>
+
+              
+               
               </>
             )}
           </div>

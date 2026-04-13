@@ -45,7 +45,7 @@
 .textoEditorial {
   font-size: 0.8rem;
 }
-/* Añadir al final de Editoriales.module.css */
+
 
 .panelLateral {
   background-color: #f8f9fa;
@@ -84,4 +84,51 @@
 .itemResultado:hover {
   background-color: #e9ecef;
   color: #000;
+}
+
+/* Añadir al final de Editoriales.module.css */
+
+/* --- ESTILOS PARA LAS ESTANTERÍAS TIPO NETFLIX --- */
+.carruselHorizontal {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem; /* Espacio para la barra de scroll */
+  scroll-behavior: smooth;
+  /* Oculta la barra de scroll en navegadores que lo soporten, pero permite deslizar */
+  scrollbar-width: thin; 
+}
+
+.carruselHorizontal::-webkit-scrollbar {
+  height: 8px;
+}
+.carruselHorizontal::-webkit-scrollbar-thumb {
+  background-color: #dee2e6;
+  border-radius: 10px;
+}
+
+.itemCarrusel {
+  flex: 0 0 auto;
+  width: 260px; /* Ancho fijo para que no se aplasten al estar en horizontal */
+}
+
+.tarjetaVerMas {
+  background-color: #f8f9fa;
+  border: 2px dashed #ced4da;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6c757d;
+  min-height: 100%;
+}
+
+.tarjetaVerMas:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+  color: #212529;
+  transform: scale(1.02);
 }
