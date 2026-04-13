@@ -66,20 +66,20 @@ router.put("/deseos/toggle", verificarToken, async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Comprobamos si el libro ya está en su lista
+    // Comprobar si el libro ya está en la lista
     const index = usuario.lista_deseos.indexOf(libroId);
 
     if (index === -1) {
-      // Si no está, lo añadimos
+      // Si no está, lo añade
       usuario.lista_deseos.push(libroId);
     } else {
-      // Si ya está, lo eliminamos
+      // Si ya está, lo elimina
       usuario.lista_deseos.splice(index, 1);
     }
 
     await usuario.save();
     
-    // Devolvemos la lista actualizada para que React pinte/despinte el corazón
+    // Devolver la lista actualizada para que React pinte/despinte el corazón
     res.json({ lista_deseos: usuario.lista_deseos });
   } catch (error) {
     console.error("Error en lista de deseos:", error);
