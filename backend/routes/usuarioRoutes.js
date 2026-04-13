@@ -54,7 +54,38 @@ router.put("/perfil", verificarToken, async (req, res) => {
   }
 });
 
+// ==========================================
+// RUTA NUEVA: Añadir/Quitar libro de Lista de Deseos (Toggle)
+// ==========================================
+router.put("/deseos/toggle", verificarToken, async (req, res) => {
+  try {
+    const { libroId } = req.body;
+    const usuario = await Usuario.findById(req.usuario.id);
 
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    // Comprobamos si el libro ya está en su lista
+    const index = usuario.lista_deseos.indexOf(libroId);
+
+    if (index === -1) {
+      // Si no está, lo añadimos
+      usuario.lista_deseos.push(libroId);
+    } else {
+      // Si ya está, lo eliminamos
+      usuario.lista_deseos.splice(index, 1);
+    }
+
+    await usuario.save();
+    
+    // Devolvemos la lista actualizada para que React pinte/despinte el corazón
+    res.json({ lista_deseos: usuario.lista_deseos });
+  } catch (error) {
+    console.error("Error en lista de deseos:", error);
+    res.status(500).json({ message: "Error al actualizar la lista de deseos" });
+  }
+});
 // ==========================================
 // RUTA: Cambiar contraseña
 // ==========================================
