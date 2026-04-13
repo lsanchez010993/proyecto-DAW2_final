@@ -5,6 +5,8 @@ const Libro = require("../models/Libro");
 const verificarToken = require("../middleware/auth");
 const Usuario = require("../models/Usuario");
 
+let cacheDirectorioAutores = null;
+
 // ==========================================
 // RUTA 1: Obtener libros CON PAGINACIÓN Y FILTROS
 // ==========================================
@@ -54,20 +56,32 @@ router.get("/", async (req, res) => {
   }
 });
 // ==========================================
-// RUTA NUEVA: Obtener TODOS los autores
+// RUTA: Obtener todos los autores (CON CACHÉ)
 // ==========================================
 router.get("/autores/todos", async (req, res) => {
   try {
-    const autores = await Libro.distinct("autor");
+    // 1. Comprueba si la lsita esta en la memoria de Node.js?
+    if (cacheDirectorioAutores !== null) {
+      // Si existe, la devuelve
+      console.log("Devolviendo autores desde la Caché");
+      return res.json(cacheDirectorioAutores);
+    }
 
-    const autoresLimpios = autores.filter((a) => a && a.trim() !== "");
+    // 2. Si la caché está vacía hace la consulta a mongoDB
+    console.log("Consultando autores a MongoDB");
+    const autores = await Libro.distinct("autor"); // Esto extrae los valores únicos
 
-    res.json(autoresLimpios.sort());
+    // Limpiamos los nulos y ordenamos alfabéticamente
+    const autoresOrdenados = autores
+      .filter((autor) => autor && autor.trim() !== "")
+      .sort();
+
+    cacheDirectorioAutores = autoresOrdenados;
+
+    res.json(cacheDirectorioAutores);
   } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener todos los autores",
-      error: error.message,
-    });
+    console.error(error);
+    res.status(500).json({ error: "Error al cargar el directorio" });
   }
 });
 // ==========================================
@@ -199,6 +213,7 @@ router.post(
       });
 
       const libroGuardado = await nuevoLibro.save();
+      cacheDirectorioAutores = null;
       res.status(201).json(libroGuardado);
     } catch (error) {
       console.error("Error al crear libro:", error);
@@ -275,7 +290,7 @@ router.put(
         datosAActualizar,
         { new: true, runValidators: true },
       );
-
+      cacheDirectorioAutores = null;
       console.log("¡ÉXITO! Libro actualizado.");
       res.json(libroActualizado);
     } catch (error) {
@@ -315,6 +330,7 @@ router.delete("/:id", verificarToken, async (req, res) => {
     }
 
     await Libro.findByIdAndDelete(req.params.id);
+    cacheDirectorioAutores = null;
     res.json({ message: "Libro eliminado correctamente" });
   } catch (error) {
     res.status(500).json({ message: error.message });
