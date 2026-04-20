@@ -3,6 +3,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import styles from "./css/Editoriales.module.css"; 
+import CarruselLibros from "../components/CarruselLibros";
+import TarjetaLibro from "../components/TarjetaLibro";
 
 function Editoriales() {
   const [listaEditoriales, setListaEditoriales] = useState([]);
@@ -273,16 +275,9 @@ function Editoriales() {
                           </div>
                         ))}
                         
-                        {mostrarVerMas && (
-                          <div className={styles.itemCarrusel} onClick={() => toggleExpandir(nombreEditorial)}>
-                            <div className={`card h-100 rounded-4 shadow-sm ${styles.tarjetaVerMas}`}>
-                              <div className="text-center p-4">
-                                <h1 className="mb-3">+{librosDeEditorial.length - 5}</h1>
-                                <span className="fw-bold">Ver catálogo completo</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                    <CarruselLibros libros={librosAMostrar} />
+                      
+                    
                       </div>
                     )}
                   </div>
@@ -300,27 +295,6 @@ function Editoriales() {
   );
 }
 
-// Sub-componente (Tarjeta)
-function TarjetaLibro({ libro }) {
-  return (
-    <div className={`card h-100 shadow-sm border-0 rounded-4 overflow-hidden`} style={{ transition: "transform 0.2s ease" }} onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.02)"} onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}>
-      <img 
-        src={libro.portada_url} 
-        className="card-img-top p-3" 
-        style={{ height: '220px', objectFit: 'contain' }}
-        alt={libro.titulo}
-      />
-      <div className="card-body text-center d-flex flex-column justify-content-between">
-        <div>
-          <h6 className="fw-bold mb-1">{libro.titulo}</h6>
-          <p className="text-muted small mb-2">{libro.autor}</p>
-        </div>
-        <Link to={`/libro/${libro._id}`} className="btn btn-outline-dark btn-sm rounded-pill mt-3 w-100">
-          Ver Detalles
-        </Link>
-      </div>
-    </div>
-  );
-}
+
 
 export default Editoriales;
