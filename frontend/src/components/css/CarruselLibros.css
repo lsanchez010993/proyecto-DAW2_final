@@ -1,0 +1,27 @@
+.carrusel-scroll-visible {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem; /* Espacio para que la barra no pise las tarjetas */
+  padding-top: 0.5rem;
+  padding-left: 0.5rem; /* Para que la sombra de la primera tarjeta no se corte */
+}
+
+/* Estilos de la barra de desplazamiento */
+.carrusel-scroll-visible::-webkit-scrollbar {
+  height: 8px; 
+}
+
+.carrusel-scroll-visible::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+
+.carrusel-scroll-visible::-webkit-scrollbar-thumb {
+  background: #a8a8a8; 
+  border-radius: 10px;
+}
+
+.carrusel-scroll-visible::-webkit-scrollbar-thumb:hover {
+  background: #787878; 
+}
