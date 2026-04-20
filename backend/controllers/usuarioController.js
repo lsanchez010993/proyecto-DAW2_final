@@ -69,7 +69,7 @@ const loginUsuario = async (req, res) => {
                 rol: usuario.rol 
             }, 
             process.env.JWT_SECRET, 
-            { expiresIn: '24h' }     
+            { expiresIn: '1d' }     
         );
 
        
@@ -83,10 +83,7 @@ const loginUsuario = async (req, res) => {
                 rol: usuario.rol,
                 gustos_literarios: usuario.gustos_literarios,
                 direccion: usuario.direccion, 
-                nombre_editorial: usuario.nombre_editorial, 
-                lista_deseos: usuario.lista_deseos,     
-                perfil_afinidad: usuario.perfil_afinidad, 
-                avatar: usuario.avatar
+                nombre_editorial: usuario.nombre_editorial 
             }
         });
 
