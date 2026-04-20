@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
 // Rutas
 app.use('/api/libros', libroRoutes);
 app.use('/api/usuarios', usuarioRoutes); 
+app.use('/api/recomendaciones', require('./routes/recomendacionesRoutes')); 
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
