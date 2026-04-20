@@ -51,6 +51,11 @@ const libroSchema = new mongoose.Schema({
     type: [String], 
     default: [],
   },
+  // Contador para Top Ventas
+    ventas: {
+      type: Number,
+      default: 0
+    },
 });
 // Índices de búsqueda para optimizar el rendimiento 
 

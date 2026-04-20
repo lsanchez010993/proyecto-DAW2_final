@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 
 
     if (esPeticionEnFila && cacheLibrosPorCategoria[categoriasQuery]) {
-      console.log(`Estantería  [${categoriasQuery}] cargada desde Caché`);
+      // console.log(`Estantería  [${categoriasQuery}] cargada desde Caché`);
       return res.json({
         data: cacheLibrosPorCategoria[categoriasQuery],
         paginacion: { totalLibros: 15, totalPaginas: 1, paginaActual: 1, librosPorPagina: 15 }
@@ -56,7 +56,7 @@ router.get("/", async (req, res) => {
 
    
     if (esPeticionEnFila) {
-      console.log(`Estantería de [${categoriasQuery}] guardada en Caché `);
+      // console.log(`Estantería de [${categoriasQuery}] guardada en Caché `);
       cacheLibrosPorCategoria[categoriasQuery] = libros;
     }
 

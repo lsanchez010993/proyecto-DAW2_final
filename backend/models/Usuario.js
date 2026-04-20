@@ -32,7 +32,16 @@ const usuarioSchema = mongoose.Schema({
     }],
 
     compras_realizadas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Venta' }],
-    lista_deseos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Libro' }]
+    lista_deseos: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Libro"
+    }],
+    perfil_afinidad: {//el perfil de afinidad sera el encargado de recopilar la informacion del usuario y cruzar datos
+      type: Map,
+      of: Number,
+      default: {} // Guardará pares de "Categoría": puntos, ej: {"Fantasía": 15}
+    },
+    
 }, {
     timestamps: true
 });
