@@ -3,6 +3,8 @@ const router = express.Router();
 const Usuario = require("../models/Usuario");
 const verificarToken = require("../middleware/auth");
 const bcrypt = require("bcryptjs"); 
+const Interaccion = require("../models/Interaccion");
+const Libro = require("../models/Libro");
 
 // controlador para Auth
 const {
@@ -66,8 +68,10 @@ router.put("/deseos/toggle", verificarToken, async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Comprobar si el libro ya está en la lista
-    const index = usuario.lista_deseos.indexOf(libroId);
+// [CORRECCIÓN] Usamos findIndex y convertimos ambos a String para una comparación exacta
+    const index = usuario.lista_deseos.findIndex(
+      (id_guardado) => id_guardado.toString() === libroId.toString()
+    );
 
     if (index === -1) {
       // Si no está, lo añade
@@ -164,6 +168,51 @@ router.put("/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al actualizar rol y editorial" });
+  }
+});
+// ==========================================
+// RUTA NUEVA: Registrar Interacción y Sumar Afinidad
+// ==========================================
+router.post("/interaccion", verificarToken, async (req, res) => {
+  try {
+    const { libroId, tipoAccion } = req.body;
+    const usuarioId = req.usuario.id;
+
+    // 1. Guardar la huella en la colección
+    const nuevaInteraccion = new Interaccion({
+      usuario: usuarioId,
+      libro: libroId,
+      tipo_accion: tipoAccion
+    });
+    await nuevaInteraccion.save();
+
+    // 2. Lógica de Puntuación para el Perfil de Afinidad
+    // Distinto peso según lo que haga el usuario
+    let puntos = 1; // Por defecto (una simple "vista")
+    if (tipoAccion === "deseo") puntos = 3;
+    if (tipoAccion === "carrito") puntos = 5;
+    if (tipoAccion === "compra") puntos = 10;
+
+    // 3. Buscar el  libro para saber de qué género es
+    const libro = await Libro.findById(libroId);
+    
+    if (libro && libro.categorias && libro.categorias.length > 0) {
+      const usuario = await Usuario.findById(usuarioId);
+
+      // Recorremos las categorías del libro y le sumamos los puntos al usuario
+      libro.categorias.forEach((categoria) => {
+        const puntosActuales = usuario.perfil_afinidad.get(categoria) || 0;
+        usuario.perfil_afinidad.set(categoria, puntosActuales + puntos);
+      });
+
+      await usuario.save();
+    }
+    // console.log("llega aqui");
+    // React no necesita hacer nada con esta respuesta. No tiene que mostrarla. Es silenciosa
+    res.status(200).json({ message: "Interacción registrada" });
+  } catch (error) {
+    console.error("Error al registrar interacción:", error);
+    res.status(500).json({ message: "Error interno al registrar interacción" });
   }
 });
 module.exports = router;
