@@ -25,7 +25,7 @@ router.post("/login", loginUsuario);
 // ==========================================
 router.put("/perfil", verificarToken, async (req, res) => {
   try {
-    // [NUEVO] Extraemos nombre_editorial
+    // Extraer nombre_editorial
     const { nombre, apellidos, email, preferencias, direccion } = req.body;
 
     const usuarioActualizado = await Usuario.findByIdAndUpdate(
@@ -57,7 +57,7 @@ router.put("/perfil", verificarToken, async (req, res) => {
 });
 
 // ==========================================
-// RUTA NUEVA: Añadir/Quitar libro de Lista de Deseos (Toggle)
+// Añadir/Quitar libro de Lista de Deseos (Toggle)
 // ==========================================
 router.put("/deseos/toggle", verificarToken, async (req, res) => {
   try {
@@ -68,7 +68,7 @@ router.put("/deseos/toggle", verificarToken, async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-// [CORRECCIÓN] Usamos findIndex y convertimos ambos a String para una comparación exacta
+// FindIndex para convertir ambos a String para una comparación exacta
     const index = usuario.lista_deseos.findIndex(
       (id_guardado) => id_guardado.toString() === libroId.toString()
     );
@@ -144,23 +144,23 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    // 1. Extraemos AMBOS datos del req.body que nos manda tu frontend perfecto
+    // 1. Extraer datos del req.body del frontend
     const { rol, nombre_editorial } = req.body; 
     
-    // 2. Preparamos el objeto con los datos a actualizar en MongoDB
+    // 2. Preparar el objeto con los datos a actualizar en MongoDB
     const datosActualizar = { rol: rol };
     
-    // 3. Si es editorial, guardamos el nombre. Si le quitan el rol, se lo borramos.
+    // 3. Si es editorial, guarda el nombre.
     if (rol === "editorial" && nombre_editorial) {
       datosActualizar.nombre_editorial = nombre_editorial;
     } else if (rol !== "editorial") {
       datosActualizar.nombre_editorial = "";
     }
 
-    // 4. Actualizamos la base de datos
+    // 4. actualizar la base de datos
     const usuarioActualizado = await Usuario.findByIdAndUpdate(
       req.params.id,
-      datosActualizar, // Pasamos el objeto completo con la editorial
+      datosActualizar, 
       { new: true },
     );
     
@@ -171,7 +171,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 // ==========================================
-// RUTA NUEVA: Registrar Interacción y Sumar Afinidad
+// Registrar Interacción y Sumar Afinidad
 // ==========================================
 router.post("/interaccion", verificarToken, async (req, res) => {
   try {
@@ -187,7 +187,7 @@ router.post("/interaccion", verificarToken, async (req, res) => {
     await nuevaInteraccion.save();
 
     // 2. Lógica de Puntuación para el Perfil de Afinidad
-    // Distinto peso según lo que haga el usuario
+
     let puntos = 1; // Por defecto (una simple "vista")
     if (tipoAccion === "deseo") puntos = 3;
     if (tipoAccion === "carrito") puntos = 5;
@@ -199,7 +199,7 @@ router.post("/interaccion", verificarToken, async (req, res) => {
     if (libro && libro.categorias && libro.categorias.length > 0) {
       const usuario = await Usuario.findById(usuarioId);
 
-      // Recorremos las categorías del libro y le sumamos los puntos al usuario
+      // Recorrer las categorías del libro y sumarle los puntos al usuario
       libro.categorias.forEach((categoria) => {
         const puntosActuales = usuario.perfil_afinidad.get(categoria) || 0;
         usuario.perfil_afinidad.set(categoria, puntosActuales + puntos);
@@ -208,7 +208,7 @@ router.post("/interaccion", verificarToken, async (req, res) => {
       await usuario.save();
     }
     // console.log("llega aqui");
-    // React no necesita hacer nada con esta respuesta. No tiene que mostrarla. Es silenciosa
+   
     res.status(200).json({ message: "Interacción registrada" });
   } catch (error) {
     console.error("Error al registrar interacción:", error);
