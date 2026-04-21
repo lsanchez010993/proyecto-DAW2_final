@@ -1,6 +1,6 @@
 const Usuario = require("../models/Usuario");
 const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 // ==========================================
 // REGISTRAR USUARIO
@@ -15,10 +15,12 @@ const registrarUsuario = async (req, res) => {
       return res.status(400).json({ mensaje: "El email está en uso" });
     }
 
-    // Verificar Nombre de Usuario 
+    // Verificar Nombre de Usuario
     const existeNick = await Usuario.findOne({ nombre });
     if (existeNick) {
-      return res.status(400).json({ mensaje: "El nombre de usuario está en uso" });
+      return res
+        .status(400)
+        .json({ mensaje: "El nombre de usuario está en uso" });
     }
 
     // Crear usuario
@@ -30,7 +32,7 @@ const registrarUsuario = async (req, res) => {
 
     // Asignar rol por defecto.
     if (!usuario.rol) {
-        usuario.rol = 'usuario';
+      usuario.rol = "usuario";
     }
 
     // Guardar usuario
@@ -43,60 +45,58 @@ const registrarUsuario = async (req, res) => {
   }
 };
 
-
 const loginUsuario = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password, recordarSesion } = req.body;
 
-    try {
-        // Buscar si el usuario existe por email
-        const usuario = await Usuario.findOne({ email });
-        
-        if (!usuario) {
-            return res.status(404).json({ mensaje: "Usuario no encontrado" });
-        }
+  try {
+    // Buscar si el usuario existe por email
+    const usuario = await Usuario.findOne({ email });
 
-        // Verificar la contraseña
-        const esCorrecto = await bcrypt.compare(password, usuario.password);
-
-        if (!esCorrecto) {
-            return res.status(401).json({ mensaje: "Contraseña incorrecta" });
-        }
-
-        // GENERAR EL TOKEN con el ID y el ROL del usuario. Luego se utiliza para identificar libros guardados por cada usuario.
-        const token = jwt.sign(
-            { 
-                id: usuario._id, 
-                rol: usuario.rol 
-            }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: '24h' }     
-        );
-
-       
-        res.json({
-            token, 
-            usuario: {
-                _id: usuario._id,
-                nombre: usuario.nombre,
-                apellidos: usuario.apellidos,
-                email: usuario.email,
-                rol: usuario.rol,
-                gustos_literarios: usuario.gustos_literarios,
-                direccion: usuario.direccion, 
-                nombre_editorial: usuario.nombre_editorial, 
-                lista_deseos: usuario.lista_deseos,     
-                perfil_afinidad: usuario.perfil_afinidad, 
-                avatar: usuario.avatar
-            }
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ mensaje: "Error en el servidor" });
+    if (!usuario) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
+
+    // Verificar la contraseña
+    const esCorrecto = await bcrypt.compare(password, usuario.password);
+
+    if (!esCorrecto) {
+      return res.status(401).json({ mensaje: "Contraseña incorrecta" });
+    }
+
+    // GENERAR EL TOKEN con el ID y el ROL del usuario. Luego se utiliza para identificar libros guardados por cada usuario.
+    const tiempoExpiracion = recordarSesion ? '7d' : '2h';
+
+    // 3. GENERAR EL TOKEN con el tiempo elegido
+    const token = jwt.sign(
+      {
+        id: usuario._id, rol: usuario.rol},
+      process.env.JWT_SECRET,
+      { expiresIn: tiempoExpiracion }, 
+    );
+
+    res.json({
+      token,
+      usuario: {
+        _id: usuario._id,
+        nombre: usuario.nombre,
+        apellidos: usuario.apellidos,
+        email: usuario.email,
+        rol: usuario.rol,
+        gustos_literarios: usuario.gustos_literarios,
+        direccion: usuario.direccion,
+        nombre_editorial: usuario.nombre_editorial,
+        lista_deseos: usuario.lista_deseos,
+        perfil_afinidad: usuario.perfil_afinidad,
+        avatar: usuario.avatar,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: "Error en el servidor" });
+  }
 };
 
 module.exports = {
-    registrarUsuario,
-    loginUsuario
+  registrarUsuario,
+  loginUsuario,
 };
