@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Libro = require("../models/Libro");
 const Interaccion = require("../models/Interaccion");
+const Usuario = require("../models/Usuario");
+const verificarToken = require("../middleware/auth");
 
 // ==========================================
 // RUTA:  Escaparate Público
@@ -58,5 +60,93 @@ router.get("/publicas", async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 });
+
+
+// ==========================================
+// Sistema de recomendaciones para usuarios validados
+// ==========================================
+router.get("/privadas", verificarToken, async (req, res) => {
+  try {
+    const usuarioId = req.usuario.id;
+    const usuario = await Usuario.findById(usuarioId);
+
+    let librosPorGenero = [];
+    let generoReferencia = "";
+
+   
+    // 1. Comprobar si el perfil de afinidad existe y tiene puntos
+    if (usuario.perfil_afinidad && typeof usuario.perfil_afinidad.entries === 'function') {
+      const afinidadArray = Array.from(usuario.perfil_afinidad.entries()).sort((a, b) => b[1] - a[1]);
+      
+      if (afinidadArray.length > 0) {
+        generoReferencia = afinidadArray[0][0]; 
+        librosPorGenero = await Libro.find({ 
+          categorias: generoReferencia,
+          _id: { $nin: usuario.lista_deseos } 
+        }).limit(10);
+      }
+    }
+
+    // 2. Si no tiene puntos aún, porque es un usuario nuevo y no ha navegado, utiliza los gustos que ha elegido en su perfil personal
+    if (!generoReferencia && usuario.gustos_literarios && usuario.gustos_literarios.length > 0) {
+      generoReferencia = usuario.gustos_literarios[0];
+      librosPorGenero = await Libro.find({ categorias: generoReferencia }).limit(10);
+    }
+
+
+   
+    let librosPorLibro = [];
+    let tituloReferencia = "";
+    let libroReferencia = null;
+
+    // 1. Buscar la última interacción 
+    const ultimaInteraccion = await Interaccion.findOne({ 
+      usuario: usuarioId, 
+      tipo_accion: { $in: ["deseo", "carrito", "compra", "vista"] } 
+    }).sort({ _id: -1 });
+
+    // 2. Búsqueda manual 
+    if (ultimaInteraccion && ultimaInteraccion.libro) {
+      libroReferencia = await Libro.findById(ultimaInteraccion.libro);
+    } 
+    // Lista de deseos antigua
+    else if (usuario.lista_deseos && usuario.lista_deseos.length > 0) {
+      const ultimoDeseoId = usuario.lista_deseos[usuario.lista_deseos.length - 1];
+      libroReferencia = await Libro.findById(ultimoDeseoId);
+    }
+
+    // Extraer autor y categoría
+    if (libroReferencia) {
+      tituloReferencia = libroReferencia.titulo;
+      
+      librosPorLibro = await Libro.find({
+        $or: [
+          { autor: libroReferencia.autor },
+          { categorias: { $in: libroReferencia.categorias } }
+        ],
+        _id: { $ne: libroReferencia._id }
+      }).limit(10);
+
+      
+      if (!generoReferencia && libroReferencia.categorias.length > 0) {
+        generoReferencia = libroReferencia.categorias[0];
+        librosPorGenero = await Libro.find({ categorias: generoReferencia, _id: { $ne: libroReferencia._id } }).limit(10);
+      }
+    }
+
+    // Enviar datos
+    res.json({
+      porLibro: librosPorLibro,
+      porGenero: librosPorGenero,
+      tituloReferencia: tituloReferencia,
+      generoReferencia: generoReferencia
+    });
+
+  } catch (error) {
+    console.error("Error en recomendaciones privadas:", error);
+    res.status(500).json({ message: "Error en recomendaciones privadas" });
+  }
+});
+
 
 module.exports = router;
