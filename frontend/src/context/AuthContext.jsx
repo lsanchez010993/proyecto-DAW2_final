@@ -6,7 +6,7 @@ export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [cargando, setCargando] = useState(true);
 
-  // Al cargar la app, miramos en AMBOS sitios
+  // Al cargar la app, compruebo ambas variables 
   useEffect(() => {
     const usuarioGuardado =
       localStorage.getItem("usuario_quedelibros") ||
@@ -20,20 +20,20 @@ export function AuthProvider({ children }) {
     setCargando(false);
   }, []);
 
-  // Función para INICIAR SESIÓN (ahora recibe un segundo parámetro)
+  // Función para iniciar sesion
   const login = (datosRespuesta, recordarSesion) => {
     const { token, usuario: datosUsuario } = datosRespuesta;
 
     setUsuario(datosUsuario);
 
-    // Decidimos qué caja usar según el checkbox
+   
     const storage = recordarSesion ? localStorage : sessionStorage;
 
     storage.setItem("usuario_quedelibros", JSON.stringify(datosUsuario));
     storage.setItem("token", token);
   };
 
-  // Función para CERRAR SESIÓN (limpiamos las dos cajas por si acaso)
+  // Función para cerrar sesion
   const logout = () => {
     setUsuario(null);
     localStorage.removeItem("usuario_quedelibros");
@@ -42,11 +42,11 @@ export function AuthProvider({ children }) {
     sessionStorage.removeItem("token");
   };
 
-  // Función para ACTUALIZAR DATOS DEL PERFIL EN VIVO
+  // Función para actualizar datos de perfil
   const actualizarUsuario = (datosActualizados) => {
     setUsuario(datosActualizados);
 
-    // Actualizamos en la caja donde el usuario decidió guardar su sesión inicialmente
+    
     if (sessionStorage.getItem("token")) {
       sessionStorage.setItem(
         "usuario_quedelibros",
