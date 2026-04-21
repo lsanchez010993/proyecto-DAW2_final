@@ -17,7 +17,7 @@ function DetalleLibro() {
 
 
   const registrarInteraccion = async (tipoAccion) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) return;
 
     try {
@@ -35,7 +35,7 @@ function DetalleLibro() {
  
 // Función para añadir/quitar de la lista de deseos
   const toggleDeseos = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) return alert("Debes iniciar sesión para guardar libros.");
 
     try {

@@ -90,7 +90,7 @@ function CrearLibro() {
 
       data.append("categorias", JSON.stringify(categoriasSeleccionadas));
 
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       return axios.post(`${URL}/api/libros`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });

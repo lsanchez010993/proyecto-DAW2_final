@@ -63,7 +63,7 @@ function EditarPerfil() {
     e.preventDefault();
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const res = await axios.put(
         `${URL}/api/usuarios/perfil`,
         { nombre, apellidos, email, preferencias, direccion },
@@ -83,7 +83,7 @@ function EditarPerfil() {
     }
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       await axios.put(`${URL}/api/usuarios/cambiar-password`, passData, {
         headers: { Authorization: `Bearer ${token}` }
       });

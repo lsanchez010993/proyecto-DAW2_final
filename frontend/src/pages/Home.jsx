@@ -103,7 +103,7 @@ function Inicio() {
             <div className="mb-5">
             
               <h4 className="border-bottom pb-2">
-                 // Si el género está en la lista de femeninos, usa "la". Si no, usa "el".
+          
                 Porque te gusta {formatearGenero(generoReferencia)}
               </h4>
               <CarruselLibros libros={recomendadosPorGenero} />

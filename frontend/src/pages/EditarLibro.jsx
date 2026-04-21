@@ -19,6 +19,8 @@ function EditarLibro() {
   });
 
   const [file, setFile] = useState(null);
+ 
+  const [preview, setPreview] = useState(null); 
 
   // 1. CARGAR DATOS AL INICIAR
   useEffect(() => {
@@ -28,7 +30,6 @@ function EditarLibro() {
         const res = await axios.get(`${URL}/api/libros/${id}`);
         const libro = res.data;
 
-        // Extraer datos de la BD
         setFormData({
           titulo: libro.titulo,
           autor: libro.autor,
@@ -52,7 +53,12 @@ function EditarLibro() {
   };
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      // URL temporal para previsualizar la imagen cargada
+      setPreview(URL.createObjectURL(selectedFile)); 
+    }
   };
 
   // 2. ENVIAR CAMBIOS (PUT)
@@ -61,8 +67,8 @@ function EditarLibro() {
 
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-
       const data = new FormData();
+      
       data.append("titulo", formData.titulo);
       data.append("autor", formData.autor);
       data.append("isbn", formData.isbn);
@@ -71,12 +77,11 @@ function EditarLibro() {
       data.append("precio_digital", formData.precio_digital);
       data.append("stock", formData.stock);
 
-      // Solo añado una imagen si el usuario la cambia
       if (file) {
         data.append("imagen", file);
       }
 
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
       await axios.put(`${URL}/api/libros/${id}`, data, {
         headers: { Authorization: `Bearer ${token}` },
@@ -86,135 +91,132 @@ function EditarLibro() {
       navigate("/admin/libros");
     } catch (error) {
       console.error(error);
-      toast.success("Error al actualizar el libro");
+      toast.error("Error al actualizar el libro");
     }
   };
 
+  // Determinar qué imagen mostrar (la nueva subida o la que ya venía de la BD)
+  const imageToShow = preview || formData.portada_url;
+
   return (
-    <div className="container mt-5">
-      <div className="card shadow p-4 mx-auto" style={{ maxWidth: "600px" }}>
-        <h2 className="text-center mb-4">✏️ Editar Libro</h2>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Título</label>
-            <input
-              type="text"
-              name="titulo"
-              className="form-control"
-              value={formData.titulo}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">ISBN</label>
-            <input
-              type="text"
-              name="isbn"
-              className="form-control"
-              value={formData.isbn}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Autor</label>
-            <input
-              type="text"
-              name="autor"
-              className="form-control"
-              value={formData.autor}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label className="form-label">Precio Físico (€)</label>
-              <input
-                type="number"
-                step="0.01"
-                name="precio_fisico"
-                className="form-control"
-                value={formData.precio_fisico}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label">Precio Digital (€)</label>
-              <input
-                type="number"
-                step="0.01"
-                name="precio_digital"
-                className="form-control"
-                value={formData.precio_digital}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
-
-          {/* STOCK */}
-          <div className="mb-3">
-            <label className="form-label">Stock (Unidades)</label>
-            <input
-              type="number"
-              name="stock"
-              className="form-control"
-              value={formData.stock}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* PORTADA CON VISTA PREVIA */}
-          <div className="mb-3">
-            <label className="form-label">Portada (Imagen)</label>
-
-            {/* Si ya hay imagen guardada, la mostramos pequeñita */}
-            {formData.portada_url && !file && (
-              <div className="mb-2">
-                <img
-                  src={formData.portada_url}
-                  alt="Portada actual"
-                  style={{ height: "100px", borderRadius: "5px" }}
+    <div className="container mt-5 mb-5">
+      <form onSubmit={handleSubmit}>
+        <div className="row">
+          
+          {/* ==========================================
+              COLUMNA IZQUIERDA: PORTADA
+          ========================================== */}
+          <div className="col-md-5 mb-4">
+            <h4 className="mb-3 fw-bold">Portada libro</h4>
+            
+            {/* Contenedor gris de la imagen con position-relative para el botón */}
+            <div 
+              className="bg-light rounded-4 border position-relative d-flex align-items-center justify-content-center" 
+              style={{ height: "450px", overflow: "hidden" }}
+            >
+              {imageToShow ? (
+                <img 
+                  src={imageToShow} 
+                  alt="Portada" 
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }} 
                 />
-                <small className="d-block text-muted">Portada actual</small>
-              </div>
-            )}
+              ) : (
+                <span className="text-muted">Sin imagen de portada</span>
+              )}
 
-            <input
-              type="file"
-              className="form-control"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-            <div className="form-text">
-              Deja esto vacío si quieres mantener la imagen actual.
+              {/* Input de archivo oculto */}
+              <input
+                type="file"
+                id="portadaInput"
+                className="d-none"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              
+              {/* Botón flotante al estilo del mockup */}
+              <button
+                type="button"
+                className="btn btn-secondary rounded-pill position-absolute px-4 shadow-sm"
+                style={{ bottom: "20px", right: "20px", backgroundColor: "#ced4da", color: "#333", border: "none" }}
+                onClick={() => document.getElementById("portadaInput").click()}
+              >
+                Cargar imagen
+              </button>
             </div>
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Sinopsis</label>
-            <textarea
-              name="sinopsis"
-              className="form-control"
-              rows="3"
-              value={formData.sinopsis}
-              onChange={handleChange}
-            ></textarea>
-          </div>
+          {/* ==========================================
+              COLUMNA DERECHA: DATOS DEL LIBRO
+          ========================================== */}
+          <div className="col-md-7">
+            
+            {/* Cabecera derecha: Título y Dropdown */}
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h2 className="fw-bold m-0 text-truncate" style={{ maxWidth: "70%" }}>
+                {formData.titulo || "Título del libro"}
+              </h2>
+              
+             
+           
+            </div>
 
-          <button type="submit" className="btn btn-primary w-100 fw-bold">
-            Actualizar Cambios
-          </button>
-        </form>
-      </div>
+            <h4 className="mb-3 fw-bold">Datos libro</h4>
+
+            {/* Contenedor gris con los campos editables */}
+            <div className="bg-light p-4 rounded-4 border">
+              
+              <div className="mb-3">
+                <label className="form-label text-muted small">Título</label>
+                <input type="text" name="titulo" className="form-control border-0 shadow-sm" value={formData.titulo} onChange={handleChange} required />
+              </div>
+
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label className="form-label text-muted small">Autor</label>
+                  <input type="text" name="autor" className="form-control border-0 shadow-sm" value={formData.autor} onChange={handleChange} required />
+                </div>
+                <div className="col-md-6 mb-3">
+                  <label className="form-label text-muted small">ISBN</label>
+                  <input type="text" name="isbn" className="form-control border-0 shadow-sm" value={formData.isbn} onChange={handleChange} required />
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-4 mb-3">
+                  <label className="form-label text-muted small">Físico (€)</label>
+                  <input type="number" step="0.01" name="precio_fisico" className="form-control border-0 shadow-sm" value={formData.precio_fisico} onChange={handleChange} required />
+                </div>
+                <div className="col-md-4 mb-3">
+                  <label className="form-label text-muted small">Digital (€)</label>
+                  <input type="number" step="0.01" name="precio_digital" className="form-control border-0 shadow-sm" value={formData.precio_digital} onChange={handleChange} required />
+                </div>
+                <div className="col-md-4 mb-3">
+                  <label className="form-label text-muted small">Stock</label>
+                  <input type="number" name="stock" className="form-control border-0 shadow-sm" value={formData.stock} onChange={handleChange} required />
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="form-label text-muted small">Sinopsis</label>
+                <textarea name="sinopsis" className="form-control border-0 shadow-sm" rows="4" value={formData.sinopsis} onChange={handleChange}></textarea>
+              </div>
+
+              {/* Botón de guardar alineado a la derecha como en el mockup */}
+              <div className="d-flex justify-content-end">
+                <button 
+                  type="submit" 
+                  className="btn rounded-pill px-4 shadow-sm" 
+                  style={{ backgroundColor: "#ced4da", color: "#333", fontWeight: "bold" }}
+                >
+                  Guardar libro
+                </button>
+              </div>
+
+            </div>
+          </div>
+          
+        </div>
+      </form>
     </div>
   );
 }

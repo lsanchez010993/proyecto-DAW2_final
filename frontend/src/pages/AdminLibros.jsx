@@ -49,7 +49,7 @@ function AdminLibros() {
     if (window.confirm(`¿Estás seguro de que quieres eliminar "${titulo}"?`)) {
       try {
         const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
         await axios.delete(`${URL}/api/libros/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
