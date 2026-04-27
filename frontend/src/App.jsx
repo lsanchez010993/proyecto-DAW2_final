@@ -16,6 +16,7 @@ import EditarLibro from "./pages/EditarLibro";
 import EditarPerfil from "./pages/EditarPerfil";
 import Categorias from "./pages/Categorias";
 import Editoriales from "./pages/Editoriales";
+import Libros from "./pages/Libros";
 import Autores from "./pages/Autores";
 import Footer from "./components/Footer";
 import MenuExplorar from "./components/MenuExplorar";
@@ -70,6 +71,7 @@ function App() {
               <Route path="/perfil" element={<EditarPerfil />} />
               <Route path="/admin/libros" element={<AdminLibros />} />
               <Route path="/editar-libro/:id" element={<EditarLibro />} />
+              <Route path="/libros" element={<Libros />} />
             </Routes>
           </div>
 

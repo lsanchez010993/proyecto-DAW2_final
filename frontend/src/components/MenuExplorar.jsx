@@ -1,8 +1,28 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "./css/MenuExplorar.module.css";
 
 function MenuExplorar() {
+  const location = useLocation();
+
+  // Rutas donde no se muestra el menú explorar
+  const rutasOcultas = [
+    "/login",
+    "/registro",
+    "/perfil",
+    "/admin/usuarios",
+    "/admin/libros",
+    "/afegirLibro",
+    "/carrito"
+  ];
+
+  // Comprobar si la ruta actual empieza por alguna de las rutas ocultas 
+  const ocultarMenu = rutasOcultas.includes(location.pathname) || location.pathname.startsWith("/editar-libro/");
+
+  if (ocultarMenu) {
+    return null; // No renderiza nada si está en una ruta oculta
+  }
+
   return (
     <div
       className={`animate__animated animate__fadeInDown ${styles.contenedorCentrado}`}
@@ -39,6 +59,16 @@ function MenuExplorar() {
           }
         >
           Autores
+        </NavLink>
+        <NavLink
+          to="/libros"
+          className={({ isActive }) =>
+            isActive
+              ? `${styles.enlaceItem} ${styles.enlaceActivo}`
+              : styles.enlaceItem
+          }
+        >
+          Libros
         </NavLink>
       </div>
     </div>

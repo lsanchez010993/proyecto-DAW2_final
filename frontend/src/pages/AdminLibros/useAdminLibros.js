@@ -23,7 +23,7 @@ export function useAdminLibros(usuario) {
         if (pestañaActiva === "gratuitos" && librosGratuitos.length === 0) {
           fetchLibrosGratuitos();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
       }, [pestañaActiva]);
     
       const fetchLibros = async () => {
@@ -82,7 +82,7 @@ export function useAdminLibros(usuario) {
         setCargandoGratuitos(true);
         try {
           const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-          // NOTA: Ajusta la ruta '/api/admin/libros-gratuitos' según cómo la hayas montado en tu server
+        
           const res = await axios.get(`${URL}/api/gutendex/libros-gratuitos`);
           setLibrosGratuitos(res.data);
         } catch (error) {
