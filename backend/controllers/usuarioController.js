@@ -1,102 +1,118 @@
 const Usuario = require("../models/Usuario");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const MESSAGES = require("../constants/messages");
+
 
 // ==========================================
-// REGISTRAR USUARIO
+// ACTUALIZAR PERFIL
 // ==========================================
-const registrarUsuario = async (req, res) => {
-  const { email, password, nombre } = req.body;
-
+async function actualizarPerfil (req, res) {
   try {
-    // Verificar email
-    const existeEmail = await Usuario.findOne({ email });
-    if (existeEmail) {
-      return res.status(400).json({ mensaje: "El email está en uso" });
-    }
+    // Extraer nombre_editorial
+    const { nombre, apellidos, email, preferencias, direccion } = req.body;
 
-    // Verificar Nombre de Usuario
-    const existeNick = await Usuario.findOne({ nombre });
-    if (existeNick) {
-      return res
-        .status(400)
-        .json({ mensaje: "El nombre de usuario está en uso" });
-    }
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(
+      req.usuario.id,
+      {
+        nombre,
+        apellidos,
+        email,
+        gustos_literarios: preferencias,
+        direccion,
+      },
+      { new: true, runValidators: true },
+    ).select("-password");
 
-    // Crear usuario
-    const usuario = new Usuario(req.body);
-
-    // Encriptar password
-    const salt = await bcrypt.genSalt(10);
-    usuario.password = await bcrypt.hash(password, salt);
-
-    // Asignar rol por defecto.
-    if (!usuario.rol) {
-      usuario.rol = "usuario";
-    }
-
-    // Guardar usuario
-    await usuario.save();
-
-    res.json({ mensaje: "¡Usuario creado con exito" });
+    res.json(usuarioActualizado);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ mensaje: "Error al guardarr" });
+    console.error("Error al actualizar perfil:", error);
+
+    // Error por nombre o email duplicado
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "El nombre de usuario o email ya está en uso.",
+      });
+    }
+
+    res.status(500).json({ message: MESSAGES.USUARIOS.UPDATE_ERROR });
   }
 };
 
-const loginUsuario = async (req, res) => {
-  const { email, password, recordarSesion } = req.body;
-
+// ==========================================
+// ACTUALIZAR LISTA DE DESEOS
+// ==========================================
+async function actualizarListaDeseos (req, res) {
   try {
-    // Buscar si el usuario existe por email
-    const usuario = await Usuario.findOne({ email });
+    const { libroId } = req.body;
+    const usuario = await Usuario.findById(req.usuario.id);
 
     if (!usuario) {
-      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+      return res.status(404).json({ message: MESSAGES.USUARIOS.NOT_FOUND });
     }
 
-    // Verificar la contraseña
-    const esCorrecto = await bcrypt.compare(password, usuario.password);
-
-    if (!esCorrecto) {
-      return res.status(401).json({ mensaje: "Contraseña incorrecta" });
-    }
-
-    // GENERAR EL TOKEN con el ID y el ROL del usuario. Luego se utiliza para identificar libros guardados por cada usuario.
-    const tiempoExpiracion = recordarSesion ? '7d' : '2h';
-
-    // 3. GENERAR EL TOKEN con el tiempo elegido
-    const token = jwt.sign(
-      {
-        id: usuario._id, rol: usuario.rol},
-      process.env.JWT_SECRET,
-      { expiresIn: tiempoExpiracion }, 
+    // FindIndex para convertir ambos a String para una comparación exacta
+    const index = usuario.lista_deseos.findIndex(
+      (id_guardado) => id_guardado.toString() === libroId.toString(),
     );
 
-    res.json({
-      token,
-      usuario: {
-        _id: usuario._id,
-        nombre: usuario.nombre,
-        apellidos: usuario.apellidos,
-        email: usuario.email,
-        rol: usuario.rol,
-        gustos_literarios: usuario.gustos_literarios,
-        direccion: usuario.direccion,
-        nombre_editorial: usuario.nombre_editorial,
-        lista_deseos: usuario.lista_deseos,
-        perfil_afinidad: usuario.perfil_afinidad,
-        avatar: usuario.avatar,
-      },
-    });
+    if (index === -1) {
+      // Si no está, lo añade
+      usuario.lista_deseos.push(libroId);
+    } else {
+      // Si ya está, lo elimina
+      usuario.lista_deseos.splice(index, 1);
+    }
+
+    await usuario.save();
+
+    // Devolver la lista actualizada para que React pinte/despinte el corazón
+    res.json({ lista_deseos: usuario.lista_deseos });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensaje: "Error en el servidor" });
+    console.error("Error en lista de deseos:", error);
+    res.status(500).json({ message: MESSAGES.USUARIOS.WISHLIST_ERROR });
   }
 };
 
+// ==========================================
+// CAMBIAR CONTRASEÑA
+// ==========================================
+async function cambiarPassword (req, res) {
+  try {
+    const { actual, nueva } = req.body;
+    const usuario = await Usuario.findById(req.usuario.id); //
+
+    // 1. Verificar si la contraseña actual es correcta
+    const esValida = await bcrypt.compare(actual, usuario.password);
+    if (!esValida) {
+      return res
+        .status(401)
+        .json({ message: "La contraseña actual no es correcta." });
+    }
+
+    // 2. Encriptar la nueva contraseña
+    const salt = await bcrypt.genSalt(10);
+    usuario.password = await bcrypt.hash(nueva, salt);
+
+    // 3. Guardar cambios
+    await usuario.save();
+    res.json({ message: MESSAGES.USUARIOS.PASSWORD_SUCCESS });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: MESSAGES.GENERAL.SERVER_ERROR });
+  }
+}
+
+
+
+
+
+
 module.exports = {
-  registrarUsuario,
-  loginUsuario,
+ 
+  actualizarPerfil,
+  actualizarListaDeseos,
+  cambiarPassword,
+ 
+
 };

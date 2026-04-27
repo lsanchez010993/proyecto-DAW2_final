@@ -5,7 +5,8 @@ const cors = require('cors');
 
 
 const libroRoutes = require('./routes/libroRoutes');
-const usuarioRoutes = require('./routes/usuarioRoutes'); // [NUEVO]
+const usuarioRoutes = require('./routes/usuarioRoutes'); 
+const gutendexRoutes  = require("./routes/rutasGutendex");
 
 const app = express();
 
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/libros', libroRoutes);
 app.use('/api/usuarios', usuarioRoutes); 
 app.use('/api/recomendaciones', require('./routes/recomendacionesRoutes')); 
+app.use("/api/gutendex", gutendexRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

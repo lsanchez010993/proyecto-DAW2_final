@@ -28,13 +28,18 @@
 }
 
 .enlaceItem:hover {
-  color: #212529;
-  background-color: #f8f9fa;
+  color: #212529 !important;
+  background-color: #f8f9fa !important;
 }
 
-/* Esta clase se aplicará automáticamente al enlace activo */
+
 .enlaceActivo {
   background-color: #212529 !important;
   color: #ffffff !important;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.enlaceActivo:hover {
+  background-color: #212529 !important;
+  color: #ffffff !important;
 }

@@ -1,0 +1,31 @@
+.contenedorPestanas {
+  background-color: #f8f9fa;
+  padding: 5px;
+  border-radius: 50px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.botonPestana {
+  transition: all 0.3s ease;
+  border: none !important;
+  font-weight: bold;
+  border-radius: 50px !important;
+  padding: 10px 0;
+}
+
+.pestanaActiva {
+  background-color: #212529 !important;
+  color: white !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pestanaInactiva {
+  background-color: transparent !important;
+  color: #6c757d !important;
+}
+
+.pestanaInactiva:hover {
+  color: #212529 !important;
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
