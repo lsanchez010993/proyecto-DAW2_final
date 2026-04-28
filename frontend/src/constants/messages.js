@@ -20,5 +20,17 @@ export const APP_MESSAGES = {
     GUTENDEX_ERROR: "❌ Error en la multibusqueda de Gutendex:",
     LOAD_SHOWCASE: "Error cargando el escaparate:",
     QUICK_SEARCH_ERROR: "Error en la búsqueda rápida",
-  }
+    
+  },
+
+  REGISTRO_USER: {
+    NOMBRE_USUARIO_EN_USO: "El nombre de usuario está en uso",
+    PASSWORD_MAYUSCULA_NUMERO: "La contraseña debe contener al menos una letra mayúscula y un número",
+    PASSWORD_LONGITUD: "La contraseña debe tener al menos 6 caracteres",
+    PASSWORD_FORMATO: "El formato del correo electrónico no es válido",
+    EMAIL_FORMATO: "El formato del correo electrónico no es válido",
+    CAMPOS_OBLIGATORIOS: "Todos los campos son obligatorios",
+    CREATE_SUCCESS: "¡Cuenta creada con éxito! Redirigiendo...",
+    SAVE_ERROR: "Error al guardar el usuario",
+  },
 };

@@ -6,22 +6,41 @@ const MESSAGES = require("../constants/messages");
 // ==========================================
 // REGISTRAR USUARIO
 // ==========================================
-async function registrarUsuario (req, res)  {
+async function registrarUsuario(req, res) {
   const { email, password, nombre } = req.body;
 
   try {
+    // Valido los campos obligatorios
+    if (!email || !password || !nombre) {
+      return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.CAMPOS_OBLIGATORIOS });
+    }
+
+    // Formato de email con una expresión regular
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.EMAIL_FORMATO });
+    }
+
+    // Longitud de la contraseña
+    if (password.length < 6) {
+      return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.PASSWORD_LONGITUD });
+    }
+
+    // Que la contraseña tenga al menos una mayúscula y un número
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.PASSWORD_MAYUSCULA_NUMERO });
+    }
     // Verificar email
     const existeEmail = await Usuario.findOne({ email });
     if (existeEmail) {
-      return res.status(400).json({ mensaje: MESSAGES.USUARIOS.EMAIL_IN_USE });
+      return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.EMAIL_IN_USE });
     }
 
     // Verificar Nombre de Usuario
     const existeNick = await Usuario.findOne({ nombre });
     if (existeNick) {
-      return res
-        .status(400)
-        .json({ mensaje: "El nombre de usuario está en uso" });
+      return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.NOMBRE_USUARIO_EN_USO });
     }
 
     // Crear usuario
@@ -39,16 +58,16 @@ async function registrarUsuario (req, res)  {
     // Guardar usuario
     await usuario.save();
 
-    res.json({ mensaje: MESSAGES.USUARIOS.CREATE_SUCCESS });
+    res.json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.CREATE_SUCCESS });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ mensaje: MESSAGES.USUARIOS.SAVE_ERROR });
+    res.status(500).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.SAVE_ERROR });
   }
-};
+}
 // ==========================================
 // LOGIN USUARIO
 // ==========================================
-async function loginUsuario (req, res){
+async function loginUsuario(req, res) {
   const { email, password, recordarSesion } = req.body;
 
   try {
@@ -67,14 +86,16 @@ async function loginUsuario (req, res){
     }
 
     // GENERAR EL TOKEN con el ID y el ROL del usuario. Luego se utiliza para identificar libros guardados por cada usuario.
-    const tiempoExpiracion = recordarSesion ? '7d' : '2h';
+    const tiempoExpiracion = recordarSesion ? "7d" : "2h";
 
-    // 3. GENERAR EL TOKEN con el tiempo elegido
+    // GENERAR EL TOKEN con el tiempo elegido
     const token = jwt.sign(
       {
-        id: usuario._id, rol: usuario.rol},
+        id: usuario._id,
+        rol: usuario.rol,
+      },
       process.env.JWT_SECRET,
-      { expiresIn: tiempoExpiracion }, 
+      { expiresIn: tiempoExpiracion },
     );
 
     res.json({
@@ -97,7 +118,7 @@ async function loginUsuario (req, res){
     console.error(error);
     res.status(500).json({ mensaje: MESSAGES.GENERAL.SERVER_ERROR });
   }
-};
+}
 module.exports = {
   registrarUsuario,
   loginUsuario,

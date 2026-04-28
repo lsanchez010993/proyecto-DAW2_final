@@ -117,15 +117,15 @@ async function buscarPorAutor(req, res) {
 
 async function obtenerAutores(req, res) {
   try {
-    // 1. Comprueba si la lsita esta en la memoria de Node.js?
+    // 1. Comprueba si la lsita esta en la memoria de Node.js
     if (cache.directorioAutores !== null) {
       // Si existe, la devuelve
-      console.log("Devolviendo autores desde la Caché");
+      // console.log("Devolviendo autores desde la Caché");
       return res.json(cache.directorioAutores);
     }
 
     // 2. Si la caché está vacía hace la consulta a mongoDB
-    console.log("Consultando autores a MongoDB");
+    // console.log("Consultando autores a MongoDB");
     const autores = await Libro.distinct("autor"); // Esto extrae los valores únicos
 
     // Limpiamos los nulos y ordenamos alfabéticamente

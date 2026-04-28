@@ -3,11 +3,12 @@ const MESSAGES = {
     SERVER_ERROR: "Error interno del servidor",
     NOT_FOUND: "El recurso solicitado no fue encontrado.",
   },
+
   USUARIOS: {
     NOT_FOUND: "Usuario no encontrado",
     EMAIL_IN_USE: "El email está en uso",
-    CREATE_SUCCESS: "¡Usuario creado con exito",
-    SAVE_ERROR: "Error al guardarr",
+    CREATE_SUCCESS: "¡Usuario creado con éxito!",
+    SAVE_ERROR: "Error al guardar el usuario",
     INVALID_PASSWORD: "Contraseña incorrecta",
     UPDATE_SUCCESS: "Perfil actualizado con éxito.",
     UPDATE_ERROR: "Error al actualizar el perfil.",
@@ -34,7 +35,18 @@ const MESSAGES = {
     INTERACTION_SUCCESS: "Interacción registrada",
     INTERACTION_ERROR: "Error interno al registrar interacción",
     PRIVATE_ERROR: "Error en recomendaciones privadas",
-  }
+  },
+  ERRORS_REGISTRO_USER: {
+    NOMBRE_USUARIO_EN_USO: "El nombre de usuario está en uso",
+    PASSWORD_MAYUSCULA_NUMERO: "La contraseña debe contener al menos una letra mayúscula y un número",
+    PASSWORD_LONGITUD: "La contraseña debe tener al menos 6 caracteres",
+    PASSWORD_FORMATO: "El formato de la contraseña no es válido",
+    EMAIL_FORMATO: "El formato del correo electrónico no es válido",
+    CAMPOS_OBLIGATORIOS: "Todos los campos son obligatorios",
+    EMAIL_IN_USE: "El email está en uso",
+    CREATE_SUCCESS: "¡Cuenta creada con éxito! Redirigiendo...",
+    SAVE_ERROR: "Error al guardar el usuario",
+  },
 };
 
 module.exports = MESSAGES;
