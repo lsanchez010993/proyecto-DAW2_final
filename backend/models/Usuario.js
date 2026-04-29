@@ -41,6 +41,10 @@ const usuarioSchema = mongoose.Schema({
       of: Number,
       default: {} // Guardará pares de "Categoría": puntos, ej: {"Fantasía": 15}
     },
+
+    // Recuperación de contraseña
+    resetPasswordTokenHash: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
     
 }, {
     timestamps: true

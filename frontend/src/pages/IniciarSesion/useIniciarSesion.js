@@ -11,6 +11,7 @@ export default function useIniciarSesion() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [recordar, setRecordar] = useState(false);
+    const [RecuperarEmail, setRecuperarEmail] = useState("");
   
     // HOOKS DE NAVEGACIÓN
   
@@ -23,14 +24,14 @@ export default function useIniciarSesion() {
       const queryParams = new URLSearchParams(location.search);
   
       if (queryParams.get("expirado") === "true") {
-        // Disparamos la notificación
+        
         toast.error(APP_MESSAGES.NOTIFICATIONS.SESSION_EXPIRED, {
           id: "sesion-expirada-toast",
           duration: 4000,
           position: "top-center",
         });
     
-        // Limpiamos la URL para quitar el ?expirado=true 
+        
         navigate("/login", { replace: true });
       }
     }, [location, navigate]);
@@ -42,15 +43,12 @@ export default function useIniciarSesion() {
       try {
         const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
   
-  
-  
         const res = await axios.post(`${URL}/api/usuarios/login`, {
           email,
           password,
           recordarSesion: recordar
         });
         login(res.data, recordar);
-  
         
         navigate("/");
       } catch (error) {
@@ -58,6 +56,26 @@ export default function useIniciarSesion() {
   
         const mensajeError =
           error.response?.data?.mensaje || APP_MESSAGES.NOTIFICATIONS.LOGIN_ERROR;
+        toast.error("Error: " + mensajeError);
+      }
+    };
+
+    const RecuperarPassOlvidado = async (e) => {
+      e?.preventDefault?.();
+
+      try {
+        const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+        const res = await axios.post(`${URL}/api/usuarios/forgot-password`, {
+          email: RecuperarEmail,
+        });
+
+        toast.success(res.data?.mensaje || `Correo enviado a: ${RecuperarEmail}`, {
+          duration: 6000, 
+        
+        });
+      } catch (error) {
+        const mensajeError =
+          error.response?.data?.mensaje || "No se pudo enviar el correo de recuperación";
         toast.error("Error: " + mensajeError);
       }
     };
@@ -70,5 +88,8 @@ export default function useIniciarSesion() {
       recordar,
       setRecordar,
       handleSubmit,
+      RecuperarEmail,
+      setRecuperarEmail,
+      RecuperarPassOlvidado,
     };
   }

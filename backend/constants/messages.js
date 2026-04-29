@@ -47,6 +47,16 @@ const MESSAGES = {
     CREATE_SUCCESS: "¡Cuenta creada con éxito! Redirigiendo...",
     SAVE_ERROR: "Error al guardar el usuario",
   },
+
+  PASSWORD_RESET: {
+    EMAIL_REQUIRED: "El correo electrónico es obligatorio",
+    TOKEN_REQUIRED: "El token es obligatorio",
+    PASSWORD_REQUIRED: "La contraseña es obligatoria",
+    FORGOT_SENT: "Correo enviado a: ",
+    RESET_SUCCESS: "Contraseña actualizada correctamente",
+    TOKEN_INVALID: "El token es inválido o ha expirado",
+    EMAIL_SEND_ERROR: "No se pudo enviar el correo de recuperación",
+  },
 };
 
 module.exports = MESSAGES;

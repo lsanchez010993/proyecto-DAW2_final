@@ -1,7 +1,9 @@
 const Usuario = require("../models/Usuario");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const MESSAGES = require("../constants/messages");
+const { sendMail } = require("../utils/mailer");
 
 // ==========================================
 // REGISTRAR USUARIO
@@ -119,7 +121,102 @@ async function loginUsuario(req, res) {
     res.status(500).json({ mensaje: MESSAGES.GENERAL.SERVER_ERROR });
   }
 }
+
+// ==========================================
+// RECUPERAR CONTRASEÑA 
+// ==========================================
+async function forgotPassword(req, res) {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ mensaje: MESSAGES.PASSWORD_RESET.EMAIL_REQUIRED });
+  }
+
+  try {
+    const usuario = await Usuario.findOne({ email });
+
+    // Si el correo introducido no existe, no se continua ejecutando el codigo.
+    if (!usuario) {
+      return res.json({ mensaje: `${MESSAGES.PASSWORD_RESET.FORGOT_SENT}${email}` });
+    }
+    //Token y expiracion
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+    
+    usuario.resetPasswordTokenHash = tokenHash;
+    usuario.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1h
+    await usuario.save();
+
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (!frontendUrl) {
+      return res.status(500).json({ mensaje: MESSAGES.GENERAL.SERVER_ERROR });
+    }
+
+    const resetLink = `${frontendUrl.replace(/\/$/, "")}/reset-password?token=${rawToken}`;
+    const subject = "Recuperación de contraseña";
+
+    const text = `Has solicitado recuperar tu contraseña.\n\nAbre este enlace para crear una nueva:\n${resetLink}\n\nEste enlace caduca en 1 hora.`;
+    const html = `
+      <p>Has solicitado recuperar tu contraseña.</p>
+      <p><a href="${resetLink}">Recuperar contraseña</a></p>
+      <p>Este enlace caduca en 1 hora.</p>
+    `;
+
+    await sendMail({ to: email, subject, text, html });
+
+    return res.json({ mensaje: `${MESSAGES.PASSWORD_RESET.FORGOT_SENT}${email}` });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ mensaje: MESSAGES.PASSWORD_RESET.EMAIL_SEND_ERROR });
+  }
+}
+
+async function resetPassword(req, res) {
+  const { token, password } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ mensaje: MESSAGES.PASSWORD_RESET.TOKEN_REQUIRED });
+  }
+  if (!password) {
+    return res.status(400).json({ mensaje: MESSAGES.PASSWORD_RESET.PASSWORD_REQUIRED });
+  }
+
+  // Misma regla que registro: mínimo 6, y al menos 1 mayúscula + 1 número
+  if (password.length < 6) {
+    return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.PASSWORD_LONGITUD });
+  }
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.PASSWORD_MAYUSCULA_NUMERO });
+  }
+
+  try {
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+    const usuario = await Usuario.findOne({
+      resetPasswordTokenHash: tokenHash,
+      resetPasswordExpires: { $gt: new Date() },
+    });
+
+    if (!usuario) {
+      return res.status(400).json({ mensaje: MESSAGES.PASSWORD_RESET.TOKEN_INVALID });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    usuario.password = await bcrypt.hash(password, salt);
+    usuario.resetPasswordTokenHash = null;
+    usuario.resetPasswordExpires = null;
+    await usuario.save();
+
+    return res.json({ mensaje: MESSAGES.PASSWORD_RESET.RESET_SUCCESS });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ mensaje: MESSAGES.GENERAL.SERVER_ERROR });
+  }
+}
 module.exports = {
   registrarUsuario,
   loginUsuario,
+  forgotPassword,
+  resetPassword,
 };

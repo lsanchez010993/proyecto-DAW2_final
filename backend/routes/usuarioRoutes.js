@@ -27,6 +27,8 @@ const requireAdmin = (req, res, next) => {
 
 router.post("/", authController.registrarUsuario);
 router.post("/login", authController.loginUsuario);
+router.post("/forgot-password", authController.forgotPassword);
+router.post("/reset-password", authController.resetPassword);
 
 // ==========================================
 // 2. PERFIL DEL USUARIO (Requieren Token)

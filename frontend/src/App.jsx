@@ -21,15 +21,24 @@ import Autores from "./pages/Autores";
 import Footer from "./components/Footer";
 import MenuExplorar from "./components/MenuExplorar";
 import AfegirLibroPage from "./pages/AfegirLibro";
+import ResetPasswordPage from "./pages/ResetPassword";
 
 axios.interceptors.response.use(
   (response) => {
-    // Comprueba si la respuesta del backend es correcta y la deja pasar sin tocarla
+    // Comprueba si la respuesta del backend es correcta 
     return response;
   },
   (error) => {
     // Si el backend da un error, el interceptor lo frena aquí
-    if (error.response && error.response.status === 401) {
+    const status = error?.response?.status;
+    const requestUrl = error?.config?.url || "";
+    const hasToken = Boolean(localStorage.getItem("token"));
+
+    // Si es el login/registro y da 401/400, lo debe manejar el componente (mostrar "credenciales inválidas", etc.)
+    const isAuthEndpoint =
+      requestUrl.includes("/api/usuarios/login") || requestUrl.includes("/api/usuarios");
+
+    if (status === 401 && hasToken && !isAuthEndpoint) {
       console.warn("🚨 Token caducado o inválido. Cerrando sesión por seguridad.");
 
       // 1. Destruye la memoria corrupta
@@ -66,6 +75,7 @@ function App() {
               <Route path="/libro/:id" element={<DetalleLibro />} />
               <Route path="/carrito" element={<CarritoPage />} />
               <Route path="/login" element={<IniciarSesionPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/registro" element={<RegistroUserPage />} />
               <Route path="/admin/usuarios" element={<AdminUsuarios />} />
               <Route path="/perfil" element={<EditarPerfil />} />
