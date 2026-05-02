@@ -7,7 +7,7 @@ export const APP_MESSAGES = {
     BOOK_UPDATED: "Un libro ha sido actualizado.",
     SESSION_EXPIRED: "Tu sesión ha caducado. Vuelve a iniciar sesión.",
     LOGIN_ERROR: "Error al iniciar sesión",
-    GOOGLE_SOON: "Función de Google próximamente",
+    GOOGLE_ERROR: "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
     LOGIN_REQUIRED: "Debes iniciar sesión para guardar libros.",
   },
   ERRORS: {

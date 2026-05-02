@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
+const googleAuthController = require("../controllers/googleAuthController");
 const verificarToken = require("../middleware/auth");
 const controllerUusuario = require("../controllers/usuarioController");
 const adminUsuariosController = require("../controllers/adminUsuariosController");
@@ -27,6 +28,7 @@ router.post("/", authController.registrarUsuario);
 router.post("/login", authController.loginUsuario);
 router.post("/forgot-password", authController.forgotPassword);
 router.post("/reset-password", authController.resetPassword);
+router.post("/google", googleAuthController.googleAuth);
 
 // ==========================================
 // PERFIL DEL USUARIO (Requieren Token)

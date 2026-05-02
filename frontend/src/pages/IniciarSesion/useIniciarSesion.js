@@ -60,6 +60,23 @@ export default function useIniciarSesion() {
       }
     };
 
+    const loginWithGoogle = async (credential) => {
+      try {
+        const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+        const res = await axios.post(`${URL}/api/usuarios/google`, {
+          credential,
+          recordarSesion: recordar,
+        });
+        login(res.data, recordar);
+        navigate("/");
+      } catch (error) {
+        console.error(error);
+        const mensajeError =
+          error.response?.data?.mensaje || APP_MESSAGES.NOTIFICATIONS.LOGIN_ERROR;
+        toast.error("Error: " + mensajeError);
+      }
+    };
+
     const RecuperarPassOlvidado = async (e) => {
       e?.preventDefault?.();
 
@@ -91,5 +108,6 @@ export default function useIniciarSesion() {
       RecuperarEmail,
       setRecuperarEmail,
       RecuperarPassOlvidado,
+      loginWithGoogle,
     };
   }

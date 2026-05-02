@@ -5,6 +5,11 @@ const MESSAGES = {
   },
 
   USUARIOS: {
+    GOOGLE_NOT_CONFIGURED: "Inicio de sesión con Google no está configurado en el servidor.",
+    GOOGLE_TOKEN_REQUIRED: "Falta el token de Google.",
+    GOOGLE_INVALID: "No se pudo verificar la cuenta de Google.",
+    GOOGLE_EMAIL_UNVERIFIED: "El correo de Google no está verificado.",
+    GOOGLE_ACCOUNT_CONFLICT: "Este correo ya está vinculado a otra cuenta de Google.",
     NOT_FOUND: "Usuario no encontrado",
     EMAIL_IN_USE: "El email está en uso",
     CREATE_SUCCESS: "¡Usuario creado con éxito!",
@@ -56,6 +61,13 @@ const MESSAGES = {
     RESET_SUCCESS: "Contraseña actualizada correctamente",
     TOKEN_INVALID: "El token es inválido o ha expirado",
     EMAIL_SEND_ERROR: "No se pudo enviar el correo de recuperación",
+    EMAIL_SUBJECT: "Recuperación de contraseña",
+    EMAIL_TEXT_INTRO: "Has solicitado recuperar tu contraseña.",
+    EMAIL_TEXT_LINK_INSTRUCTION: "Abre este enlace para crear una nueva:",
+    EMAIL_TEXT_EXPIRY: "Este enlace caduca en 1 hora.",
+    EMAIL_HTML_INTRO: "Has solicitado recuperar tu contraseña.",
+    EMAIL_HTML_LINK_LABEL: "Recuperar contraseña",
+    EMAIL_HTML_EXPIRY: "Este enlace caduca en 1 hora.",
   },
 };
 

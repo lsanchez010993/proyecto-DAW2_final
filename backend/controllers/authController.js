@@ -1,9 +1,9 @@
 const Usuario = require("../models/Usuario");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const jwt = require("jsonwebtoken");
 const MESSAGES = require("../constants/messages");
 const { sendMail } = require("../utils/mailer");
+const { construirRespuestaAuth } = require("../utils/authTokens");
 
 // ==========================================
 // REGISTRAR USUARIO
@@ -87,35 +87,7 @@ async function loginUsuario(req, res) {
       return res.status(401).json({ mensaje: MESSAGES.USUARIOS.INVALID_PASSWORD });
     }
 
-    // GENERAR EL TOKEN con el ID y el ROL del usuario. Luego se utiliza para identificar libros guardados por cada usuario.
-    const tiempoExpiracion = recordarSesion ? "7d" : "2h";
-
-    // GENERAR EL TOKEN con el tiempo elegido
-    const token = jwt.sign(
-      {
-        id: usuario._id,
-        rol: usuario.rol,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: tiempoExpiracion },
-    );
-
-    res.json({
-      token,
-      usuario: {
-        _id: usuario._id,
-        nombre: usuario.nombre,
-        apellidos: usuario.apellidos,
-        email: usuario.email,
-        rol: usuario.rol,
-        gustos_literarios: usuario.gustos_literarios,
-        direccion: usuario.direccion,
-        nombre_editorial: usuario.nombre_editorial,
-        lista_deseos: usuario.lista_deseos,
-        perfil_afinidad: usuario.perfil_afinidad,
-        avatar: usuario.avatar,
-      },
-    });
+    res.json(construirRespuestaAuth(usuario, recordarSesion));
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: MESSAGES.GENERAL.SERVER_ERROR });
@@ -153,13 +125,14 @@ async function forgotPassword(req, res) {
     }
 
     const resetLink = `${frontendUrl.replace(/\/$/, "")}/reset-password?token=${rawToken}`;
-    const subject = "Recuperación de contraseña";
-
-    const text = `Has solicitado recuperar tu contraseña.\n\nAbre este enlace para crear una nueva:\n${resetLink}\n\nEste enlace caduca en 1 hora.`;
+    // Extraer en la variable PR los mensajes de correo definidos en messajes.js y despues mostrarlos en estructura HTML.
+    const PR = MESSAGES.PASSWORD_RESET;
+    const subject = PR.EMAIL_SUBJECT;
+    const text = `${PR.EMAIL_TEXT_INTRO}\n\n${PR.EMAIL_TEXT_LINK_INSTRUCTION}\n${resetLink}\n\n${PR.EMAIL_TEXT_EXPIRY}`;
     const html = `
-      <p>Has solicitado recuperar tu contraseña.</p>
-      <p><a href="${resetLink}">Recuperar contraseña</a></p>
-      <p>Este enlace caduca en 1 hora.</p>
+      <p>${PR.EMAIL_HTML_INTRO}</p>
+      <p><a href="${resetLink}">${PR.EMAIL_HTML_LINK_LABEL}</a></p>
+      <p>${PR.EMAIL_HTML_EXPIRY}</p>
     `;
 
     await sendMail({ to: email, subject, text, html });
@@ -181,7 +154,7 @@ async function resetPassword(req, res) {
     return res.status(400).json({ mensaje: MESSAGES.PASSWORD_RESET.PASSWORD_REQUIRED });
   }
 
-  // Misma regla que registro: mínimo 6, y al menos 1 mayúscula + 1 número
+  // mínimo 6 caracteres, y al menos 1 mayúscula + 1 número
   if (password.length < 6) {
     return res.status(400).json({ mensaje: MESSAGES.ERRORS_REGISTRO_USER.PASSWORD_LONGITUD });
   }
@@ -191,6 +164,7 @@ async function resetPassword(req, res) {
   }
 
   try {
+    // Convertir el token a hash
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
     const usuario = await Usuario.findOne({

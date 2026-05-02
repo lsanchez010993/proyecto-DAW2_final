@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Toaster } from "react-hot-toast";
+
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home/index.jsx";
@@ -47,11 +48,11 @@ axios.interceptors.response.use(
     if (status === 401 && hasToken && !isAuthEndpoint) {
       console.warn("🚨 Token caducado o inválido. Cerrando sesión por seguridad.");
 
-      // 1. Destruye la memoria corrupta
+      // Destruye la memoria corrupta
       localStorage.removeItem("token");
       localStorage.removeItem("usuario_quedelibros");
 
-      // 2. Expulsa al usuario a la pantalla de login
+      // Expulsa al usuario a la pantalla de login
       // Usamos window.location porque estamos fuera del contexto de React Router
       window.location.href = "/login?expirado=true";
     }
@@ -69,7 +70,7 @@ function App() {
           <Navbar />
           <Toaster position="top-center" reverseOrder={false} />
 
-          {/* Contenedor principal: le damos una altura mínima para empujar el footer hacia abajo */}
+          
           <div className="container mt-4 mb-5" style={{ minHeight: "75vh" }}>
             <MenuExplorar />
             <Routes>

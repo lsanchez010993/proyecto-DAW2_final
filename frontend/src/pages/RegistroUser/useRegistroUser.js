@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { APP_MESSAGES } from "../../constants/messages";
+import { useAuth } from "../../context/AuthContext";
 
 export default function useRegistroUser() {
   const [nombre, setNombre] = useState("");
@@ -10,6 +11,7 @@ export default function useRegistroUser() {
   const [alerta, setAlerta] = useState(null);
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   function validarDatos(nombre, email, password) {
     if ([nombre, email, password].includes('')) {
@@ -64,6 +66,24 @@ export default function useRegistroUser() {
       });
     }
   };
+
+  const loginWithGoogle = async (credential) => {
+    try {
+      const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+      const res = await axios.post(`${URL}/api/usuarios/google`, {
+        credential,
+        recordarSesion: false,
+      });
+      login(res.data, false);
+      navigate("/");
+    } catch (error) {
+      setAlerta({
+        msg: error.response?.data?.mensaje || APP_MESSAGES.REGISTRO_USER.SAVE_ERROR,
+        error: true,
+      });
+    }
+  };
+
   return {
     nombre,
     setNombre,
@@ -74,5 +94,6 @@ export default function useRegistroUser() {
     alerta,
     setAlerta,
     handleSubmit,
+    loginWithGoogle,
   };
 }
