@@ -13,13 +13,13 @@ function createTransporter() {
     throw new Error("Faltan variables SMTP (SMTP_HOST/SMTP_USER/SMTP_PASS)");
   }
 
- return nodemailer.createTransport({
+return nodemailer.createTransport({
   host,
   port,
-  secure: port === 465,
+  secure: true, 
   auth: { user, pass },
   tls: { rejectUnauthorized },
-  family: 4
+  family: 4 
 });
 }
 
