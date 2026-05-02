@@ -31,13 +31,13 @@ export function useAdminUsuarios() {
     }
   };
 
-  // 2. LÓGICA DE ROLES MEJORADA
+  
   function handleSeleccionRol(user, nuevoRol) {
     if (nuevoRol === "editorial") {
       setEditandoEditorialId(user._id);
       setNombreEditorialTemp(user.nombre_editorial || "");
     } else {
-      // Abrimos el modal genérico configurado para 'ROL'
+      // Abrir el modal genérico configurado para 'ROL'
       setModalConfig({
         isOpen: true,
         tipo: 'ROL',
@@ -94,7 +94,7 @@ export function useAdminUsuarios() {
     ejecutarCambioRol(id, "editorial", nombreEditorialTemp);
   }
 
-  // 3. Función para eliminar
+  // Función para confirmar eliminación de usuario
   function confirmarEliminacionUsuario(user) {
     setModalConfig({
       isOpen: true,

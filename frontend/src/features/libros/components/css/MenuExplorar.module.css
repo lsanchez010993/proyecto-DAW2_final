@@ -1,0 +1,45 @@
+.contenedorCentrado {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.menuPildora {
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 50px;
+  padding: 0.4rem;
+  display: inline-flex;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  flex-wrap: wrap; 
+  justify-content: center;
+}
+
+.enlaceItem {
+  color: #6c757d;
+  font-weight: 500;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.enlaceItem:hover {
+  color: #212529 !important;
+  background-color: #f8f9fa !important;
+}
+
+
+.enlaceActivo {
+  background-color: #212529 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.enlaceActivo:hover {
+  background-color: #212529 !important;
+  color: #ffffff !important;
+}

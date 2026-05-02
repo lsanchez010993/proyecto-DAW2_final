@@ -13,26 +13,26 @@ export default function useRegistroUser() {
 
   function validarDatos(nombre, email, password) {
     if ([nombre, email, password].includes('')) {
-        setAlerta({ msg: APP_MESSAGES.ERRORS_REGISTRO_USER.CAMPOS_OBLIGATORIOS, error: true });
+        setAlerta({ msg: APP_MESSAGES.REGISTRO_USER.CAMPOS_OBLIGATORIOS, error: true });
         return false; 
       }
     // Validar formato de email con una expresión regular
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setAlerta({ msg: APP_MESSAGES.ERRORS_REGISTRO_USER.EMAIL_FORMATO, error: true });
+      setAlerta({ msg: APP_MESSAGES.REGISTRO_USER.EMAIL_FORMATO, error: true });
       return false;
     }
 
     // Validar longitud y seguridad de la contraseña
     if (password.length < 6) {
-      setAlerta({ msg: APP_MESSAGES.ERRORS_REGISTRO_USER.PASSWORD_LONGITUD, error: true });
+      setAlerta({ msg: APP_MESSAGES.REGISTRO_USER.PASSWORD_LONGITUD, error: true });
       return false;
     }
 
     // Validar que la contraseña tenga al menos una mayúscula y un número
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
     if (!passwordRegex.test(password)) {
-      setAlerta({ msg: APP_MESSAGES.ERRORS_REGISTRO_USER.PASSWORD_MAYUSCULA_NUMERO, error: true });
+      setAlerta({ msg: APP_MESSAGES.REGISTRO_USER.PASSWORD_MAYUSCULA_NUMERO, error: true });
       return false;
     }
     return true;
@@ -49,17 +49,17 @@ export default function useRegistroUser() {
       // URL inteligente (Nube o Local)
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
-      // Usamos esa variable en la petición
+      // variable URL en la petición
       await axios.post(`${URL}/api/usuarios`, { nombre, email, password });
 
-      setAlerta({ msg: APP_MESSAGES.ERRORS_REGISTRO_USER.CREATE_SUCCESS, error: false });
+      setAlerta({ msg: APP_MESSAGES.REGISTRO_USER.CREATE_SUCCESS, error: false });
 
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (error) {
       setAlerta({
-        msg: error.response?.data?.mensaje || APP_MESSAGES.ERRORS_REGISTRO_USER.SAVE_ERROR,
+        msg: error.response?.data?.mensaje || APP_MESSAGES.REGISTRO_USER.SAVE_ERROR,
         error: true,
       });
     }

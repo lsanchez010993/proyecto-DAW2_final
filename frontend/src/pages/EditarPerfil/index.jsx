@@ -6,6 +6,8 @@ import PasswordModal from "./PasswordModal";
 
 export default function EditarPerfil() {
   const {
+    esEditorial,
+    editorial,
     pestañaActiva,
     setPestañaActiva,
     nombre,
@@ -64,6 +66,8 @@ export default function EditarPerfil() {
             <form onSubmit={handleSubmit}>
               {pestañaActiva === "datos" && (
                 <DatosPersonalesForm 
+                  esEditorial={esEditorial}
+                  editorial={editorial}
                   nombre={nombre}
                   setNombre={setNombre}
                   apellidos={apellidos}

@@ -1,6 +1,6 @@
 import formatearGenero from "./formatearGenero";
 import useHome from "./useHome";
-import CarruselLibros from "../../components/CarruselLibros";
+import CarruselLibros from "../../features/libros/components/CarruselLibros";
 
 function Home() {
   const {

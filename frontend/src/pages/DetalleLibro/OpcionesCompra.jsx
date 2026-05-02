@@ -10,7 +10,7 @@ function OpcionesCompra({ libro, enDeseos, onToggleDeseos, onInteraccion }) {
         <button
           className="btn btn-primary"
           onClick={() => {
-            agregarAlCarrito(libro);
+            agregarAlCarrito(libro, "fisico");
             onInteraccion("carrito");
           }}
         >
@@ -20,7 +20,7 @@ function OpcionesCompra({ libro, enDeseos, onToggleDeseos, onInteraccion }) {
         <button
           className="btn btn-info text-white"
           onClick={() => {
-            agregarAlCarrito(libro);
+            agregarAlCarrito(libro, "digital");
             onInteraccion("carrito");
           }}
         >

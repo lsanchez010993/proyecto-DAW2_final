@@ -22,6 +22,9 @@ const usuarioSchema = mongoose.Schema({
 
     biblioteca_digital: [{
         libro: { type: mongoose.Schema.Types.ObjectId, ref: 'Libro' },
+        tipo_compra: { type: String, enum: ["fisico", "digital"], default: "digital" },
+        cantidad: { type: Number, default: 1 },
+        precio_unitario: { type: Number, default: 0 },
         fecha_compra: { type: Date, default: Date.now }
     }],
 
@@ -36,7 +39,7 @@ const usuarioSchema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Libro"
     }],
-    perfil_afinidad: {//el perfil de afinidad sera el encargado de recopilar la informacion del usuario y cruzar datos
+    perfil_afinidad: {//el perfil de afinidad sera el encargado de recopilar la informacion del usuario y cruzar datos para mostrar recomendaciones
       type: Map,
       of: Number,
       default: {} // Guardará pares de "Categoría": puntos, ej: {"Fantasía": 15}

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const uploadCloud = require("../config/cloudinary");
 const Libro = require("../models/Libro");
-const verificarToken = require("../middleware/auth");
+
 const Usuario = require("../models/Usuario");
 const cache = require("../utils/cache");
 const MESSAGES = require("../constants/messages");
@@ -22,6 +22,7 @@ async function crearLibro(req, res) {
       precio_digital,
       stock,
       categorias,
+      editorial: editorialBody,
     } = req.body;
     const usuarioCreador = await Usuario.findById(req.usuario.id);
     let categoriasArray = [];
@@ -37,12 +38,17 @@ async function crearLibro(req, res) {
       return res.status(400).json({ message: MESSAGES.LIBROS.ISBN_REQUIRED });
     }
 
+    const esAdmin = req?.usuario?.rol === "admin";
+    const editorialAsignada = esAdmin
+      ? (editorialBody || "").trim() || "Editorial Independiente"
+      : (usuarioCreador?.nombre_editorial || "").trim() || "Editorial Independiente";
+
     const nuevoLibro = new Libro({
       titulo,
       autor,
       isbn,
       sinopsis,
-      editorial: usuarioCreador.nombre_editorial || "Editorial Independiente",
+      editorial: editorialAsignada,
       categorias: categoriasArray,
       portada_url: req.file ? req.file.path : "https://via.placeholder.com/300",
       precio: {
@@ -78,6 +84,7 @@ async function actualizarLibro(req, res) {
       precio_digital,
       stock,
       categorias,
+      editorial: editorialBody,
     } = req.body;
 
     const usuarioCreador = await Usuario.findById(req.usuario.id);
@@ -108,7 +115,9 @@ async function actualizarLibro(req, res) {
       autor,
       isbn,
       sinopsis,
-      editorial: usuarioCreador.nombre_editorial || "Editorial Independiente",
+      editorial: esAdmin
+        ? ((editorialBody || "").trim() || libroOriginal.editorial || "Editorial Independiente")
+        : (usuarioCreador?.nombre_editorial || "").trim() || "Editorial Independiente",
       categorias: categorias ? JSON.parse(categorias) : [],
       precio: {
         fisico: isNaN(pFisico) ? 0 : pFisico,

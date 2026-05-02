@@ -10,11 +10,24 @@ export default function DatosPersonalesForm({
   setShowModal,
   opcionesPreferencias,
   preferencias,
-  togglePreferencia
+  togglePreferencia,
+  esEditorial,
+  editorial,
 }) {
   return (
     <div className="animate__animated animate__fadeIn">
       <h4 className="mb-4 text-center">Información Personal</h4>
+      {esEditorial && (
+        <div className="mb-3">
+          <label className="small text-muted">Editorial</label>
+          <input 
+            type="text" 
+            className="form-control rounded-pill" 
+            value={editorial} 
+           readOnly
+          />
+        </div>
+      )}
       <div className="mb-3">
         <label className="small text-muted">Nombre</label>
         <input 

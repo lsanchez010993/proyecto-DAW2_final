@@ -64,7 +64,7 @@ libroSchema.index({ autor: 1 });
 libroSchema.index({ editorial: 1 });
 libroSchema.index({ categorias: 1 }); 
 
-// 2. Índice Compuesto (Para cuando se cruzan filtros, ej: Fantasía + Libros Polvorientos)
+// 2. Índice Compuesto (Para cuando se cruzan filtros)
 libroSchema.index({ categorias: 1, editorial: 1 });
 
 module.exports = mongoose.model("Libro", libroSchema);

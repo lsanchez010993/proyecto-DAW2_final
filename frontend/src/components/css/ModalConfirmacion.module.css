@@ -1,0 +1,65 @@
+.overlay {
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1050;
+}
+
+.overlay[data-danger="true"] {
+  --modal-icon-bg: rgba(220, 53, 69, 0.12);
+  --modal-accent: #dc3545;
+}
+
+.overlay[data-danger="false"] {
+  --modal-icon-bg: rgba(13, 110, 253, 0.12);
+  --modal-accent: #0d6efd;
+}
+
+.content {
+  border-radius: 18px;
+  overflow: hidden;
+  transform: translateY(0);
+  animation: qcModalPop 160ms ease-out;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--modal-icon-bg), rgba(255, 255, 255, 0.92));
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.iconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background-color: var(--modal-icon-bg);
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.iconSvg {
+  color: var(--modal-accent);
+}
+
+.title {
+  color: #0f172a;
+}
+
+.message {
+  color: #334155;
+}
+
+.footer {
+  background: rgba(248, 250, 252, 0.9);
+}
+
+@keyframes qcModalPop {
+  from {
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}

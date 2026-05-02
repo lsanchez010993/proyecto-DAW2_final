@@ -1,22 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCarrito } from '../context/CarritoContext';
-import toast from 'react-hot-toast';
 
 function CarritoPage() {
-  const { carrito, cantidadTotal } = useCarrito();
+  const { carrito } = useCarrito();
+  const navigate = useNavigate();
 
   // calcular el precio total sumando (Precio x Cantidad)
   const precioTotal = carrito.reduce((acc, item) => {
-    // Si es físico usa precio.fisico
-    const precio = item.precio?.fisico || 0; 
+    const tipo = item.tipo_compra || "fisico";
+    const precio = item.precio?.[tipo] || 0;
     return acc + (precio * item.cantidad);
   }, 0).toFixed(2); 
 
   if (carrito.length === 0) {
     return (
       <div className="container mt-5 text-center">
-        <h3>Tu carrito está vacío 😢</h3>
-        <Link to="/" className="btn btn-primary mt-3">Volver a la tienda</Link>
+        <h3>Tu carrito está vacío </h3>
+        <Link to="/" className="btn btn-primary mt-3">Añadir libros</Link>
       </div>
     );
   }
@@ -30,6 +30,7 @@ function CarritoPage() {
           <thead className="table-light">
             <tr>
               <th>Producto</th>
+              <th>Tipo</th>
               <th>Precio</th>
               <th>Cantidad</th>
               <th>Subtotal</th>
@@ -44,9 +45,16 @@ function CarritoPage() {
                         {item.titulo}
                     </div>
                 </td>
-                <td>{item.precio.fisico} €</td>
+                <td className="text-capitalize">{item.tipo_compra || "fisico"}</td>
+                <td>{(item.precio?.[item.tipo_compra || "fisico"] || 0).toFixed(2)} €</td>
                 <td>{item.cantidad}</td>
-                <td>{(item.precio.fisico * item.cantidad).toFixed(2)} €</td>
+                <td>
+                  {(
+                    (item.precio?.[item.tipo_compra || "fisico"] || 0) *
+                    item.cantidad
+                  ).toFixed(2)}{" "}
+                  €
+                </td>
               </tr>
             ))}
           </tbody>
@@ -55,7 +63,10 @@ function CarritoPage() {
 
       <div className="d-flex justify-content-end align-items-center mt-4">
         <h3 className="me-4">Total: <span className="text-primary">{precioTotal} €</span></h3>
-        <button className="btn btn-success btn-lg" onClick={() => toast.success("¡Compra realizada con éxito! (Simulación)")}>
+        <button
+          className="btn btn-success btn-lg"
+          onClick={() => navigate("/checkout")}
+        >
           Finalizar Compra
         </button>
       </div>

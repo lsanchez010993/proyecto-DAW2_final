@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URI)
 // Rutas
 app.use('/api/libros', libroRoutes);
 app.use('/api/usuarios', usuarioRoutes); 
-app.use('/api/recomendaciones', require('./routes/recomendacionesRoutes')); 
+app.use('/api/home', require('./routes/rutasPaginaPrincipal')); 
 app.use("/api/gutendex", gutendexRoutes);
 
 const PORT = process.env.PORT || 4000;

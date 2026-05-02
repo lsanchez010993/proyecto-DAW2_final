@@ -10,7 +10,7 @@ function Footer() {
       className={styles.footerContainer} 
       style={{ backgroundImage: `url(${imagenFondo})` }}
     >
-      {/* Capa para oscurecer el fondo */}
+      {/* Oscurecer el fondo */}
       <div className={styles.capaOscura}></div>
 
       {/* Contenedor principal del texto */}

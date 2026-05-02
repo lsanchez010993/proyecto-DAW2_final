@@ -1,17 +1,17 @@
 import { useEditarLibro } from "./useEditarLibro";
-
+import ModalConfirmacion from "../../components/ModalConfirmacion.jsx";
 
 function EditarLibroPage() {
-    const { formData, imageToShow, handleChange, handleFileChange, handleSubmit } = useEditarLibro(); 
+    const { formData, imageToShow, handleChange, handleFileChange, handleSubmit, modalConfig, cerrarModal, confirmarModal } = useEditarLibro(); 
     
     return (
     <div className="container mt-5 mb-5">
     <form onSubmit={handleSubmit}>
       <div className="row">
         
-        {/* ==========================================
-            COLUMNA IZQUIERDA: PORTADA
-        ========================================== */}
+       
+           {/*  COLUMNA IZQUIERDA: PORTADA */}
+     
         <div className="col-md-5 mb-4">
           <h4 className="mb-3 fw-bold">Portada libro</h4>
           
@@ -51,21 +51,14 @@ function EditarLibroPage() {
           </div>
         </div>
 
-        {/* ==========================================
-            COLUMNA DERECHA: DATOS DEL LIBRO
-        ========================================== */}
+        {/* // COLUMNA DERECHA: DATOS DEL LIBRO */}
         <div className="col-md-7">
-          
           {/* Cabecera derecha: Título y Dropdown */}
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h2 className="fw-bold m-0 text-truncate" style={{ maxWidth: "70%" }}>
               {formData.titulo || "Título del libro"}
             </h2>
-            
-           
-         
           </div>
-
           <h4 className="mb-3 fw-bold">Datos libro</h4>
 
           {/* Contenedor gris con los campos editables */}
@@ -107,7 +100,7 @@ function EditarLibroPage() {
               <textarea name="sinopsis" className="form-control border-0 shadow-sm" rows="4" value={formData.sinopsis} onChange={handleChange}></textarea>
             </div>
 
-            {/* Botón de guardar alineado a la derecha */}
+            {/* Botón de guardar */}
             <div className="d-flex justify-content-end">
               <button 
                 type="submit" 
@@ -123,7 +116,19 @@ function EditarLibroPage() {
         
       </div>
     </form>
+    <ModalConfirmacion 
+        isOpen={modalConfig.isOpen}
+        titulo={'Confirmar edición de libro'}
+        mensaje={
+          <>¿Estás seguro de que quieres guardar los cambios <strong className="text-dark">{formData.titulo}</strong>? Esta acción no se puede deshacer.</>
+        }
+        textoConfirmar={'Sí, guardar cambios'}
+        isDanger={false}
+        onConfirm={confirmarModal}
+        onCancel={cerrarModal}
+      />
   </div>
 
 );
-}   export default EditarLibroPage;
+}   
+export default EditarLibroPage;

@@ -32,12 +32,29 @@ export function useDetalleLibro(id) {
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
       await axios.post(
-        `${URL}/api/recomendaciones/interaccion`,
+        `${URL}/api/usuarios/interaccion`,
         { libroId: id, tipoAccion },
         { headers: { Authorization: `Bearer ${token}` } },
       );
     } catch (error) {
       console.error(APP_MESSAGES.ERRORS.RADAR_ERROR);
+    }
+  }
+
+  async function registrarDescarga(titulo_guardado, categoria, libro_id) {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+      await axios.post(
+        `${URL}/api/usuarios/registrar-descarga-gratuita`,
+        { titulo_guardado, categoria, libro_id },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+    } catch (error) {
+      console.error(APP_MESSAGES.ERRORS.DESCARGAS_GRATUITAS_ERROR);
     }
   }
 
@@ -136,6 +153,7 @@ export function useDetalleLibro(id) {
     enDeseos,
     toggleDeseos,
     registrarInteraccion,
+    registrarDescarga,
     librosRelacionados,
     tituloSeccion,
   };

@@ -1,5 +1,5 @@
 import { useLibros } from "./useLibros";
-import TarjetaLibro from "../../components/TarjetaLibro";
+import TarjetaLibro from "../../features/libros/components/TarjetaLibro";
 import Paginacion from "../../components/Paginacion";
 function ListarLibros() {
    

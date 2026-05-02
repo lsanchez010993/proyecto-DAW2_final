@@ -26,16 +26,15 @@ export default function useHome() {
 
       try {
         // 1. Cargar  los datos públicos (para todos)
-        const resPublica = await axios.get(`${URL}/api/recomendaciones/publicas`);
+        const resPublica = await axios.get(`${URL}/api/home/publicas`);
         setNovedades(resPublica.data.novedades);
         setTopVentas(resPublica.data.topVentas);
         setTendencias(resPublica.data.tendencias);
 
         // 2. Si hay token, carga los datos privados
         if (token) {
-          const resPrivada = await axios.get(`${URL}/api/recomendaciones/privadas`, {
-            //Se envía el token en las cabeceras (headers) HTTP. El estándar de seguridad dicta que se envíe con la 
-            // palabra clave "Bearer" seguida del token.
+          const resPrivada = await axios.get(`${URL}/api/home/privadas`, {
+            //Se envía el token en las cabeceras (headers) HTTP. El estándar de seguridad dicta que se envíe con la palabra clave "Bearer" seguida del token.
             headers: { Authorization: `Bearer ${token}` },
           });
           //Se actualizan los estados con los datos recibidos de la API.

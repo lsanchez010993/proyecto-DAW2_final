@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import logo from "../images/logo.jpg";
-import librosImg from "../assets/tomo-libros.png";
 import styles from "./css/Navbar.module.css";
 
 function Navbar() {
@@ -113,7 +112,7 @@ function Navbar() {
                       </li>
 
                       <li>
-                        <Link className="dropdown-item" to="/admin/libros">
+                        <Link className="dropdown-item" to="/editorial/libros">
                           Nuestro catalogo
                         </Link>
                       </li>

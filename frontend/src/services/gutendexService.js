@@ -13,13 +13,13 @@ const mapaCategorias = {
   "literatura": ["literature", "classics", "essays"]
 };
 
-// [NUEVO] Añadimos el parámetro idioma con valor por defecto 'es'
+// Añade el parámetro idioma con valor por defecto 'es'
 export const buscarLibrosGratuitosPorGenero = async (genero, idioma = 'es') => {
   try {
     const generoMin = genero ? genero.trim().toLowerCase() : "literatura";
     const terminosBusqueda = mapaCategorias[generoMin] || ["fiction"];
     
-    // [MODIFICADO] Inyectamos la variable idioma en la URL
+    // Inyecta la variable idioma en la URL
     const promesas = terminosBusqueda.map(termino => 
       axios.get(`https://gutendex.com/books/?topic=${encodeURIComponent(termino)}&languages=${idioma}`)
     );
@@ -31,7 +31,7 @@ export const buscarLibrosGratuitosPorGenero = async (genero, idioma = 'es') => {
       new Map(todosLosLibros.map(libro => [libro.id, libro])).values()
     );
 
-    return librosUnicos.slice(0, 20); // Devolvemos los 20 mejores
+    return librosUnicos.slice(0, 20); // Devuelve los 20 mejores
 
   } catch (error) {
     console.error(APP_MESSAGES.ERRORS.GUTENDEX_ERROR, error);

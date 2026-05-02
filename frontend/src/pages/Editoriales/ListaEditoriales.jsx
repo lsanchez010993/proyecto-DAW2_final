@@ -1,6 +1,6 @@
 import styles from "./Editoriales.module.css";
-import TarjetaLibro from "../../components/TarjetaLibro";
-import CarruselLibros from "../../components/CarruselLibros";
+import TarjetaLibro from "../../features/libros/components/TarjetaLibro";
+import CarruselLibros from "../../features/libros/components/CarruselLibros";
 
 export default function ListaEditoriales({
   listaEditoriales,

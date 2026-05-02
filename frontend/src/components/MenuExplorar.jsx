@@ -12,8 +12,13 @@ function MenuExplorar() {
     "/perfil",
     "/admin/usuarios",
     "/admin/libros",
+    "/editorial/libros",
     "/afegirLibro",
-    "/carrito"
+    "/carrito",
+    "/admin/compras",
+    "/admin/descargas",
+    "/historial/compras",
+    "/historial/descargas"
   ];
 
   // Comprobar si la ruta actual empieza por alguna de las rutas ocultas 

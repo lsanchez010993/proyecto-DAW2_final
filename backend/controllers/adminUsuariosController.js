@@ -13,6 +13,27 @@ async function obtenerUsuarios (req, res) {
       res.status(500).json({ message: error.message });
     }
   }
+
+// ==========================================
+// OBTENER HISTORIAL COMPLETO (Admin)
+// ==========================================
+async function obtenerHistorialUsuarios(req, res) {
+  try {
+    const usuarios = await Usuario.find()
+      .select(
+        "nombre apellidos email rol biblioteca_digital historial_descargas_gratuitas createdAt",
+      )
+      .populate({
+        path: "biblioteca_digital.libro",
+        select: "titulo autor editorial portada_url",
+      })
+      .sort({ createdAt: -1 });
+
+    return res.json(usuarios);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
   
   // ==========================================
   // ELIMINAR USUARIO
@@ -34,17 +55,17 @@ async function obtenerUsuarios (req, res) {
       // 1. Extraer datos del req.body del frontend
       const { rol, nombre_editorial } = req.body;
   
-      // 2. Preparar el objeto con los datos a actualizar en MongoDB
+      // Preparar el objeto con los datos a actualizar en MongoDB
       const datosActualizar = { rol: rol };
   
-      // 3. Si es editorial, guarda el nombre.
+      // Si es editorial, guarda el nombre.
       if (rol === "editorial" && nombre_editorial) {
         datosActualizar.nombre_editorial = nombre_editorial;
       } else if (rol !== "editorial") {
         datosActualizar.nombre_editorial = "";
       }
   
-      // 4. actualizar la base de datos
+      // actualizar la base de datos
       const usuarioActualizado = await Usuario.findByIdAndUpdate(
         req.params.id,
         datosActualizar,
@@ -59,6 +80,7 @@ async function obtenerUsuarios (req, res) {
   };
   module.exports = {
     obtenerUsuarios,
+    obtenerHistorialUsuarios,
     eliminarUsuario,
     cambiarRolYEditorial,
   };

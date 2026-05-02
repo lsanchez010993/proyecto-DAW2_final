@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import styles from "./Categorias.module.css";
 import { useCategorias } from "./useCategorias";
-import CarruselLibros from "../../components/CarruselLibros";
-import TarjetaLibro from "../../components/TarjetaLibro";
+import CarruselLibros from "../../features/libros/components/CarruselLibros";
+import TarjetaLibro from "../../features/libros/components/TarjetaLibro";
 
 function CategoriasPage() {
   const {
@@ -62,7 +62,7 @@ function CategoriasPage() {
         </div>
 
         {/* =========================================
-            COLUMNA DERECHA: Escaparate estilo netflix
+            COLUMNA DERECHA: Escaparate 
             ========================================= */}
         <div className="col-md-9">
           <div className={`shadow-sm p-4 mb-4 ${styles.tarjetaNube} animate__animated animate__fadeIn`}>
@@ -90,7 +90,7 @@ function CategoriasPage() {
               {seleccionadas.length === 0 ? `Catálogo General:` : `Resultados Encontrados:`}
             </h4>
 
-            {/* DIBUJAR ESTANTERÍAS DESCARGADAS */}
+            {/* DIBUJAR LIBROS POR CATEGORÍA */}
             {Object.entries(librosPorCategoria).length === 0 && !cargandoFilas ? (
               <div className={`text-center text-muted w-100 mt-5`}>
                 <h1 style={{ fontSize: "4rem" }}>🧭</h1>

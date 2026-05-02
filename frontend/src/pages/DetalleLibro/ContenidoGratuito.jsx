@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { APP_MESSAGES } from "../../constants/messages";
 
-function ModalGutendex({ categoria, onClose, onDescarga }) {
+function ContenidoGratuito({ categoria, onClose, onDescarga }) {
   const [idiomaModal, setIdiomaModal] = useState("es");
   const [librosGutendexES, setLibrosGutendexES] = useState([]);
   const [librosGutendexEN, setLibrosGutendexEN] = useState([]);
@@ -10,13 +10,13 @@ function ModalGutendex({ categoria, onClose, onDescarga }) {
 
   useEffect(() => {
     cargarLibrosGutendex("es");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, []);
 
   async function cargarLibrosGutendex(idiomaDeseado) {
     setIdiomaModal(idiomaDeseado);
 
-    // EFICIENCIA: Caché local
+    // Caché local
     if (idiomaDeseado === "es" && librosGutendexES.length > 0) return;
     if (idiomaDeseado === "en" && librosGutendexEN.length > 0) return;
 
@@ -55,7 +55,7 @@ function ModalGutendex({ categoria, onClose, onDescarga }) {
         <div className="modal-content shadow">
           <div className="modal-header bg-light d-flex align-items-center justify-content-between">
             <h5 className="modal-title fw-bold mb-0">
-              📚 Obras gratuitas: {categoria || "Literatura"}
+              Obras gratuitas: {categoria || "Literatura"}
             </h5>
 
             <div className="d-flex align-items-center gap-3">
@@ -123,7 +123,7 @@ function ModalGutendex({ categoria, onClose, onDescarga }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-sm btn-outline-primary w-100 rounded-pill fw-bold"
-                            onClick={onDescarga}
+                            onClick={() => onDescarga?.(libroGuten)}
                           >
                             ⬇️ Descargar
                           </a>
@@ -158,4 +158,4 @@ function ModalGutendex({ categoria, onClose, onDescarga }) {
   );
 }
 
-export default ModalGutendex;
+export default ContenidoGratuito;

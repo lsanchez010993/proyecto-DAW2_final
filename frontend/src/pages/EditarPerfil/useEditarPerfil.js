@@ -1,20 +1,27 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { APP_MESSAGES } from "../../constants/messages";
 
 export function useEditarPerfil() {
   const { usuario, actualizarUsuario } = useAuth();
   const [pestañaActiva, setPestañaActiva] = useState("datos");
+  const esEditorial = usuario?.rol === "editorial";
+  const editorial = usuario?.nombre_editorial || "";
 
   // Estados del perfil
+
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [email, setEmail] = useState("");
   const [preferencias, setPreferencias] = useState([]);
   const [direccion, setDireccion] = useState({
-    calle: "", ciudad: "", codigo_postal: "", pais: "", telefono: ""
+    calle: "",
+    ciudad: "",
+    codigo_postal: "",
+    pais: "",
+    telefono: "",
   });
 
   // Estados Modal
@@ -22,9 +29,18 @@ export function useEditarPerfil() {
   const [passData, setPassData] = useState({ actual: "", nueva: "", confirmar: "" });
 
   const opcionesPreferencias = [
-    "Ciencia Ficción", "Fantasía", "Misterio y Thriller", "Romance", "Terror",
-    "Novela Histórica", "Biografía", "Desarrollo Personal", "Poesía",
-    "Cómic y Manga", "Clásicos", "Aventura"
+    "Ciencia Ficción",
+    "Fantasía",
+    "Misterio y Thriller",
+    "Romance",
+    "Terror",
+    "Novela Histórica",
+    "Biografía",
+    "Desarrollo Personal",
+    "Poesía",
+    "Cómic y Manga",
+    "Clásicos",
+    "Aventura",
   ];
 
   useEffect(() => {
@@ -39,7 +55,7 @@ export function useEditarPerfil() {
           ciudad: usuario.direccion.ciudad || "",
           codigo_postal: usuario.direccion.codigo_postal || "",
           pais: usuario.direccion.pais || "",
-          telefono: usuario.direccion.telefono || ""
+          telefono: usuario.direccion.telefono || "",
         });
       }
     }
@@ -59,18 +75,21 @@ export function useEditarPerfil() {
     setPassData({ ...passData, [e.target.name]: e.target.value });
   };
 
+  const getToken = () =>
+    localStorage.getItem("token") || sessionStorage.getItem("token");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      const token = getToken();
       const res = await axios.put(
         `${URL}/api/usuarios/perfil`,
         { nombre, apellidos, email, preferencias, direccion },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       actualizarUsuario(res.data);
-      toast.success(APP_MESSAGES.NOTIFICATIONS.PROFILE_UPDATED); 
+      toast.success(APP_MESSAGES.NOTIFICATIONS.PROFILE_UPDATED);
     } catch (error) {
       toast.error(error.response?.data?.message || "Error al guardar el perfil");
     }
@@ -83,15 +102,21 @@ export function useEditarPerfil() {
     }
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-      await axios.put(`${URL}/api/usuarios/cambiar-password`, passData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const token = getToken();
+      await axios.put(
+        `${URL}/api/usuarios/cambiar-password`,
+        { actual: passData.actual, nueva: passData.nueva },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
       toast.success(APP_MESSAGES.SUCCESS.UPDATE_PASSWORD);
       setShowModal(false);
       setPassData({ actual: "", nueva: "", confirmar: "" });
     } catch (error) {
-      toast.error(error.response?.data?.message || APP_MESSAGES.ERRORS.UPDATE_PASSWORD);
+      const msg =
+        error.response?.data?.message ||
+        error.response?.data?.mensaje ||
+        APP_MESSAGES.ERRORS.UPDATE_PASSWORD;
+      toast.error(msg);
     }
   };
 
@@ -114,6 +139,8 @@ export function useEditarPerfil() {
     handleDireccionChange,
     handlePassChange,
     handleSubmit,
-    submitPassword
+    submitPassword,
+    esEditorial,
+    editorial,
   };
 }

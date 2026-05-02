@@ -1,4 +1,4 @@
-import CarruselLibros from "../../components/CarruselLibros";
+import CarruselLibros from "../../features/libros/components/CarruselLibros";
 
 function SeccionRelacionados({ tituloSeccion, libros, onAbrirModal }) {
   return (

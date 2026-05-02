@@ -1,9 +1,11 @@
 import styles from "./AfegirLibro.module.css";
 import { useAfegirLibro } from "./useAfegirLibro";
+import ModalConfirmacion from "../../components/ModalConfirmacion.jsx";
 
 
 function AfegirLibroPage() {
-  const { loading, formData, setFile, preview, setPreview, categoriasSeleccionadas, listaCategorias, handleChange, handleFileChange, toggleCategoria, handleSubmit } = useAfegirLibro();
+  const { loading, formData, setFile, preview, setPreview, categoriasSeleccionadas, listaCategorias, handleChange, handleFileChange, toggleCategoria, handleSubmit, esEditor, esAdmin, editoriales, modalConfig, cerrarModal, confirmarModal } = useAfegirLibro();
+
   return (
     <div className="container mt-5">
       <div className={`card shadow p-4 ${styles.tarjetaCrear}`}>
@@ -67,6 +69,8 @@ function AfegirLibroPage() {
               />
             </div>
           </div>
+          {/* Si el usuario es editorial, se muestra el campo de editorial */}
+          {esEditor && (
           <div className="mb-3">
             <label className="small text-muted mb-1">Editorial</label>
             <input
@@ -81,7 +85,24 @@ function AfegirLibroPage() {
               * Este campo se asigna automáticamente según tu perfil.
             </small>
           </div>
-        
+          )}
+          {/* Si el usuario es admin, se muestra el campo de editorial */}
+          {esAdmin && (
+            <div className="mb-3">
+              <label className="small text-muted mb-1">Editorial</label>
+              <select
+                name="editorial"
+                className={`form-control ${styles.inputRedondeado}`}
+                value={formData.editorial}
+                onChange={handleChange}
+                required
+              >
+                {editoriales.map((editorial) => (
+                  <option key={editorial} value={editorial}>{editorial}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="row">
             <div className="col-md-6 mb-3">
               <label className="small text-muted mb-1">Precio Físico (€)</label>
@@ -160,6 +181,17 @@ function AfegirLibroPage() {
             {loading ? "Guardando..." : "Guardar Libro"}
           </button>
         </form>
+        <ModalConfirmacion 
+        isOpen={modalConfig.isOpen}
+        titulo={'Confirmar añadir libro'}
+        mensaje={
+          <>¿Estás seguro de que quieres añadir el libro <strong className="text-dark">{formData.titulo}</strong>? </>
+        }
+        textoConfirmar={'Sí, guardar libro'}
+        isDanger={false}
+        onConfirm={confirmarModal}
+        onCancel={cerrarModal}
+      />
       </div>
     </div>
   );

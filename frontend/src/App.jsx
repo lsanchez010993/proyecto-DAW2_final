@@ -11,7 +11,8 @@ import { CarritoProvider } from "./context/CarritoContext";
 import RegistroUserPage from "./pages/RegistroUser";
 import { AuthProvider } from "./context/AuthContext";
 import AdminUsuarios from "./pages/AdminUsuarios/index";
-import AdminLibros from "./pages/AdminLibros/index";
+import AdminLibrosAdministrador from "./pages/AdminLibrosAdministrador";
+import AdminLibrosEditorial from "./pages/AdminLibrosEditorial";
 import EditarLibro from "./pages/EditarLibro";
 import EditarPerfil from "./pages/EditarPerfil";
 import Categorias from "./pages/Categorias";
@@ -22,6 +23,11 @@ import Footer from "./components/Footer";
 import MenuExplorar from "./components/MenuExplorar";
 import AfegirLibroPage from "./pages/AfegirLibro";
 import ResetPasswordPage from "./pages/ResetPassword";
+import HistorialComprasPage from "./pages/HistorialCompras";
+import HistorialDescargasPage from "./pages/HistorialDescargas";
+import CheckoutSimulacionPage from "./pages/CheckoutSimulacion";
+import AdministrarCompras from "./pages/AdministrarCompras";
+import FavoritosPage from "./pages/Favoritos";
 
 axios.interceptors.response.use(
   (response) => {
@@ -79,9 +85,15 @@ function App() {
               <Route path="/registro" element={<RegistroUserPage />} />
               <Route path="/admin/usuarios" element={<AdminUsuarios />} />
               <Route path="/perfil" element={<EditarPerfil />} />
-              <Route path="/admin/libros" element={<AdminLibros />} />
+              <Route path="/admin/libros" element={<AdminLibrosAdministrador />} />
+              <Route path="/editorial/libros" element={<AdminLibrosEditorial />} />
               <Route path="/editar-libro/:id" element={<EditarLibro />} />
               <Route path="/libros" element={<Libros />} />
+              <Route path="/historial/compras" element={<HistorialComprasPage />} />
+              <Route path="/historial/descargas" element={<HistorialDescargasPage />} />
+              <Route path="/checkout" element={<CheckoutSimulacionPage />} />
+              <Route path="/admin/compras" element={<AdministrarCompras />} />
+              <Route path="/favoritos" element={<FavoritosPage />} />
             </Routes>
           </div>
 

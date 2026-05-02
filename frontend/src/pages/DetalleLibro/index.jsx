@@ -3,11 +3,11 @@ import { useParams, Link } from "react-router-dom";
 import { useDetalleLibro } from "./useDetalleLibro";
 import OpcionesCompra from "./OpcionesCompra";
 import SeccionRelacionados from "./SeccionRelacionados";
-import ModalGutendex from "./ModalGutendex";
+import ContenidoGratuito from "./ContenidoGratuito";
 
 function DetalleLibro() {
   const { id } = useParams();
-  const { libro, cargando, enDeseos, toggleDeseos, registrarInteraccion, librosRelacionados, tituloSeccion } = useDetalleLibro(id);
+  const { libro, cargando, enDeseos, toggleDeseos, registrarInteraccion, registrarDescarga, librosRelacionados, tituloSeccion } = useDetalleLibro(id);
   const [mostrarModal, setMostrarModal] = useState(false);
 
   if (cargando || !libro) return <div className="text-center mt-5">Cargando libro...</div>;
@@ -48,10 +48,13 @@ function DetalleLibro() {
       />
 
       {mostrarModal && (
-        <ModalGutendex 
+        <ContenidoGratuito 
           categoria={libro.categorias?.[0]} 
           onClose={() => setMostrarModal(false)} 
-          onDescarga={() => registrarInteraccion("descarga_gratuita")}
+          onDescarga={(libroGuten) => {
+            registrarInteraccion("descarga_gratuita");
+            registrarDescarga(libroGuten?.titulo, libro.categorias?.[0]);
+          }}
         />
       )}
     </div>
