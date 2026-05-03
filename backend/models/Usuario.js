@@ -18,7 +18,7 @@ const usuarioSchema = mongoose.Schema(
       telefono: { type: String, default: "" },
     },
 
-    gustos_literarios: [{ type: string }],
+    gustos_literarios: [{ type: String }],
     autores_favoritos: [{ type: String }],
 
     biblioteca_digital: [
