@@ -39,9 +39,9 @@ async function sincronizarGutendex(req, res) {
         let librosValidos = []; // Nuestra "caja temporal"
         const idsIncluidos = new Set();
 
-        // 1. PETICIONES A LA API (SECUENCIALES Y EDUCADAS PARA NO SER BANEADOS)
+        // 1. PETICIONES A LA API 
         for (const termino of terminosIngles) {
-          if (librosValidos.length >= 50) break; // Si ya tenemos 50, no pedimos más a la API
+          if (librosValidos.length >= 50) break; // Si ya tenemos 50, no pido más a la API
 
           const url = `https://gutendex.com/books/?topic=${encodeURIComponent(termino)}&languages=${idioma}`;
 
@@ -77,14 +77,14 @@ async function sincronizarGutendex(req, res) {
             console.error(`⚠️ Gutendex rechazó la conexión en '${termino}'. Saltando...`);
           }
 
-          // Pausa de 600ms obligatoria para calmar a los servidores de Gutendex
-          // (evitamos dormir si ya hemos alcanzado 50)
+          // Pausa de 600ms obligatoria para evitar que Gutendex corte la conexión
+         
           if (librosValidos.length < 50) {
             await new Promise((resolve) => setTimeout(resolve, 600));
           }
         }
 
-        // 2. GUARDADO EN BASE DE DATOS (BULK, MÁS RÁPIDO)
+        // 2. GUARDADO EN BASE DE DATOS 
         if (librosValidos.length > 0) {
           const ops = librosValidos.map((datosLibro) => ({
             updateOne: {

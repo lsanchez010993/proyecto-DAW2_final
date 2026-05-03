@@ -18,7 +18,7 @@ const usuarioSchema = mongoose.Schema(
       telefono: { type: String, default: "" },
     },
 
-    gustos_literarios: [{ type: String }],
+    gustos_literarios: [{ type: string }],
     autores_favoritos: [{ type: String }],
 
     biblioteca_digital: [
@@ -33,13 +33,14 @@ const usuarioSchema = mongoose.Schema(
 
     historial_descargas_gratuitas: [
       {
-        libro_id: { type: mongoose.Schema.Types.ObjectId, ref: "Libro" },
+
+        libro_id: { type: mongoose.Schema.Types.ObjectId, ref: "LibroGratuito" },
         titulo_guardado: { type: String, required: true },
         fecha_descarga: { type: Date, default: Date.now },
       },
     ],
 
-    compras_realizadas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Venta" }],
+
     lista_deseos: [
       {
         type: mongoose.Schema.Types.ObjectId,
