@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { APP_MESSAGES } from "../../constants/messages";
 
 const SORT_KEYS = {
   titulo: "titulo",
@@ -13,6 +14,7 @@ function LibrosGratuitosTab({
   sincronizando,
   onSincronizar,
 }) {
+  const M = APP_MESSAGES.PAGES.ADMIN_LIBROS;
   const [sort, setSort] = useState({ key: SORT_KEYS.titulo, dir: "asc" });
 
   const sortedLibros = useMemo(() => {
@@ -54,7 +56,7 @@ function LibrosGratuitosTab({
       <button
         type="button"
         onClick={() => toggleSort(sortKey)}
-        title="Clicar para ordenar"
+        title={M.GRATUITOS_SORT_TITLE}
         style={{
           all: "unset",
           cursor: "pointer",
@@ -97,7 +99,7 @@ function LibrosGratuitosTab({
           </div>
           <div>
             <div className="fw-bold" style={{ fontSize: 18 }}>
-              Libros gratuitos
+              {M.GRATUITOS_TITULO}
             </div>
             <div className="d-flex flex-wrap align-items-center gap-2">
               <span
@@ -107,10 +109,10 @@ function LibrosGratuitosTab({
                   border: "1px solid #212529",
                 }}
               >
-                Total: {librosGratuitos.length}
+                {M.GRATUITOS_TOTAL} {librosGratuitos.length}
               </span>
               <span className="small text-muted">
-                Ordena por autor, categoría o idioma
+                {M.GRATUITOS_HINT}
               </span>
             </div>
           </div>
@@ -128,14 +130,14 @@ function LibrosGratuitosTab({
                 className="spinner-border spinner-border-sm me-2"
                 aria-hidden="true"
               ></span>
-              Sincronizando...
+              {M.GRATUITOS_SINCRONIZANDO}
             </>
           ) : (
             <>
               <span className="me-2" aria-hidden="true">
                 🔄
               </span>
-              Actualizar base de datos
+              {M.GRATUITOS_ACTUALIZAR}
             </>
           )}
         </button>
@@ -145,14 +147,13 @@ function LibrosGratuitosTab({
         {cargando ? (
           <div className="text-center py-5">
             <div className="spinner-border text-secondary" role="status"></div>
-            <p className="text-muted mt-2 mb-0">Cargando listado...</p>
+            <p className="text-muted mt-2 mb-0">{M.GRATUITOS_CARGANDO}</p>
           </div>
         ) : librosGratuitos.length === 0 ? (
           <div className="text-center py-5 text-muted">
-            <p className="lead mb-2">La base de datos espejo está vacía.</p>
+            <p className="lead mb-2">{M.GRATUITOS_VACIO_TITULO}</p>
             <p className="mb-0">
-              Pulsa “Actualizar base de datos” para descargar el catálogo
-              inicial.
+              {M.GRATUITOS_VACIO_TEXTO}
             </p>
           </div>
         ) : (
@@ -161,14 +162,14 @@ function LibrosGratuitosTab({
               <thead className="position-sticky top-0" style={{ zIndex: 2 }}>
                 <tr>
                   <SortableTh className="ps-4" sortKey={SORT_KEYS.titulo}>
-                    Título
+                    {M.GRATUITOS_COL_TITULO}
                   </SortableTh>
-                  <SortableTh sortKey={SORT_KEYS.autor}>Autor</SortableTh>
+                  <SortableTh sortKey={SORT_KEYS.autor}>{M.GRATUITOS_COL_AUTOR}</SortableTh>
                   <SortableTh sortKey={SORT_KEYS.categoria}>
-                    Categoría
+                    {M.GRATUITOS_COL_CATEGORIA}
                   </SortableTh>
-                  <SortableTh sortKey={SORT_KEYS.idioma}>Idioma</SortableTh>
-                  <th style={{ ...thBaseStyle, borderRight: "0" }}>ID Origen</th>
+                  <SortableTh sortKey={SORT_KEYS.idioma}>{M.GRATUITOS_COL_IDIOMA}</SortableTh>
+                  <th style={{ ...thBaseStyle, borderRight: "0" }}>{M.GRATUITOS_COL_ID_ORIGEN}</th>
                 </tr>
               </thead>
               <tbody>
@@ -189,7 +190,7 @@ function LibrosGratuitosTab({
                         {libroG.categoria_tienda}
                       </span>
                     </td>
-                    <td>{libroG.idioma === "es" ? "🇪🇸 Español" : "🇬🇧 Inglés"}</td>
+                    <td>{libroG.idioma === "es" ? M.GRATUITOS_IDIOMA_ES : M.GRATUITOS_IDIOMA_EN}</td>
                     <td className="text-muted small">#{libroG.gutendex_id}</td>
                   </tr>
                 ))}

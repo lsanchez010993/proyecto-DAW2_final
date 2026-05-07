@@ -13,7 +13,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'libros', // Nombre de la carpeta que se creará en tu Cloudinary
+    folder: 'libros', 
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
   },
 });

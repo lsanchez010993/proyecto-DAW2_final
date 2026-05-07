@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --host",
-    "start": "vite preview --host --port $PORT"
+    "start": "serve -s dist -l tcp://0.0.0.0:$PORT"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
@@ -17,7 +17,8 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hot-toast": "^2.6.0",
-    "react-router-dom": "^7.13.1"
+    "react-router-dom": "^7.13.1",
+    "serve": "^14.2.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

@@ -3,8 +3,10 @@ import { useState } from "react";
 
 import { useProcesamientoPago } from "./useProcesamientoPago";
 import ModalConfirmacion from "../../components/ModalConfirmacion";
+import { APP_MESSAGES } from "../../constants/messages";
 
 function CheckoutSimulacionPage() {
+  const M = APP_MESSAGES.PAGES.CHECKOUT;
   const {
     requiereLogin,
     carritoVacio,
@@ -26,11 +28,11 @@ function CheckoutSimulacionPage() {
   if (requiereLogin) {
     return (
       <div className="container mt-4">
-        <h2 className="mb-3 fw-bold">Simulación de compra</h2>
+        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
         <div className="alert alert-warning">
-          Necesitas iniciar sesión para comprar.{" "}
+          {`${M.LOGIN_REQUERIDO} `}
           <Link to="/login" className="alert-link">
-            Ir a iniciar sesión
+            {M.LINK_LOGIN}
           </Link>
           .
         </div>
@@ -41,10 +43,10 @@ function CheckoutSimulacionPage() {
   if (carritoVacio) {
     return (
       <div className="container mt-4 text-center">
-        <h2 className="mb-3 fw-bold">Simulación de compra</h2>
-        <div className="text-muted mb-3">No hay productos en el carrito.</div>
+        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
+        <div className="text-muted mb-3">{M.CARRITO_VACIO}</div>
         <Link to="/" className="btn btn-primary">
-          Volver a la tienda
+          {M.VOLVER_TIENDA}
         </Link>
       </div>
     );
@@ -54,13 +56,13 @@ function CheckoutSimulacionPage() {
     <div className="container mt-4">
       <div className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
         <div>
-          <h2 className="mb-1 fw-bold">Simulación de compra</h2>
+          <h2 className="mb-1 fw-bold">{M.TITULO}</h2>
           <p className="text-muted mb-0">
-            Al confirmar, se registra la compra.
+            {M.SUBTITULO}
           </p>
         </div>
         <Link to="/carrito" className="btn btn-outline-dark">
-          Volver al carrito
+          {M.VOLVER_CARRITO}
         </Link>
       </div>
 
@@ -68,7 +70,7 @@ function CheckoutSimulacionPage() {
         <div className="col-12 col-lg-7">
           <div className="card border-0 shadow-sm rounded-4">
             <div className="card-body p-4">
-              <h5 className="fw-bold mb-3">Datos de pago </h5>
+              <h5 className="fw-bold mb-3">{M.DATOS_PAGO}</h5>
 
               <form
                 onSubmit={(e) => {
@@ -77,46 +79,46 @@ function CheckoutSimulacionPage() {
                 }}
               >
                 <div className="mb-3">
-                  <label className="form-label">Tarjeta de crédito</label>
+                  <label className="form-label">{M.TARJETA_LABEL}</label>
                   <input
                     className="form-control"
                     value={tarjeta}
                     onChange={(e) => setTarjeta(e.target.value)}
-                    placeholder="1234 5678 9012 3456"
+                    placeholder={M.TARJETA_PLACEHOLDER}
                     autoComplete="off"
                   />
                 </div>
 
                 <div className="row">
                   <div className="col-12 col-md-6 mb-3">
-                    <label className="form-label">Fecha de vencimiento</label>
+                    <label className="form-label">{M.VENCIMIENTO_LABEL}</label>
                     <input
                       className="form-control"
                       value={vencimiento}
                       onChange={(e) => setVencimiento(e.target.value)}
-                      placeholder="MM/AA"
+                      placeholder={M.VENCIMIENTO_PLACEHOLDER}
                       autoComplete="off"
                     />
                   </div>
                   <div className="col-12 col-md-6 mb-3">
-                    <label className="form-label">Número secreto</label>
+                    <label className="form-label">{M.CVV_LABEL}</label>
                     <input
                       className="form-control"
                       value={cvv}
                       onChange={(e) => setCvv(e.target.value)}
-                      placeholder="CVV"
+                      placeholder={M.CVV_PLACEHOLDER}
                       autoComplete="off"
                     />
                   </div>
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Titular</label>
+                  <label className="form-label">{M.TITULAR_LABEL}</label>
                   <input
                     className="form-control"
                     value={titular}
                     onChange={(e) => setTitular(e.target.value)}
-                    placeholder="Nombre y apellidos"
+                    placeholder={M.TITULAR_PLACEHOLDER}
                     autoComplete="off"
                   />
                 </div>
@@ -126,7 +128,7 @@ function CheckoutSimulacionPage() {
                   type="submit"
                   disabled={enviando}
                 >
-                  {enviando ? "Registrando compra..." : "Realizar compra"}
+                  {enviando ? M.REGISTRANDO : M.REALIZAR_COMPRA}
                 </button>
               </form>
             </div>
@@ -136,7 +138,7 @@ function CheckoutSimulacionPage() {
         <div className="col-12 col-lg-5">
           <div className="card border-0 shadow-sm rounded-4">
             <div className="card-body p-4">
-              <h5 className="fw-bold mb-3">Resumen</h5>
+              <h5 className="fw-bold mb-3">{M.RESUMEN}</h5>
               <ul className="list-group list-group-flush">
                 {resumen.lineas.map((l, idx) => (
                   <li
@@ -157,7 +159,7 @@ function CheckoutSimulacionPage() {
               </ul>
               <hr />
               <div className="d-flex justify-content-between align-items-center">
-                <span className="fw-bold">Total</span>
+                <span className="fw-bold">{M.TOTAL}</span>
                 <span className="fw-bold text-primary">{resumen.total} €</span>
               </div>
               <div className="text-muted small mt-2">
@@ -169,9 +171,9 @@ function CheckoutSimulacionPage() {
       </div>
       <ModalConfirmacion
         isOpen={modalAbierto}
-        titulo="Finalizar compra"
-        mensaje="¿Deseas finalizar la compra?"
-        textoConfirmar="Finalizar"
+        titulo={M.MODAL_TITULO}
+        mensaje={M.MODAL_MENSAJE}
+        textoConfirmar={M.MODAL_CONFIRMAR}
         isDanger={false}
         onCancel={() => setModalAbierto(false)}
         onConfirm={async () => {

@@ -5,8 +5,10 @@ import Paginacion from "../../components/Paginacion";
 import TablaLibros from "../../features/libros/components/TablaLibros.jsx";
 import CuadriculaLibros from "../../features/libros/components/CuadriculaLibros.jsx";
 import ModalConfirmacion from "../../components/ModalConfirmacion";
+import { APP_MESSAGES } from "../../constants/messages";
 
 function AdminLibrosEditorial() {
+  const M = APP_MESSAGES.PAGES.ADMIN_LIBROS;
   const { usuario } = useAuth();
   const {
     modalConfig,
@@ -26,13 +28,13 @@ function AdminLibrosEditorial() {
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 className="fw-bold mb-1">Mi catálogo</h2>
+          <h2 className="fw-bold mb-1">{M.TITULO_EDITORIAL}</h2>
           <div className="text-muted small">
-            {nombreEditorial ? `Editorial: ${nombreEditorial}` : "Editorial no configurada"}
+            {nombreEditorial ? `${M.EDITORIAL_LABEL} ${nombreEditorial}` : M.EDITORIAL_NO_CONFIGURADA}
           </div>
         </div>
         <Link to="/afegirLibro" className="btn btn-success fw-bold">
-          + Nuevo Libro
+          {M.NUEVO_LIBRO}
         </Link>
       </div>
 
@@ -41,7 +43,7 @@ function AdminLibrosEditorial() {
           className="btn btn-link text-primary p-0"
           onClick={() => setVistaListado(!vistaListado)}
         >
-          {vistaListado ? "Ver cuadrícula" : "Ver listado"}
+          {vistaListado ? M.VER_CUADRICULA : M.VER_LISTADO}
         </button>
       </div>
 
@@ -63,18 +65,19 @@ function AdminLibrosEditorial() {
       />
       <ModalConfirmacion
         isOpen={modalConfig.isOpen}
-        titulo={modalConfig.tipo === "ELIMINAR" ? "Eliminar libro" : "Confirmación"}
+        titulo={modalConfig.tipo === "ELIMINAR" ? M.MODAL_ELIMINAR_TITULO : M.MODAL_CONFIRMACION_TITULO}
         mensaje={
           modalConfig.tipo === "ELIMINAR" ? (
             <>
-              ¿Estás seguro de que quieres eliminar el libro{" "}
-              <strong className="text-dark">{modalConfig.datos?.titulo}</strong>? Esta acción no se puede deshacer.
+              {`${M.MODAL_ELIMINAR_PREFIJO} `}
+              <strong className="text-dark">{modalConfig.datos?.titulo}</strong>
+              {M.MODAL_ELIMINAR_SUFIX}
             </>
           ) : (
-            "Confirmar eliminación"
+            M.MODAL_CONFIRMACION_MENSAJE
           )
         }
-        textoConfirmar={modalConfig.tipo === "ELIMINAR" ? "Eliminar" : "Confirmar"}
+        textoConfirmar={modalConfig.tipo === "ELIMINAR" ? M.MODAL_CONFIRMAR_ELIMINAR : M.MODAL_CONFIRMAR_DEFAULT}
         isDanger={modalConfig.tipo === "ELIMINAR"}
         onConfirm={confirmarModal}
         onCancel={cerrarModal}

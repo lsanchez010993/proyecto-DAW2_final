@@ -13,6 +13,7 @@ function TarjetaLibro({ libro }) {
         className="card-img-top p-3" 
         style={{ height: "220px", objectFit: "contain" }} 
         alt={libro.titulo} 
+        
       />
       <div className="card-body text-center d-flex flex-column justify-content-between">
         <div>

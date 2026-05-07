@@ -3,6 +3,7 @@ import axios from "axios";
 import { APP_MESSAGES } from "../../constants/messages";
 
 function ContenidoGratuito({ categoria, onClose, onDescarga }) {
+  const M = APP_MESSAGES.PAGES.DETALLE_LIBRO;
   const [idiomaModal, setIdiomaModal] = useState("es");
   const [librosGutendexES, setLibrosGutendexES] = useState([]);
   const [librosGutendexEN, setLibrosGutendexEN] = useState([]);
@@ -22,7 +23,7 @@ function ContenidoGratuito({ categoria, onClose, onDescarga }) {
 
     setCargandoGutendex(true);
 
-    const categoriaBuscar = categoria || "Literatura";
+    const categoriaBuscar = categoria || M.CONTENIDO_GRATUITO_DEFECTO;
 
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
@@ -55,7 +56,7 @@ function ContenidoGratuito({ categoria, onClose, onDescarga }) {
         <div className="modal-content shadow">
           <div className="modal-header bg-light d-flex align-items-center justify-content-between">
             <h5 className="modal-title fw-bold mb-0">
-              Obras gratuitas: {categoria || "Literatura"}
+              {`${M.CONTENIDO_GRATUITO_TITULO} ${categoria || M.CONTENIDO_GRATUITO_DEFECTO}`}
             </h5>
 
             <div className="d-flex align-items-center gap-3">
@@ -65,14 +66,14 @@ function ContenidoGratuito({ categoria, onClose, onDescarga }) {
                   className={`btn btn-sm ${idiomaModal === "es" ? "btn-primary" : "btn-outline-secondary bg-white"}`}
                   onClick={() => cargarLibrosGutendex("es")}
                 >
-                  🇪🇸 Español
+                  {M.CONTENIDO_IDIOMA_ES}
                 </button>
                 <button
                   type="button"
                   className={`btn btn-sm ${idiomaModal === "en" ? "btn-primary" : "btn-outline-secondary bg-white"}`}
                   onClick={() => cargarLibrosGutendex("en")}
                 >
-                  🇬🇧 Inglés
+                  {M.CONTENIDO_IDIOMA_EN}
                 </button>
               </div>
 
@@ -92,7 +93,7 @@ function ContenidoGratuito({ categoria, onClose, onDescarga }) {
                   role="status"
                 ></div>
                 <p className="lead">
-                  Explorando estanterías en {idiomaModal === "es" ? "español" : "inglés"}...
+                  {`${M.CONTENIDO_CARGANDO_PREFIJO} ${idiomaModal === "es" ? M.CONTENIDO_ESPANOL : M.CONTENIDO_INGLES}...`}
                 </p>
               </div>
             ) : librosAMostrar.length > 0 ? (
@@ -125,7 +126,7 @@ function ContenidoGratuito({ categoria, onClose, onDescarga }) {
                             className="btn btn-sm btn-outline-primary w-100 rounded-pill fw-bold"
                             onClick={() => onDescarga?.(libroGuten)}
                           >
-                            ⬇️ Descargar
+                            {M.CONTENIDO_DESCARGAR}
                           </a>
                         </div>
                       </div>
@@ -136,8 +137,7 @@ function ContenidoGratuito({ categoria, onClose, onDescarga }) {
             ) : (
               <div className="text-center text-muted my-5">
                 <p className="lead">
-                  No hay clásicos de {categoria || "Literatura"} disponibles en{" "}
-                  {idiomaModal === "es" ? "español" : "inglés"}.
+                  {`${M.CONTENIDO_VACIO_PREFIJO} ${categoria || M.CONTENIDO_GRATUITO_DEFECTO} ${M.CONTENIDO_VACIO_MEDIO} ${idiomaModal === "es" ? M.CONTENIDO_ESPANOL : M.CONTENIDO_INGLES}.`}
                 </p>
               </div>
             )}
@@ -149,7 +149,7 @@ function ContenidoGratuito({ categoria, onClose, onDescarga }) {
               className="btn btn-secondary"
               onClick={onClose}
             >
-              Cerrar
+              {M.CERRAR}
             </button>
           </div>
         </div>

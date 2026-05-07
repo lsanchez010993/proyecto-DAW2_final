@@ -1,7 +1,9 @@
 // frontend/src/components/PestanasAdmin.jsx
 import styles from "./AdminLibros.module.css";
+import { APP_MESSAGES } from "../../constants/messages";
 
 export default function PestanasAdmin({ pestañaActiva, onCambiarPestaña }) {
+  const M = APP_MESSAGES.PAGES.ADMIN_LIBROS;
   return (
     <div className={`mb-3 ${styles.contenedorPestanas}`}>
        <ul className="nav nav-pills nav-fill border-0">
@@ -15,7 +17,7 @@ export default function PestanasAdmin({ pestañaActiva, onCambiarPestaña }) {
                 }`}
                 onClick={() => onCambiarPestaña("catalogo")}
               >
-                📦 Libros
+                {M.PESTANA_LIBROS}
               </button>
             </li>
             <li className="nav-item">
@@ -28,7 +30,7 @@ export default function PestanasAdmin({ pestañaActiva, onCambiarPestaña }) {
                 }`}
                 onClick={() => onCambiarPestaña("gratuitos")}
               >
-                📚 Libros gratuitos
+                {M.PESTANA_GRATUITOS}
               </button>
             </li>
           </ul>

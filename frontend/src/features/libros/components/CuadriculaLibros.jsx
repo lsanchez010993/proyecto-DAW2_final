@@ -19,6 +19,7 @@ export default function CuadriculaLibros({ libros, onDelete }) {
                 className="card-img-top h-100 w-100"
                 style={{ objectFit: "cover" }}
                 alt={libro.titulo}
+                
               />
             ) : (
               <span className="text-muted">Sin imagen</span>

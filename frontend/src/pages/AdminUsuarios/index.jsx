@@ -1,8 +1,10 @@
 import { useAdminUsuarios } from "./useAdminUsuarios";
 import SelectorRol from "./SelectorRol";
 import ModalConfirmacion from "../../components/ModalConfirmacion.jsx";
+import { APP_MESSAGES } from "../../constants/messages";
 
 function AdminUsuarios() {
+  const M = APP_MESSAGES.PAGES.ADMIN_USUARIOS;
   const {
     usuarios,
     editandoEditorialId, setEditandoEditorialId,
@@ -18,17 +20,17 @@ function AdminUsuarios() {
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">Gestión de Usuarios</h2>
+      <h2 className="mb-4">{M.TITULO}</h2>
       
       <div className="table-responsive shadow-sm rounded">
         <table className="table table-hover align-middle mb-0 bg-white">
           <thead className="bg-light">
             <tr>
-              <th>Usuario</th>
-              <th>Email</th>
-              <th>Rol (Permisos)</th>
-              <th>Historial</th>
-              <th>Acciones</th>
+              <th>{M.COLUMNA_USUARIO}</th>
+              <th>{M.COLUMNA_EMAIL}</th>
+              <th>{M.COLUMNA_ROL}</th>
+              <th>{M.COLUMNA_HISTORIAL}</th>
+              <th>{M.COLUMNA_ACCIONES}</th>
             </tr>
           </thead>
           <tbody>
@@ -43,7 +45,7 @@ function AdminUsuarios() {
                     </div>
                     <div>
                       <p className="fw-bold mb-1">{user.nombre}</p>
-                      <p className="text-muted mb-0 small">ID: {user._id.slice(-4)}</p>
+                      <p className="text-muted mb-0 small">{M.ID_PREFIX} {user._id.slice(-4)}</p>
                     </div>
                   </div>
                 </td>
@@ -67,7 +69,7 @@ function AdminUsuarios() {
                 {/* Columna Historial */}
                 <td>
                     <button className="btn btn-sm btn-outline-info" onClick={() => verHistorial(user)}>
-                        Ver
+                        {M.BOTON_VER}
                     </button>
                 </td>
 
@@ -77,7 +79,7 @@ function AdminUsuarios() {
                     <button 
                       className="btn btn-sm btn-outline-danger" 
                       onClick={() => confirmarEliminacionUsuario(user)}
-                      title="Eliminar usuario"
+                      title={M.ELIMINAR_TITLE}
                     >
                       🗑️
                     </button>
@@ -91,13 +93,13 @@ function AdminUsuarios() {
 
       <ModalConfirmacion 
         isOpen={modalConfig.isOpen}
-        titulo={modalConfig.tipo === 'ELIMINAR' ? 'Confirmar eliminación' : 'Confirmar cambio de rol'}
+        titulo={modalConfig.tipo === 'ELIMINAR' ? M.MODAL_ELIMINAR_TITULO : M.MODAL_CAMBIO_ROL_TITULO}
         mensaje={
           modalConfig.tipo === 'ELIMINAR' 
-            ? <>¿Estás seguro de que quieres eliminar al usuario <strong className="text-dark">{modalConfig.datos?.user?.nombre}</strong>? Esta acción no se puede deshacer.</>
-            : <>¿Estás seguro de cambiar el rol de <strong className="text-dark">{modalConfig.datos?.user?.nombre}</strong>?<br/><span className="text-muted fs-6 mt-2 d-inline-block">El nuevo rol será: <span className="badge bg-info text-dark">{modalConfig.datos?.nuevoRol}</span></span></>
+            ? <>{`${M.MODAL_ELIMINAR_PREFIJO} `}<strong className="text-dark">{modalConfig.datos?.user?.nombre}</strong>{M.MODAL_ELIMINAR_SUFIX}</>
+            : <>{`${M.MODAL_ROL_PREFIJO} `}<strong className="text-dark">{modalConfig.datos?.user?.nombre}</strong>{M.MODAL_ROL_SUFIX}<br/><span className="text-muted fs-6 mt-2 d-inline-block">{`${M.MODAL_ROL_MEDIO} `}<span className="badge bg-info text-dark">{modalConfig.datos?.nuevoRol}</span></span></>
         }
-        textoConfirmar={modalConfig.tipo === 'ELIMINAR' ? 'Sí, eliminar' : 'Sí, cambiar rol'}
+        textoConfirmar={modalConfig.tipo === 'ELIMINAR' ? M.MODAL_CONFIRMAR_ELIMINAR : M.MODAL_CONFIRMAR_ROL}
         isDanger={modalConfig.tipo === 'ELIMINAR'}
         onConfirm={confirmarModal}
         onCancel={cerrarModal}

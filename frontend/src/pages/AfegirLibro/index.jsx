@@ -1,24 +1,26 @@
 import styles from "./AfegirLibro.module.css";
 import { useAfegirLibro } from "./useAfegirLibro";
 import ModalConfirmacion from "../../components/ModalConfirmacion.jsx";
+import { APP_MESSAGES } from "../../constants/messages";
 
 
 function AfegirLibroPage() {
+  const M = APP_MESSAGES.PAGES.AFEGIR_LIBRO;
   const { loading, formData, setFile, preview, setPreview, categoriasSeleccionadas, listaCategorias, handleChange, handleFileChange, toggleCategoria, handleSubmit, esEditor, esAdmin, editoriales, modalConfig, cerrarModal, confirmarModal } = useAfegirLibro();
 
   return (
     <div className="container mt-5">
       <div className={`card shadow p-4 ${styles.tarjetaCrear}`}>
-        <h2 className="text-center mb-4 fw-bold">📚 Añadir Nuevo Libro</h2>
+        <h2 className="text-center mb-4 fw-bold">{M.TITULO}</h2>
         <form onSubmit={handleSubmit}>
           {preview && (
             <div className="text-center mb-4 animate__animated animate__zoomIn">
               <p className="small text-muted mb-2">
-                Vista previa de la portada:
+                {M.PREVIEW_LABEL}
               </p>
               <img
                 src={preview}
-                alt="Vista previa"
+                alt={M.PREVIEW_ALT}
                 className={styles.imagenPreview}
               />
               <div className="mt-2">
@@ -30,14 +32,14 @@ function AfegirLibroPage() {
                     setPreview(null);
                   }}
                 >
-                  Quitar imagen
+                  {M.QUITAR_IMAGEN}
                 </button>
               </div>
             </div>
           )}
 
           <div className="mb-3">
-            <label className="small text-muted mb-1">Título</label>
+            <label className="small text-muted mb-1">{M.LABEL_TITULO}</label>
             <input
               type="text"
               name="titulo"
@@ -49,7 +51,7 @@ function AfegirLibroPage() {
 
           <div className="row">
             <div className="col-md-6 mb-3">
-              <label className="small text-muted mb-1">ISBN</label>
+              <label className="small text-muted mb-1">{M.LABEL_ISBN}</label>
               <input
                 type="text"
                 name="isbn"
@@ -59,7 +61,7 @@ function AfegirLibroPage() {
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="small text-muted mb-1">Autor</label>
+              <label className="small text-muted mb-1">{M.LABEL_AUTOR}</label>
               <input
                 type="text"
                 name="autor"
@@ -72,24 +74,24 @@ function AfegirLibroPage() {
           {/* Si el usuario es editorial, se muestra el campo de editorial */}
           {esEditor && (
           <div className="mb-3">
-            <label className="small text-muted mb-1">Editorial</label>
+            <label className="small text-muted mb-1">{M.LABEL_EDITORIAL}</label>
             <input
               type="text"
               name="editorial"
               className={`form-control ${styles.inputRedondeado} bg-light`}
               value={formData.editorial}
               readOnly // Evita que lo modifiquen
-              placeholder="Cargando tu editorial..."
+              placeholder={M.PLACEHOLDER_EDITORIAL}
             />
             <small className="text-muted ms-2" style={{ fontSize: "0.75rem" }}>
-              * Este campo se asigna automáticamente según tu perfil.
+              {M.AYUDA_EDITORIAL}
             </small>
           </div>
           )}
           {/* Si el usuario es admin, se muestra el campo de editorial */}
           {esAdmin && (
             <div className="mb-3">
-              <label className="small text-muted mb-1">Editorial</label>
+              <label className="small text-muted mb-1">{M.LABEL_EDITORIAL}</label>
               <select
                 name="editorial"
                 className={`form-control ${styles.inputRedondeado}`}
@@ -105,7 +107,7 @@ function AfegirLibroPage() {
           )}
           <div className="row">
             <div className="col-md-6 mb-3">
-              <label className="small text-muted mb-1">Precio Físico (€)</label>
+              <label className="small text-muted mb-1">{M.LABEL_PRECIO_FISICO}</label>
               <input
                 type="number"
                 step="0.01"
@@ -117,7 +119,7 @@ function AfegirLibroPage() {
             </div>
             <div className="col-md-6 mb-3">
               <label className="small text-muted mb-1">
-                Precio Digital (€)
+                {M.LABEL_PRECIO_DIGITAL}
               </label>
               <input
                 type="number"
@@ -133,7 +135,7 @@ function AfegirLibroPage() {
           {/*Interfaz visual de categorías */}
           <div className="mb-4">
             <label className="small text-muted mb-2 d-block">
-              Categorías del libro (Selecciona una o varias)
+              {M.LABEL_CATEGORIAS}
             </label>
             <div className="d-flex flex-wrap gap-2">
               {listaCategorias.map((cat) => (
@@ -154,7 +156,7 @@ function AfegirLibroPage() {
           </div>
 
           <div className="mb-3">
-            <label className="small text-muted mb-1">Subir Portada</label>
+            <label className="small text-muted mb-1">{M.LABEL_PORTADA}</label>
             <input
               type="file"
               className={`form-control ${styles.inputRedondeado}`}
@@ -164,7 +166,7 @@ function AfegirLibroPage() {
           </div>
 
           <div className="mb-4">
-            <label className="small text-muted mb-1">Sinopsis</label>
+            <label className="small text-muted mb-1">{M.LABEL_SINOPSIS}</label>
             <textarea
               name="sinopsis"
               className={`form-control ${styles.areaTexto}`}
@@ -178,16 +180,16 @@ function AfegirLibroPage() {
             className="btn btn-dark w-100 rounded-pill fw-bold py-2 shadow"
             disabled={loading}
           >
-            {loading ? "Guardando..." : "Guardar Libro"}
+            {loading ? M.GUARDANDO : M.GUARDAR_LIBRO}
           </button>
         </form>
         <ModalConfirmacion 
         isOpen={modalConfig.isOpen}
-        titulo={'Confirmar añadir libro'}
+        titulo={M.MODAL_TITULO}
         mensaje={
-          <>¿Estás seguro de que quieres añadir el libro <strong className="text-dark">{formData.titulo}</strong>? </>
+          <>{`${M.MODAL_MENSAJE_PREFIJO} `}<strong className="text-dark">{formData.titulo}</strong>{M.MODAL_MENSAJE_SUFIX}</>
         }
-        textoConfirmar={'Sí, guardar libro'}
+        textoConfirmar={M.MODAL_CONFIRMAR}
         isDanger={false}
         onConfirm={confirmarModal}
         onCancel={cerrarModal}

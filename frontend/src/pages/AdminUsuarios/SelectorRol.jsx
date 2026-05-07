@@ -1,3 +1,5 @@
+import { APP_MESSAGES } from "../../constants/messages";
+
 export default function SelectorRol({
   user,
   editandoEditorialId,
@@ -7,13 +9,14 @@ export default function SelectorRol({
   handleSeleccionRol,
   guardarEditorial,
 }) {
+  const M = APP_MESSAGES.PAGES.ADMIN_USUARIOS;
   if (user.rol === "admin") {
     return (
       <div
         className="form-control form-control-sm fw-bold border-warning text-warning bg-light shadow-sm d-flex align-items-center"
         style={{ cursor: "not-allowed", height: "31px" }}
       >
-        Admin
+        {M.SELECTOR_ADMIN}
       </div>
     );
   }
@@ -29,9 +32,9 @@ export default function SelectorRol({
         value={editandoEditorialId === user._id ? "editorial" : user.rol}
         onChange={(e) => handleSeleccionRol(user, e.target.value)}
       >
-        <option value="cliente">Usuario</option>
-        <option value="editorial">Editor</option>
-        <option value="admin">Admin</option>
+        <option value="cliente">{M.SELECTOR_USUARIO}</option>
+        <option value="editorial">{M.SELECTOR_EDITOR}</option>
+        <option value="admin">{M.SELECTOR_ADMIN}</option>
       </select>
 
       {/* CAJÓN AUTOEDITABLE PARA LA EDITORIAL */}
@@ -41,7 +44,7 @@ export default function SelectorRol({
             <input
               type="text"
               className="form-control border-info"
-              placeholder="Nombre de la editorial..."
+              placeholder={M.SELECTOR_PLACEHOLDER_EDITORIAL}
               value={nombreEditorialTemp}
               onChange={(e) => setNombreEditorialTemp(e.target.value)}
               autoFocus

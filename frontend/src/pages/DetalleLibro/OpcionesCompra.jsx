@@ -1,11 +1,13 @@
 import { useCarrito } from "../../context/CarritoContext";
+import { APP_MESSAGES } from "../../constants/messages";
 
 function OpcionesCompra({ libro, enDeseos, onToggleDeseos, onInteraccion }) {
+  const M = APP_MESSAGES.PAGES.DETALLE_LIBRO;
   const { agregarAlCarrito } = useCarrito();
 
   return (
     <div className="card bg-light p-3 mt-4">
-      <h5>Opciones de Compra:</h5>
+      <h5>{M.OPCIONES_COMPRA}</h5>
       <div className="d-flex gap-3 mt-2 align-items-center">
         <button
           className="btn btn-primary"
@@ -14,7 +16,7 @@ function OpcionesCompra({ libro, enDeseos, onToggleDeseos, onInteraccion }) {
             onInteraccion("carrito");
           }}
         >
-          Comprar Físico ({libro.precio?.fisico} €)
+          {`${M.COMPRAR_FISICO} (${libro.precio?.fisico} €)`}
         </button>
 
         <button
@@ -24,15 +26,15 @@ function OpcionesCompra({ libro, enDeseos, onToggleDeseos, onInteraccion }) {
             onInteraccion("carrito");
           }}
         >
-          Comprar Ebook ({libro.precio?.digital} €)
+          {`${M.COMPRAR_EBOOK} (${libro.precio?.digital} €)`}
         </button>
 
         <button
           className={`btn ${enDeseos ? "btn-danger" : "btn-outline-danger"}`}
           onClick={onToggleDeseos}
-          title="Añadir a lista de deseos"
+          title={M.DESEOS_TITLE}
         >
-          {enDeseos ? "❤️ Guardado" : "🤍 Guardar"}
+          {enDeseos ? M.DESEOS_GUARDADO : M.DESEOS_GUARDAR}
         </button>
       </div>
     </div>

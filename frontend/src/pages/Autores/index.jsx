@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import styles from "../Autores/Autores.module.css";
 import { useAutores } from "./useAutores";
+import { APP_MESSAGES } from "../../constants/messages";
 
 
 function AutoresPage() {
+    const M = APP_MESSAGES.PAGES.AUTORES;
 
     const {
       busqueda,
@@ -36,14 +38,14 @@ function AutoresPage() {
       <div className="col-md-3 mb-4 h-100">
         <div className={`shadow-sm ${styles.panelLateral}`}>
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="fw-bold m-0">Autores</h5>
+            <h5 className="fw-bold m-0">{M.TITULO_PANEL}</h5>
           </div>
           
           <div className="mb-3">
             <input
               type="text"
               className="form-control rounded-pill bg-white"
-              placeholder="Buscar autor..."
+              placeholder={M.BUSCAR_PLACEHOLDER}
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
             />
@@ -51,14 +53,14 @@ function AutoresPage() {
 
           <div className={styles.listaAutores}>
             {buscando ? (
-              <p className="text-center text-muted small mt-4">Buscando...</p>
+              <p className="text-center text-muted small mt-4">{M.BUSCANDO}</p>
             ) : busqueda === "" ? (
               <p className="text-center text-muted small mt-4">
-                Usa el buscador para encontrar un autor específico.
+                {M.AYUDA_BUSQUEDA}
               </p>
             ) : resultadosBusqueda.length === 0 ? (
               <p className="text-center text-muted small mt-4">
-                No hay autores que coincidan con "{busqueda}".
+                {`${M.SIN_COINCIDENCIAS_PREFIJO}${busqueda}${M.SIN_COINCIDENCIAS_SUFIX}`}
               </p>
             ) : (
               resultadosBusqueda.map((autor, index) => (
@@ -91,7 +93,7 @@ function AutoresPage() {
                   !letraSeleccionada && !autorSeleccionado ? "btn-primary text-white" : "btn-light"
                 }`}
                 style={{ width: "38px", height: "38px", padding: 0 }}
-                title="Ver Todos"
+                title={M.VER_TODOS_TITLE}
               >
                 ∞
             </button>
@@ -120,14 +122,14 @@ function AutoresPage() {
           {autorSeleccionado ? (
             <>
               <h3 className="mb-4 border-bottom pb-2">
-                Obras de <span className="fw-bold">{autorSeleccionado}</span>
+                {`${M.OBRAS_DE} `}<span className="fw-bold">{autorSeleccionado}</span>
               </h3>
               
               <div className="row g-4">
                 {cargandoLibros ? (
-                  <p className="text-center w-100">Cargando estantería...</p>
+                  <p className="text-center w-100">{M.CARGANDO_ESTANTERIA}</p>
                 ) : libros.length === 0 ? (
-                  <p className="text-center w-100 text-muted">No se encontraron libros de este autor.</p>
+                  <p className="text-center w-100 text-muted">{M.SIN_LIBROS_AUTOR}</p>
                 ) : (
                   libros.map((libro) => (
                     <div key={libro._id} className="col-md-4 col-lg-3">
@@ -136,10 +138,10 @@ function AutoresPage() {
                         <div className="card-body text-center d-flex flex-column justify-content-between">
                           <div>
                             <h6 className="fw-bold mb-1">{libro.titulo}</h6>
-                            <p className="text-muted small mb-2">Editorial: {libro.editorial}</p>
+                            <p className="text-muted small mb-2">{M.EDITORIAL_LABEL} {libro.editorial}</p>
                           </div>
                           <Link to={`/libro/${libro._id}`} className="btn btn-outline-dark btn-sm rounded-pill mt-2 w-100">
-                            Ver Detalles
+                            {M.VER_DETALLES}
                           </Link>
                         </div>
                       </div>
@@ -155,15 +157,15 @@ function AutoresPage() {
             <>
               <h3 className="mb-4 border-bottom pb-2">
                 {letraSeleccionada 
-                  ? `Autores que empiezan por "${letraSeleccionada}"` 
-                  : "Directorio de Autores"}
+                  ? `${M.AUTORES_POR_LETRA_PREFIJO}${letraSeleccionada}${M.AUTORES_POR_LETRA_SUFIX}`
+                  : M.DIRECTORIO_AUTORES}
               </h3>
               
               <div className="row g-4">
                 {(letraSeleccionada ? cargandoLetra : cargandoTodos) ? (
-                  <p className="text-center w-100 mt-5">Cargando el directorio...</p>
+                  <p className="text-center w-100 mt-5">{M.CARGANDO_DIRECTORIO}</p>
                 ) : listaActiva.length === 0 ? (
-                  <p className="text-center w-100 text-muted mt-5">Aún no hay autores registrados en esta sección.</p>
+                  <p className="text-center w-100 text-muted mt-5">{M.SIN_AUTORES}</p>
                 ) : (
                   <>
                     {/* Dibuja solo los autores limitados por el scroll */}

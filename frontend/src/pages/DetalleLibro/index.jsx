@@ -4,17 +4,19 @@ import { useDetalleLibro } from "./useDetalleLibro";
 import OpcionesCompra from "./OpcionesCompra";
 import SeccionRelacionados from "./SeccionRelacionados";
 import ContenidoGratuito from "./ContenidoGratuito";
+import { APP_MESSAGES } from "../../constants/messages";
 
 function DetalleLibro() {
+  const M = APP_MESSAGES.PAGES.DETALLE_LIBRO;
   const { id } = useParams();
   const { libro, cargando, enDeseos, toggleDeseos, registrarInteraccion, registrarDescarga, librosRelacionados, tituloSeccion } = useDetalleLibro(id);
   const [mostrarModal, setMostrarModal] = useState(false);
 
-  if (cargando || !libro) return <div className="text-center mt-5">Cargando libro...</div>;
+  if (cargando || !libro) return <div className="text-center mt-5">{M.CARGANDO}</div>;
 
   return (
     <div className="container mt-5 mb-5">
-      <Link to="/" className="btn btn-outline-secondary mb-3">← Volver al catálogo</Link>
+      <Link to="/" className="btn btn-outline-secondary mb-3">{M.VOLVER_CATALOGO}</Link>
 
       <div className="row">
         <div className="col-md-4">
@@ -25,7 +27,7 @@ function DetalleLibro() {
           <h3 className="text-muted">{libro.autor}</h3>
           <hr />
           <p className="lead">{libro.sinopsis}</p>
-          <p className="mb-3 text-secondary"><span className="fw-bold">Editorial:</span> {libro.editorial}</p>
+          <p className="mb-3 text-secondary"><span className="fw-bold">{M.EDITORIAL_LABEL}</span> {libro.editorial}</p>
 
           {/* Etiquetas de categorías */}
           <div className="mb-4 d-flex flex-wrap gap-2">

@@ -3,8 +3,10 @@ import styles from "./Categorias.module.css";
 import { useCategorias } from "./useCategorias";
 import CarruselLibros from "../../features/libros/components/CarruselLibros";
 import TarjetaLibro from "../../features/libros/components/TarjetaLibro";
+import { APP_MESSAGES } from "../../constants/messages";
 
 function CategoriasPage() {
+  const M = APP_MESSAGES.PAGES.CATEGORIAS;
   const {
     listaCategoriasGlobal,
     seleccionadas,
@@ -26,13 +28,13 @@ function CategoriasPage() {
             ========================================= */}
         <div className="col-md-3 mb-4 h-100">
           <div className={`shadow-sm ${styles.panelLateral}`}>
-            <h5 className="fw-bold mb-3">Buscar Libro</h5>
+            <h5 className="fw-bold mb-3">{M.BUSCAR_TITULO}</h5>
 
             <div className="mb-3">
               <input
                 type="text"
                 className="form-control rounded-pill bg-white"
-                placeholder="🔍 Título del libro..."
+                placeholder={M.BUSCAR_PLACEHOLDER}
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
               />
@@ -40,11 +42,11 @@ function CategoriasPage() {
 
             <div className={styles.listaResultados}>
               {buscando ? (
-                <p className="text-center text-muted small mt-4">Buscando...</p>
+                <p className="text-center text-muted small mt-4">{M.BUSCANDO}</p>
               ) : busqueda === "" ? (
-                <p className="text-center text-muted small mt-4">Encuentra un libro específico por su título.</p>
+                <p className="text-center text-muted small mt-4">{M.AYUDA_BUSQUEDA}</p>
               ) : resultadosBusqueda.length === 0 ? (
-                <p className="text-center text-muted small mt-4">No hay libros que coincidan con "{busqueda}".</p>
+                <p className="text-center text-muted small mt-4">{`${M.SIN_COINCIDENCIAS_PREFIJO}${busqueda}${M.SIN_COINCIDENCIAS_SUFIX}`}</p>
               ) : (
                 resultadosBusqueda.map((libro) => (
                   <Link key={libro._id} to={`/libro/${libro._id}`} className={styles.itemResultado}>
@@ -66,12 +68,13 @@ function CategoriasPage() {
             ========================================= */}
         <div className="col-md-9">
           <div className={`shadow-sm p-4 mb-4 ${styles.tarjetaNube} animate__animated animate__fadeIn`}>
-            <p className="text-muted text-center mb-4">Filtra por tus géneros favoritos</p>
+            <p className="text-muted text-center mb-4">{M.FILTRO_HINT}</p>
 
             <div className="d-flex flex-wrap justify-content-center gap-2">
               {listaCategoriasGlobal.map((cat) => (
                 <button
                   key={cat}
+                  aria-label={cat}
                   onClick={() => toggleCategoria(cat)}
                   className={`btn rounded-pill px-4 py-2 shadow-sm ${styles.botonPildora} ${
                     seleccionadas.includes(cat)
@@ -87,14 +90,14 @@ function CategoriasPage() {
 
           <div>
             <h4 className="mb-4 border-bottom pb-2">
-              {seleccionadas.length === 0 ? `Catálogo General:` : `Resultados Encontrados:`}
+              {seleccionadas.length === 0 ? M.CATALOGO_GENERAL : M.RESULTADOS_ENCONTRADOS}
             </h4>
 
             {/* DIBUJAR LIBROS POR CATEGORÍA */}
             {Object.entries(librosPorCategoria).length === 0 && !cargandoFilas ? (
               <div className={`text-center text-muted w-100 mt-5`}>
                 <h1 style={{ fontSize: "4rem" }}>🧭</h1>
-                <p className="mt-3">Aún no hay libros en estas categorías.</p>
+                <p className="mt-3">{M.VACIO}</p>
               </div>
             ) : (
               Object.entries(librosPorCategoria).map(([nombreCategoria, librosDeCategoria]) => {
@@ -113,7 +116,7 @@ function CategoriasPage() {
                           className="btn btn-sm btn-outline-dark rounded-pill px-3"
                           onClick={() => toggleExpandir(nombreCategoria)}
                         >
-                          {estaExpandida ? "Ocultar" : "Ver todo"}
+                          {estaExpandida ? M.OCULTAR : M.VER_TODO}
                         </button>
                       )}
                     </h5>

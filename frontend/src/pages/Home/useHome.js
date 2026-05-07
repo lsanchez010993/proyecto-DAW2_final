@@ -34,7 +34,7 @@ export default function useHome() {
         // 2. Si hay token, carga los datos privados
         if (token) {
           const resPrivada = await axios.get(`${URL}/api/home/privadas`, {
-            //Se envía el token en las cabeceras (headers) HTTP. El estándar de seguridad dicta que se envíe con la palabra clave "Bearer" seguida del token.
+            
             headers: { Authorization: `Bearer ${token}` },
           });
           //Se actualizan los estados con los datos recibidos de la API.

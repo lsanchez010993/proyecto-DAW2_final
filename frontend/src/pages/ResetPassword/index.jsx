@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { APP_MESSAGES } from "../../constants/messages";
 
 export default function ResetPasswordPage() {
+  const M = APP_MESSAGES.PAGES.RESET_PASSWORD;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -53,9 +55,9 @@ export default function ResetPasswordPage() {
   return (
     <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f0f2f5" }}>
       <div className="card border-0 shadow-sm p-4" style={{ width: "100%", maxWidth: "420px" }}>
-        <h3 className="text-center mb-2 fw-bold">Restablecer contraseña</h3>
+        <h3 className="text-center mb-2 fw-bold">{M.TITULO}</h3>
         <p className="text-muted text-center mb-4" style={{ fontSize: "0.95rem" }}>
-          Introduce tu nueva contraseña.
+          {M.SUBTITULO}
         </p>
 
         <form onSubmit={onSubmit}>
@@ -63,13 +65,13 @@ export default function ResetPasswordPage() {
             <input
               type="password"
               className="form-control py-2"
-              placeholder="Nueva contraseña"
+              placeholder={M.PLACEHOLDER_PASSWORD}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
             <small className="text-muted d-block mt-2">
-              Debe tener al menos 6 caracteres, una mayúscula y un número.
+              {M.AYUDA_PASSWORD}
             </small>
           </div>
 
@@ -77,7 +79,7 @@ export default function ResetPasswordPage() {
             <input
               type="password"
               className="form-control py-2"
-              placeholder="Repite la nueva contraseña"
+              placeholder={M.PLACEHOLDER_PASSWORD_REPEAT}
               value={password2}
               onChange={(e) => setPassword2(e.target.value)}
               required
@@ -85,13 +87,13 @@ export default function ResetPasswordPage() {
           </div>
 
           <button type="submit" className="btn btn-primary w-100 py-2 fw-bold" disabled={isSubmitting}>
-            {isSubmitting ? "Guardando..." : "Guardar nueva contraseña"}
+            {isSubmitting ? M.GUARDANDO : M.GUARDAR}
           </button>
         </form>
 
         <div className="text-center mt-3">
           <Link to="/login" className="text-primary text-decoration-none small">
-            Volver a iniciar sesión
+            {M.VOLVER_LOGIN}
           </Link>
         </div>
       </div>

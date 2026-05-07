@@ -35,6 +35,7 @@ function MenuExplorar() {
       <div className={styles.menuPildora}>
         <NavLink
           to="/categorias"
+          
           className={({ isActive }) =>
             isActive
               ? `${styles.enlaceItem} ${styles.enlaceActivo}`
@@ -46,6 +47,7 @@ function MenuExplorar() {
 
         <NavLink
           to="/editoriales"
+          
           className={({ isActive }) =>
             isActive
               ? `${styles.enlaceItem} ${styles.enlaceActivo}`
@@ -57,6 +59,7 @@ function MenuExplorar() {
 
         <NavLink
           to="/autores"
+          
           className={({ isActive }) =>
             isActive
               ? `${styles.enlaceItem} ${styles.enlaceActivo}`
@@ -67,6 +70,7 @@ function MenuExplorar() {
         </NavLink>
         <NavLink
           to="/libros"
+          
           className={({ isActive }) =>
             isActive
               ? `${styles.enlaceItem} ${styles.enlaceActivo}`

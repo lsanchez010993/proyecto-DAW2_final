@@ -6,6 +6,7 @@ const verificarToken = require("../middleware/auth");
 const controllerUusuario = require("../controllers/usuarioController");
 const adminUsuariosController = require("../controllers/adminUsuariosController");
 const MESSAGES = require("../constants/messages");
+const uploadAvatar = require("../config/cloudinaryAvatar");
 
 
 // ==========================================
@@ -34,7 +35,7 @@ router.post("/google", googleAuthController.googleAuth);
 // PERFIL DEL USUARIO (Requieren Token)
 // ==========================================
 
-router.put("/perfil", verificarToken, controllerUusuario.actualizarPerfil);
+router.put("/perfil", verificarToken, uploadAvatar.single("avatar"), controllerUusuario.actualizarPerfil);
 router.put("/deseos/toggle", verificarToken, controllerUusuario.actualizarListaDeseos);
 router.get("/deseos", verificarToken, controllerUusuario.listarDeseos);
 router.put("/cambiar-password", verificarToken, controllerUusuario.cambiarPassword);

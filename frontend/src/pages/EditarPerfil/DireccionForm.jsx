@@ -1,24 +1,32 @@
+import { APP_MESSAGES } from "../../constants/messages";
+
 export default function DireccionForm({
   direccion,
   handleDireccionChange
 }) {
   return (
     <div className="animate__animated animate__fadeIn">
-      <h4 className="mb-4 text-center">Dirección de Entrega</h4>
+      <h4 className="mb-4 text-center">
+        {APP_MESSAGES.EDITAR_PERFIL.DIRECCION.TITULO}
+      </h4>
       <div className="mb-3">
-        <label className="small text-muted">Calle y número</label>
+        <label className="small text-muted">
+          {APP_MESSAGES.EDITAR_PERFIL.DIRECCION.CALLE_LABEL}
+        </label>
         <input 
           type="text" 
           name="calle" 
           className="form-control rounded-pill" 
           value={direccion.calle} 
           onChange={handleDireccionChange} 
-          placeholder="Ej: Calle Mayor 12, 2B" 
+          placeholder={APP_MESSAGES.EDITAR_PERFIL.DIRECCION.CALLE_PLACEHOLDER}
         />
       </div>
       <div className="row">
         <div className="col-md-6 mb-3">
-          <label className="small text-muted">Ciudad</label>
+          <label className="small text-muted">
+            {APP_MESSAGES.EDITAR_PERFIL.DIRECCION.CIUDAD_LABEL}
+          </label>
           <input 
             type="text" 
             name="ciudad" 
@@ -28,7 +36,9 @@ export default function DireccionForm({
           />
         </div>
         <div className="col-md-6 mb-3">
-          <label className="small text-muted">Código Postal</label>
+          <label className="small text-muted">
+            {APP_MESSAGES.EDITAR_PERFIL.DIRECCION.CP_LABEL}
+          </label>
           <input 
             type="text" 
             name="codigo_postal" 
@@ -39,7 +49,9 @@ export default function DireccionForm({
         </div>
       </div>
       <div className="mb-3">
-        <label className="small text-muted">País</label>
+        <label className="small text-muted">
+          {APP_MESSAGES.EDITAR_PERFIL.DIRECCION.PAIS_LABEL}
+        </label>
         <input 
           type="text" 
           name="pais" 
@@ -49,7 +61,9 @@ export default function DireccionForm({
         />
       </div>
       <div className="mb-3">
-        <label className="small text-muted">Teléfono de contacto</label>
+        <label className="small text-muted">
+          {APP_MESSAGES.EDITAR_PERFIL.DIRECCION.TELEFONO_LABEL}
+        </label>
         <input 
           type="text" 
           name="telefono" 

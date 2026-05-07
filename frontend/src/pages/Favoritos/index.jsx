@@ -1,8 +1,10 @@
 import TarjetaLibro from "../../features/libros/components/TarjetaLibro";
+import { APP_MESSAGES } from "../../constants/messages";
 import { useFavoritos } from "./useFavoritos";
 
 function FavoritosPage() {
   const { cargando, libros, quitarDeFavoritos } = useFavoritos();
+  const M = APP_MESSAGES.PAGES.FAVORITOS;
 
   if (cargando) {
     return (
@@ -11,7 +13,7 @@ function FavoritosPage() {
         style={{ height: "50vh" }}
       >
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Cargando...</span>
+          <span className="visually-hidden">{M.CARGANDO}</span>
         </div>
       </div>
     );
@@ -20,16 +22,16 @@ function FavoritosPage() {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold mb-0">Mis favoritos</h2>
+        <h2 className="fw-bold mb-0">{M.TITULO}</h2>
         <div className="text-muted small">
-          {libros.length} {libros.length === 1 ? "libro" : "libros"}
+          {libros.length} {libros.length === 1 ? M.LIBRO_SINGULAR : M.LIBRO_PLURAL}
         </div>
       </div>
 
       {libros.length === 0 ? (
         <div className="text-center mt-5 text-muted">
-          <h4>No tienes libros en favoritos.</h4>
-          <p className="mb-0">Añade libros a tu lista de deseos para verlos aquí.</p>
+          <h4>{M.VACIO_TITULO}</h4>
+          <p className="mb-0">{M.VACIO_DESCRIPCION}</p>
         </div>
       ) : (
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -42,9 +44,9 @@ function FavoritosPage() {
                   className="btn btn-sm btn-outline-danger position-absolute"
                   style={{ top: 12, right: 12 }}
                   onClick={() => quitarDeFavoritos(libro._id)}
-                  title="Quitar de favoritos"
+                  title={M.QUITAR_TITLE}
                 >
-                  Quitar
+                  {M.QUITAR_BOTON}
                 </button>
               </div>
             </div>

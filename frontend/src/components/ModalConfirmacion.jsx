@@ -77,7 +77,7 @@ function ModalConfirmacion({ isOpen, titulo, mensaje, textoConfirmar, onConfirm,
                 </div>
                 <div>
                   <h5 className={`modal-title fw-bold mb-1 ${styles.title}`}>{titulo}</h5>
-                  <div className="small text-muted">Confirma tu acción para continuar</div>
+                  <div className="small text-muted" >Confirma tu acción para continuar</div>
                 </div>
               </div>
               <button type="button" className="btn-close" onClick={onCancel} aria-label="Cerrar"></button>
@@ -89,13 +89,14 @@ function ModalConfirmacion({ isOpen, titulo, mensaje, textoConfirmar, onConfirm,
           </div>
 
           <div className={`modal-footer border-0 px-4 pt-4 pb-4 d-flex justify-content-end gap-2 ${styles.footer}`}>
-            <button type="button" className="btn btn-outline-secondary px-4" onClick={onCancel}>
+            <button type="button" className="btn btn-outline-secondary px-4" onClick={onCancel} aria-label="Cancelar">
               Cancelar
             </button>
             <button
               type="button"
               className={`btn ${isDanger ? "btn-danger" : "btn-primary"} px-4`}
               onClick={onConfirm}
+              aria-label="Confirmar"
             >
               {textoConfirmar || "Confirmar"}
             </button>

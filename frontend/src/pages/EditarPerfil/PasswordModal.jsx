@@ -1,4 +1,5 @@
 import styles from "./EditarPerfil.module.css";
+import { APP_MESSAGES } from "../../constants/messages";
 
 export default function PasswordModal({
   showModal,
@@ -14,7 +15,9 @@ export default function PasswordModal({
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content border-0 shadow-lg rounded-4 p-3">
           <div className="modal-header border-0 pb-0">
-            <h5 className="modal-title fw-bold">Actualizar Contraseña</h5>
+            <h5 className="modal-title fw-bold">
+              {APP_MESSAGES.EDITAR_PERFIL.PASSWORD_MODAL.TITULO}
+            </h5>
             <button 
               type="button" 
               className="btn-close" 
@@ -24,7 +27,9 @@ export default function PasswordModal({
           <form onSubmit={submitPassword}>
             <div className="modal-body py-4">
               <div className="mb-3">
-                <label className="small text-muted mb-1">Contraseña Actual</label>
+                <label className="small text-muted mb-1">
+                  {APP_MESSAGES.EDITAR_PERFIL.PASSWORD_MODAL.ACTUAL_LABEL}
+                </label>
                 <input 
                   type="password" 
                   name="actual" 
@@ -35,7 +40,9 @@ export default function PasswordModal({
                 />
               </div>
               <div className="mb-3">
-                <label className="small text-muted mb-1">Nueva Contraseña</label>
+                <label className="small text-muted mb-1">
+                  {APP_MESSAGES.EDITAR_PERFIL.PASSWORD_MODAL.NUEVA_LABEL}
+                </label>
                 <input 
                   type="password" 
                   name="nueva" 
@@ -46,7 +53,9 @@ export default function PasswordModal({
                 />
               </div>
               <div className="mb-0">
-                <label className="small text-muted mb-1">Confirmar Nueva Contraseña</label>
+                <label className="small text-muted mb-1">
+                  {APP_MESSAGES.EDITAR_PERFIL.PASSWORD_MODAL.CONFIRMAR_LABEL}
+                </label>
                 <input 
                   type="password" 
                   name="confirmar" 
@@ -63,13 +72,13 @@ export default function PasswordModal({
                 className="btn btn-light rounded-pill px-4" 
                 onClick={() => setShowModal(false)}
               >
-                Cancelar
+                {APP_MESSAGES.EDITAR_PERFIL.PASSWORD_MODAL.CANCELAR}
               </button>
               <button 
                 type="submit" 
                 className="btn btn-dark rounded-pill px-4 shadow-sm"
               >
-                Guardar Nueva Clave
+                {APP_MESSAGES.EDITAR_PERFIL.PASSWORD_MODAL.GUARDAR}
               </button>
             </div>
           </form>

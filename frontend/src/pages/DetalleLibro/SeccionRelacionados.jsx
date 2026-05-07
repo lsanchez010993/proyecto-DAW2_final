@@ -1,17 +1,19 @@
 import CarruselLibros from "../../features/libros/components/CarruselLibros";
+import { APP_MESSAGES } from "../../constants/messages";
 
 function SeccionRelacionados({ tituloSeccion, libros, onAbrirModal }) {
+  const M = APP_MESSAGES.PAGES.DETALLE_LIBRO;
   return (
     <div className="mt-5 pt-4 border-top">
       <div className="d-flex gap-4 mb-4">
         <span className="text-dark fw-bold border-bottom border-dark border-2 pb-1">
-          Más del autor
+          {M.RELACIONADOS_AUTOR}
         </span>
         <button
           className="btn btn-link text-decoration-none p-0 pb-1 text-primary"
           onClick={onAbrirModal}
         >
-          Contenido gratuito relacionado
+          {M.RELACIONADOS_GRATIS}
         </button>
       </div>
 
@@ -23,7 +25,7 @@ function SeccionRelacionados({ tituloSeccion, libros, onAbrirModal }) {
         ) : (
           <div className="py-4 text-center">
             <p className="text-muted mb-0">
-              No hay más obras de este autor en el catálogo por el momento.
+              {M.RELACIONADOS_VACIO}
             </p>
           </div>
         )}

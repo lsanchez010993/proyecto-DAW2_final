@@ -9,7 +9,7 @@ export function useEditarPerfil() {
   const [pestañaActiva, setPestañaActiva] = useState("datos");
   const esEditorial = usuario?.rol === "editorial";
   const editorial = usuario?.nombre_editorial || "";
-
+  const [fotoPerfil, setFotoPerfil] = useState(null);
   // Estados del perfil
 
   const [nombre, setNombre] = useState("");
@@ -23,6 +23,7 @@ export function useEditarPerfil() {
     pais: "",
     telefono: "",
   });
+
 
   // Estados Modal
   const [showModal, setShowModal] = useState(false);
@@ -49,6 +50,7 @@ export function useEditarPerfil() {
       setApellidos(usuario.apellidos || "");
       setEmail(usuario.email || "");
       setPreferencias(usuario.gustos_literarios || []);
+      setFotoPerfil(usuario.avatar || "");
       if (usuario.direccion) {
         setDireccion({
           calle: usuario.direccion.calle || "",
@@ -83,11 +85,28 @@ export function useEditarPerfil() {
     try {
       const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
       const token = getToken();
-      const res = await axios.put(
-        `${URL}/api/usuarios/perfil`,
-        { nombre, apellidos, email, preferencias, direccion },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const isFile =
+        typeof File !== "undefined" &&
+        fotoPerfil instanceof File;
+
+      const payload = isFile
+        ? (() => {
+            const fd = new FormData();
+            fd.append("nombre", nombre);
+            fd.append("apellidos", apellidos);
+            fd.append("email", email);
+            fd.append("preferencias", JSON.stringify(preferencias || []));
+            fd.append("direccion", JSON.stringify(direccion || {}));
+            fd.append("avatar", fotoPerfil);
+            return fd;
+          })()
+        : { nombre, apellidos, email, preferencias, direccion };
+
+      const res = await axios.put(`${URL}/api/usuarios/perfil`, payload, {
+        headers,
+      });
       actualizarUsuario(res.data);
       toast.success(APP_MESSAGES.NOTIFICATIONS.PROFILE_UPDATED);
     } catch (error) {
@@ -121,6 +140,8 @@ export function useEditarPerfil() {
   };
 
   return {
+    fotoPerfil,
+    setFotoPerfil,
     pestañaActiva,
     setPestañaActiva,
     nombre,

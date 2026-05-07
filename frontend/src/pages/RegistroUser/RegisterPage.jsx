@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { APP_MESSAGES } from "../../constants/messages";
 
 function RegisterPage() {
+  const M = APP_MESSAGES.PAGES.REGISTRO;
 
   const [nombre, setNombre] = useState('');     
   const [email, setEmail] = useState('');       
@@ -45,7 +47,7 @@ function RegisterPage() {
       
       <div className="card border-0 shadow-sm p-4" style={{ width: '100%', maxWidth: '400px' }}>
         
-        <h3 className="text-center mb-4 fw-bold">Crear Cuenta</h3>
+        <h3 className="text-center mb-4 fw-bold">{M.TITULO}</h3>
 
         {/* ALERTA VISUAL */}
         {alerta && (
@@ -60,7 +62,7 @@ function RegisterPage() {
             <input 
               type="text" 
               className="form-control py-2" 
-              placeholder="Nombre de usuario"
+              placeholder={M.NOMBRE_PLACEHOLDER}
               value={nombre}
               onChange={e => setNombre(e.target.value)}
             />
@@ -71,7 +73,7 @@ function RegisterPage() {
             <input 
               type="email" 
               className="form-control py-2" 
-              placeholder="Correo electrónico"
+              placeholder={M.EMAIL_PLACEHOLDER}
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
@@ -82,7 +84,7 @@ function RegisterPage() {
             <input 
               type="password" 
               className="form-control py-2" 
-              placeholder="Contraseña"
+              placeholder={M.PASSWORD_PLACEHOLDER}
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
@@ -91,7 +93,7 @@ function RegisterPage() {
           {/* SEPARADOR */}
           <div className="d-flex align-items-center my-4">
             <hr className="flex-grow-1" />
-            <span className="mx-3 text-muted small">O continua con:</span>
+            <span className="mx-3 text-muted small">{M.SEPARADOR}</span>
             <hr className="flex-grow-1" />
           </div>
 
@@ -111,13 +113,13 @@ function RegisterPage() {
 
           {/* BOTÓN REGISTRARSE */}
           <button type="submit" className="btn btn-primary w-100 py-2 fw-bold">
-            Registrarse
+            {M.BOTON_REGISTRO}
           </button>
         </form>
 
         <div className="mt-4 text-center">
             <Link to="/login" className="text-decoration-none text-muted small">
-                ¿Ya tienes cuenta? Inicia sesión
+                {M.YA_TIENES_CUENTA}
             </Link>
         </div>
 

@@ -19,7 +19,7 @@ function Navbar() {
       className={`navbar navbar-expand-lg navbar-dark bg-dark ${styles.navPrincipal}`}
     >
       <div className={`container-fluid ${styles.contenedorInterno}`}>
-        <Link className="navbar-brand py-0" to="/">
+        <Link className="navbar-brand py-0" to="/" aria-label="Inicio">
           <img src={logo} alt="Logo" className={styles.logo}/>
         </Link>
         <button
@@ -27,6 +27,7 @@ function Navbar() {
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -60,6 +61,7 @@ function Navbar() {
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"
+                 
                 >
                   Benvingut, {usuario.nombre}
                 </a>
@@ -153,7 +155,7 @@ function Navbar() {
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
-                        <h6 className="dropdown-header">Historial</h6>
+                        <h6 className="dropdown-header" >Historial</h6>
                       </li>
                       <li className="ps-3">
                         <Link className="dropdown-item" to="/historial/compras">

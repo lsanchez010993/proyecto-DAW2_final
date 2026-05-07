@@ -1,4 +1,5 @@
 import { useEditarPerfil } from "./useEditarPerfil";
+import { APP_MESSAGES } from "../../constants/messages";
 import styles from "./EditarPerfil.module.css";
 import DatosPersonalesForm from "./DatosPersonalesForm";
 import DireccionForm from "./DireccionForm";
@@ -6,6 +7,8 @@ import PasswordModal from "./PasswordModal";
 
 export default function EditarPerfil() {
   const {
+    fotoPerfil,
+    setFotoPerfil,
     esEditorial,
     editorial,
     pestañaActiva,
@@ -34,7 +37,9 @@ export default function EditarPerfil() {
       <div className="container mt-5 mb-5 d-flex justify-content-center">
         <div className={`card shadow-sm border-0 ${styles.tarjetaPerfil}`}>
           <div className="card-header bg-white border-0 pt-4 pb-0">
-            <h2 className="display-6 text-center mb-4 fw-bold">Mi perfil</h2>
+            <h2 className="display-6 text-center mb-4 fw-bold">
+              {APP_MESSAGES.EDITAR_PERFIL.VISTA.TITULO}
+            </h2>
 
             <div className={styles.contenedorPestanas}>
               <ul className="nav nav-pills nav-fill border-0">
@@ -45,7 +50,7 @@ export default function EditarPerfil() {
                     }`}
                     onClick={() => setPestañaActiva("datos")}
                   >
-                    👤 Mis Datos
+                    {APP_MESSAGES.EDITAR_PERFIL.VISTA.TAB_DATOS}
                   </button>
                 </li>
                 <li className="nav-item">
@@ -55,7 +60,7 @@ export default function EditarPerfil() {
                     }`}
                     onClick={() => setPestañaActiva("envio")}
                   >
-                    🚚 Envío
+                    {APP_MESSAGES.EDITAR_PERFIL.VISTA.TAB_ENVIO}
                   </button>
                 </li>
               </ul>
@@ -68,6 +73,8 @@ export default function EditarPerfil() {
                 <DatosPersonalesForm 
                   esEditorial={esEditorial}
                   editorial={editorial}
+                  fotoPerfil={fotoPerfil}
+                  setFotoPerfil={setFotoPerfil}
                   nombre={nombre}
                   setNombre={setNombre}
                   apellidos={apellidos}
@@ -90,7 +97,7 @@ export default function EditarPerfil() {
 
               <div className="d-grid mt-5">
                 <button type="submit" className="btn btn-dark rounded-pill py-2 fw-bold shadow">
-                  Guardar todos los cambios
+                  {APP_MESSAGES.EDITAR_PERFIL.VISTA.GUARDAR_CAMBIOS}
                 </button>
               </div>
             </form>

@@ -1,7 +1,9 @@
 import { useLibros } from "./useLibros";
 import TarjetaLibro from "../../features/libros/components/TarjetaLibro";
 import Paginacion from "../../components/Paginacion";
+import { APP_MESSAGES } from "../../constants/messages";
 function ListarLibros() {
+    const M = APP_MESSAGES.PAGES.LIBROS;
    
     const { libros, cargando, pagina, setPagina, totalPaginas } = useLibros();
 
@@ -9,14 +11,14 @@ function ListarLibros() {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ height: "50vh" }}>
                 <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Cargando...</span>
+                    <span className="visually-hidden">{M.CARGANDO}</span>
                 </div>
             </div>
         );
     }
     return (
         <div className="container mt-4">
-            <h2 className="mb-4 fw-bold">Todos los libros</h2>
+            <h2 className="mb-4 fw-bold">{M.TITULO}</h2>
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 {libros.map((libro) => (
                     <div className="col" key={libro._id}>
@@ -27,7 +29,7 @@ function ListarLibros() {
             </div>
             {libros.length === 0 && (
                 <div className="text-center mt-5 text-muted">
-                    <h4>No se encontraron libros.</h4>
+                    <h4>{M.SIN_RESULTADOS}</h4>
                 </div>
             )}
          

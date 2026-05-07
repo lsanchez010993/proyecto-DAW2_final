@@ -10,17 +10,39 @@ const Interaccion = require("../models/Interaccion");
 async function actualizarPerfil(req, res) {
   try {
     
-    const { nombre, apellidos, email, preferencias, direccion } = req.body;
+    let { nombre, apellidos, email, preferencias, direccion } = req.body;
+
+    // Soportar multipart/form-data (FormData) donde arrays/objetos llegan como string
+    if (typeof preferencias === "string") {
+      try {
+        preferencias = JSON.parse(preferencias);
+      } catch (_) {
+        // si viene como string simple, lo dejamos tal cual
+      }
+    }
+    if (typeof direccion === "string") {
+      try {
+        direccion = JSON.parse(direccion);
+      } catch (_) {
+        // dejar como string si no es JSON válido
+      }
+    }
+
+    const update = {
+      nombre,
+      apellidos,
+      email,
+      gustos_literarios: preferencias,
+      direccion,
+    };
+
+    if (req.file?.path) {
+      update.avatar = req.file.path;
+    }
 
     const usuarioActualizado = await Usuario.findByIdAndUpdate(
       req.usuario.id,
-      {
-        nombre,
-        apellidos,
-        email,
-        gustos_literarios: preferencias,
-        direccion,
-      },
+      update,
       { new: true, runValidators: true },
     ).select("-password");
 //new: true, runValidators: true:

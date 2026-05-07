@@ -1,6 +1,7 @@
 import styles from "./Editoriales.module.css";
 import TarjetaLibro from "../../features/libros/components/TarjetaLibro";
 import CarruselLibros from "../../features/libros/components/CarruselLibros";
+import { APP_MESSAGES } from "../../constants/messages";
 
 export default function ListaEditoriales({
   listaEditoriales,
@@ -11,11 +12,12 @@ export default function ListaEditoriales({
   editorialesExpandidas,
   toggleExpandir
 }) {
+  const M = APP_MESSAGES.PAGES.EDITORIALES;
   return (
     <>
       <div className={`shadow-sm p-4 mb-5 ${styles.tarjetaNube} animate__animated animate__fadeIn`}>
         <p className="text-muted text-center mb-4">
-          Selecciona una o varias editoriales para explorar su catálogo de libros.
+          {M.LISTA_INTRO}
         </p>
         
         <div className="d-flex flex-wrap justify-content-center gap-2">
@@ -33,21 +35,21 @@ export default function ListaEditoriales({
             </button>
           ))}
           {listaEditoriales.length === 0 && (
-            <p className="text-muted m-0">No hay editoriales registradas todavía.</p>
+            <p className="text-muted m-0">{M.LISTA_VACIO_EDITORIALES}</p>
           )}
         </div>
       </div>
       
       <div>
         <h4 className="mb-4 border-bottom pb-2">
-          {seleccionadas.length === 0 ? `Catálogo General:` : `Catálogo Seleccionado:`}
+          {seleccionadas.length === 0 ? M.CATALOGO_GENERAL : M.CATALOGO_SELECCIONADO}
         </h4>
 
         {/* DIBUJAR ESTANTERÍAS DESCARGADAS */}
         {Object.entries(librosPorEditorial).length === 0 && !cargandoFilas ? (
           <div className={`text-center text-muted w-100 mt-5`}>
             <h1 style={{ fontSize: "4rem" }}>📚</h1>
-            <p className="mt-3">No hay libros disponibles para esta selección actualmente.</p>
+            <p className="mt-3">{M.LISTA_SIN_LIBROS}</p>
           </div>
         ) : (
           Object.entries(librosPorEditorial).map(([nombreEditorial, librosDeEditorial]) => {
@@ -68,7 +70,7 @@ export default function ListaEditoriales({
                       className="btn btn-sm btn-outline-dark rounded-pill px-3"
                       onClick={() => toggleExpandir(nombreEditorial)}
                     >
-                      {estaExpandida ? "Ocultar" : "Ver todo"}
+                      {estaExpandida ? M.OCULTAR : M.VER_TODO}
                     </button>
                   )}
                 </h4>

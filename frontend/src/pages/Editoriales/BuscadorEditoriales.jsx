@@ -1,15 +1,17 @@
 import styles from "./Editoriales.module.css";
+import { APP_MESSAGES } from "../../constants/messages";
 
 export default function BuscadorEditoriales({busqueda,setBusqueda,editorialesFiltradas,seleccionadas,setSeleccionadas}) {
+  const M = APP_MESSAGES.PAGES.EDITORIALES;
   return (
     <div className={`shadow-sm ${styles.panelLateral}`}>
-      <h5 className="fw-bold mb-3">Buscar Editorial</h5>
+      <h5 className="fw-bold mb-3">{M.BUSCADOR_TITULO}</h5>
       
       <div className="mb-3">
         <input
           type="text"
           className="form-control rounded-pill bg-white"
-          placeholder="🔍 Nombre de la editorial..."
+          placeholder={M.BUSCADOR_PLACEHOLDER}
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
@@ -18,11 +20,11 @@ export default function BuscadorEditoriales({busqueda,setBusqueda,editorialesFil
       <div className={styles.listaResultados}>
         {busqueda === "" ? (
           <p className="text-center text-muted small mt-4">
-            Encuentra una editorial específica rápidamente.
+            {M.BUSCADOR_HINT}
           </p>
         ) : editorialesFiltradas.length === 0 ? (
           <p className="text-center text-muted small mt-4">
-            No hay editoriales que coincidan con "{busqueda}".
+            {`${M.BUSCADOR_SIN_COINCIDENCIAS_PREFIJO}${busqueda}${M.BUSCADOR_SIN_COINCIDENCIAS_SUFIX}`}
           </p>
         ) : (
           editorialesFiltradas.map((editorial, index) => (
