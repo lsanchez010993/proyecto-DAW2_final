@@ -29,6 +29,7 @@ import HistorialDescargasPage from "./pages/HistorialDescargas";
 import CheckoutSimulacionPage from "./pages/CheckoutSimulacion";
 import AdministrarCompras from "./pages/AdministrarCompras";
 import FavoritosPage from "./pages/Favoritos";
+import Pagina404 from "./components/Pagina_404";
 
 axios.interceptors.response.use(
   (response) => {
@@ -52,8 +53,8 @@ axios.interceptors.response.use(
       localStorage.removeItem("token");
       localStorage.removeItem("usuario_quedelibros");
 
-      // Expulsa al usuario a la pantalla de login
-      // Usamos window.location porque estamos fuera del contexto de React Router
+      // Expulsa al usuario a la pantalla de login y redirige a la pagina de login
+     
       window.location.href = "/login?expirado=true";
     }
 
@@ -95,6 +96,7 @@ function App() {
               <Route path="/checkout" element={<CheckoutSimulacionPage />} />
               <Route path="/admin/compras" element={<AdministrarCompras />} />
               <Route path="/favoritos" element={<FavoritosPage />} />
+              <Route path="*" element={<Pagina404 />} />
             </Routes>
           </div>
 
