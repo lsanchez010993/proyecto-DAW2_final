@@ -1,6 +1,7 @@
 const Usuario = require("../models/Usuario");
 const Interaccion = require("../models/Interaccion");
 const Libro = require("../models/Libro");
+const ResenaLibro = require("../models/ResenaLibro");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const MESSAGES = require("../constants/messages");
@@ -96,11 +97,38 @@ async function cargarRecomendacionesPublicas(req, res) {
       { $unwind: "$libroInfo" },
       { $replaceRoot: { newRoot: "$libroInfo" } },
     ]);
-    
+    // 4. MEJOR VALORADOS
+    const mejorValorados = await ResenaLibro.aggregate([
+      //  Libros AGRUPADOS por ID. Calcular la media de puntuación y el total de resenas
+        { $group: {
+            _id: "$libro",
+            mediaPuntuacion: { $avg: "$puntuacion" },
+            totalResenas: { $sum: 1 }
+        }},
+      // Filtro por puntuación y reseña
+        { $match: {
+            mediaPuntuacion: { $gte: 4 },
+            // Para hacer las pruebas lo dejo en 1 reseña por usuario, aunque lo ideal es, como minimo, que un libro tenga reseñas de 3 usuario como minimo.
+         
+            totalResenas: { $gte: 1 }
+        }},
+        // Libros ordenados por media de puntuación y total de resenas
+        { $sort: { mediaPuntuacion: -1, totalResenas: -1 } },
+        
+        { $limit: 15 },
+        // Busca en la colección libros y extrae la información completa del libro
+        { $lookup: { from: "libros", localField: "_id", foreignField: "_id", as: "libroInfo" } },
+        // Convierte libroInfo de array a objeto.
+        { $unwind: "$libroInfo" },
+       // Reemplaza la raíz del documento (datos que no necesito para renderizar en el carrusel de libros) con los de libroInfo.
+        { $replaceRoot: { newRoot: "$libroInfo" } }
+      
+    ]);
     res.json({
       novedades,
       topVentas,
       tendencias,
+      mejorValorados,
     });
   } catch (error) {
     console.error("Error al cargar recomendaciones públicas:", error);

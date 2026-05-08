@@ -16,7 +16,7 @@ function Navbar() {
 
   return (
     <nav
-      className={`navbar navbar-expand-lg navbar-dark bg-dark ${styles.navPrincipal}`}
+      className={`navbar navbar-expand-md navbar-dark bg-dark ${styles.navPrincipal}`}
     >
       <div className={`container-fluid ${styles.contenedorInterno}`}>
         <Link className="navbar-brand py-0" to="/" aria-label="Inicio">
@@ -45,8 +45,8 @@ function Navbar() {
        
 
           {/* 2. MENÚ DERECHO */}
-          <ul className="navbar-nav ms-auto align-items-center">
-            <li className="nav-item me-3">
+          <ul className="navbar-nav ms-auto align-items-center flex-nowrap">
+            <li className="nav-item me-2">
               <Link className="nav-link" to="/carrito">
                 🛒 Carrito{" "}
                 <span className="badge bg-primary">{cantidadTotal}</span>
@@ -63,7 +63,9 @@ function Navbar() {
                   data-bs-toggle="dropdown"
                  
                 >
-                  Benvingut, {usuario.nombre}
+                  <span className={styles.usuarioNombre}>
+                    Benvingut, {usuario.nombre}
+                  </span>
                 </a>
 
                 <ul className="dropdown-menu dropdown-menu-end">

@@ -1,3 +1,6 @@
+// Este test valida casos básicos de registro de usuario: campos obligatorios, email inválido, password inválido, email en uso, nombre en uso y error interno.
+
+
 // Mock del modelo Usuario 
 jest.mock("../../../models/Usuario", () => {
   const U = jest.fn();

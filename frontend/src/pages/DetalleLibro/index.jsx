@@ -4,12 +4,27 @@ import { useDetalleLibro } from "./useDetalleLibro";
 import OpcionesCompra from "./OpcionesCompra";
 import SeccionRelacionados from "./SeccionRelacionados";
 import ContenidoGratuito from "./ContenidoGratuito";
+import SeccionResenas from "./SeccionResenas";
 import { APP_MESSAGES } from "../../constants/messages";
 
 function DetalleLibro() {
   const M = APP_MESSAGES.PAGES.DETALLE_LIBRO;
   const { id } = useParams();
-  const { libro, cargando, enDeseos, toggleDeseos, registrarInteraccion, registrarDescarga, librosRelacionados, tituloSeccion } = useDetalleLibro(id);
+  const {
+    libro,
+    cargando,
+    enDeseos,
+    toggleDeseos,
+    registrarInteraccion,
+    registrarDescarga,
+    librosRelacionados,
+    tituloSeccion,
+    resenas,
+    resumenResenas,
+    permisoResena,
+    guardandoResena,
+    guardarResena,
+  } = useDetalleLibro(id);
   const [mostrarModal, setMostrarModal] = useState(false);
 
   if (cargando || !libro) return <div className="text-center mt-5">{M.CARGANDO}</div>;
@@ -59,6 +74,15 @@ function DetalleLibro() {
           }}
         />
       )}
+
+      <SeccionResenas
+        key={`${id}-${permisoResena?.review?._id || "sin-resena"}-${permisoResena?.review?.updatedAt || ""}`}
+        resenas={resenas}
+        resumenResenas={resumenResenas}
+        permisoResena={permisoResena}
+        guardandoResena={guardandoResena}
+        onGuardarResena={guardarResena}
+      />
     </div>
   );
 }

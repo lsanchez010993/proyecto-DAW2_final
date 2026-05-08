@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { APP_MESSAGES } from "../../constants/messages";
@@ -7,6 +7,18 @@ export function useDetalleLibro(id) {
   const [libro, setLibro] = useState(null);
   const [cargando, setCargando] = useState(true);
   const { usuario, actualizarUsuario } = useAuth();
+  const [resenas, setResenas] = useState([]);
+  const [resumenResenas, setResumenResenas] = useState({
+    mediaPuntuacion: 0,
+    totalResenas: 0,
+  });
+  const [permisoResena, setPermisoResena] = useState({
+    canReview: false,
+    hasReview: false,
+    review: null,
+    message: "",
+  });
+  const [guardandoResena, setGuardandoResena] = useState(false);
 
   // Estados para libros relacionados
   const [tituloSeccion, setTituloSeccion] = useState("Otros del autor");
@@ -21,12 +33,15 @@ export function useDetalleLibro(id) {
     setEnDeseos(usuario?.lista_deseos?.includes(id) || false);
   }, [usuario, id]);
 
+  function obtenerToken() {
+    return localStorage.getItem("token") || sessionStorage.getItem("token");
+  }
+
   // ==========================================
   // FUNCIONES DE USUARIO (Deseos e Interacciones)
   // ==========================================
   async function registrarInteraccion(tipoAccion) {
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const token = obtenerToken();
     if (!token) return;
 
     try {
@@ -36,14 +51,13 @@ export function useDetalleLibro(id) {
         { libroId: id, tipoAccion },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-    } catch (error) {
+    } catch {
       console.error(APP_MESSAGES.ERRORS.RADAR_ERROR);
     }
   }
 
   async function registrarDescarga(titulo_guardado, categoria, libro_id) {
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const token = obtenerToken();
     if (!token) return;
 
     try {
@@ -53,14 +67,13 @@ export function useDetalleLibro(id) {
         { titulo_guardado, categoria, libro_id },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-    } catch (error) {
+    } catch {
       console.error(APP_MESSAGES.ERRORS.DESCARGAS_GRATUITAS_ERROR);
     }
   }
 
   async function toggleDeseos() {
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const token = obtenerToken();
     if (!token) return alert(APP_MESSAGES.NOTIFICATIONS.LOGIN_REQUIRED);
 
     try {
@@ -81,8 +94,91 @@ export function useDetalleLibro(id) {
       }
 
       if (!enDeseos) registrarInteraccion("deseo");
-    } catch (error) {
+    } catch {
       console.error(APP_MESSAGES.ERRORS.WISHLIST_ERROR);
+    }
+  }
+
+  const cargarResenas = useCallback(async () => {
+    try {
+      const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+      const res = await axios.get(`${URL}/api/resenas/libro/${id}`);
+      setResenas(res.data?.data || []);
+      setResumenResenas({
+        mediaPuntuacion: res.data?.resumen?.mediaPuntuacion || 0,
+        totalResenas: res.data?.resumen?.totalResenas || 0,
+      });
+    } catch (error) {
+      console.error("Error al cargar resenas:", error);
+      setResenas([]);
+      setResumenResenas({ mediaPuntuacion: 0, totalResenas: 0 });
+    }
+  }, [id]);
+
+  const cargarPermisoResena = useCallback(async () => {
+    const token = obtenerToken();
+    if (!token) {
+      setPermisoResena({
+        canReview: false,
+        hasReview: false,
+        review: null,
+        message: APP_MESSAGES.PAGES.DETALLE_LIBRO.RESENAS_LOGIN_REQUERIDO,
+      });
+      return;
+    }
+
+    try {
+      const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+      const res = await axios.get(`${URL}/api/resenas/libro/${id}/permiso`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setPermisoResena({
+        canReview: Boolean(res.data?.canReview),
+        hasReview: Boolean(res.data?.hasReview),
+        review: res.data?.review || null,
+        message: "",
+      });
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        APP_MESSAGES.PAGES.DETALLE_LIBRO.RESENAS_COMPRA_REQUERIDA;
+      setPermisoResena({
+        canReview: false,
+        hasReview: false,
+        review: null,
+        message,
+      });
+    }
+  }, [id]);
+
+  async function guardarResena({ puntuacion, resena }) {
+    const token = obtenerToken();
+    if (!token) {
+      throw new Error(APP_MESSAGES.PAGES.DETALLE_LIBRO.RESENAS_LOGIN_REQUERIDO);
+    }
+
+    setGuardandoResena(true);
+    try {
+      const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+      await axios.put(
+        `${URL}/api/resenas/libro/${id}`,
+        { puntuacion, resena },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      await Promise.all([cargarResenas(), cargarPermisoResena()]);
+      return {
+        ok: true,
+        message: APP_MESSAGES.PAGES.DETALLE_LIBRO.RESENAS_ENVIADA_OK,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message:
+          error?.response?.data?.message ||
+          APP_MESSAGES.PAGES.DETALLE_LIBRO.RESENAS_COMPRA_REQUERIDA,
+      };
+    } finally {
+      setGuardandoResena(false);
     }
   }
 
@@ -147,6 +243,14 @@ export function useDetalleLibro(id) {
       .finally(() => setCargando(false));
   }, [id]);
 
+  useEffect(() => {
+    cargarResenas();
+  }, [cargarResenas]);
+
+  useEffect(() => {
+    cargarPermisoResena();
+  }, [cargarPermisoResena]);
+
   return {
     libro,
     cargando,
@@ -156,5 +260,11 @@ export function useDetalleLibro(id) {
     registrarDescarga,
     librosRelacionados,
     tituloSeccion,
+    resenas,
+    resumenResenas,
+    permisoResena,
+    guardandoResena,
+    guardarResena,
+    recargarResenas: cargarResenas,
   };
 }

@@ -1,3 +1,4 @@
+// Este test valida casos básicos de error en autenticación: login con password incorrecta, forgot sin email y reset sin token.
 jest.mock("../../../models/Usuario", () => ({ findOne: jest.fn() }));
 // Mock del modelo Usuario
 jest.mock("bcryptjs", () => ({ compare: jest.fn() }));

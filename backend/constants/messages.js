@@ -69,6 +69,19 @@ const MESSAGES = {
     EMAIL_HTML_LINK_LABEL: "Recuperar contraseña",
     EMAIL_HTML_EXPIRY: "Este enlace caduca en 1 hora.",
   },
+  RESENAS: {
+    BOOK_INVALID: "Libro invalido.",
+    USER_NOT_FOUND: "Usuario no encontrado.",
+    FORBIDDEN_NOT_PURCHASED: "Solo puedes valorar y resenar libros comprados.",
+    SCORE_INVALID: "La puntuacion debe ser un entero entre 1 y 5.",
+    REVIEW_INVALID_TYPE: "La resena debe ser texto.",
+    REVIEW_EMPTY: "La resena no puede estar vacia.",
+    LIST_ERROR: "No se pudieron obtener las resenas.",
+    PERMISSION_ERROR: "No se pudo validar el permiso de resena.",
+    SAVE_ERROR: "No se pudo guardar la resena.",
+    CREATE_SUCCESS: "Resena creada correctamente.",
+    UPDATE_SUCCESS: "Resena actualizada correctamente.",
+  },
 };
 
 module.exports = MESSAGES;

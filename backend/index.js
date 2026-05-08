@@ -7,6 +7,7 @@ const cors = require('cors');
 const libroRoutes = require('./routes/libroRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes'); 
 const gutendexRoutes  = require("./routes/rutasGutendex");
+const resenasRoutes = require("./routes/resenasRoutes");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/libros', libroRoutes);
 app.use('/api/usuarios', usuarioRoutes); 
 app.use('/api/home', require('./routes/rutasPaginaPrincipal')); 
 app.use("/api/gutendex", gutendexRoutes);
+app.use("/api/resenas", resenasRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
