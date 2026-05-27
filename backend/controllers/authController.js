@@ -46,16 +46,13 @@ async function registrarUsuario(req, res) {
     }
 
     // Crear usuario
-    const usuario = new Usuario(req.body);
+    const usuario = new Usuario({ nombre, email, password });
 
     // Encriptar password
     const salt = await bcrypt.genSalt(10);
     usuario.password = await bcrypt.hash(password, salt);
 
-    // Asignar rol por defecto.
-    if (!usuario.rol) {
-      usuario.rol = "usuario";
-    }
+    usuario.rol = "cliente";
 
     // Guardar usuario
     await usuario.save();
@@ -77,14 +74,14 @@ async function loginUsuario(req, res) {
     const usuario = await Usuario.findOne({ email });
 
     if (!usuario) {
-      return res.status(404).json({ mensaje: MESSAGES.USUARIOS.NOT_FOUND });
+      return res.status(401).json({ mensaje: MESSAGES.USUARIOS.INVALID_CREDENTIALS });
     }
 
     // Verificar la contraseña
     const esCorrecto = await bcrypt.compare(password, usuario.password);
 
     if (!esCorrecto) {
-      return res.status(401).json({ mensaje: MESSAGES.USUARIOS.INVALID_PASSWORD });
+      return res.status(401).json({ mensaje: MESSAGES.USUARIOS.INVALID_CREDENTIALS });
     }
 
     res.json(construirRespuestaAuth(usuario, recordarSesion));
