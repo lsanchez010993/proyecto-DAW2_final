@@ -15,6 +15,7 @@ const MESSAGES = {
     CREATE_SUCCESS: "¡Usuario creado con éxito!",
     SAVE_ERROR: "Error al guardar el usuario",
     INVALID_PASSWORD: "Contraseña incorrecta",
+    INVALID_CREDENTIALS: "Credenciales inválidas",
     UPDATE_SUCCESS: "Perfil actualizado con éxito.",
     UPDATE_ERROR: "Error al actualizar el perfil.",
     WISHLIST_ERROR: "Error al actualizar la lista de deseos",

@@ -26,7 +26,16 @@ describe("auth basico", () => {
     const r = res();
     await loginUsuario({ body: { email: "prueba1@mail.com", password: "x" } }, r); // Ejecuta login
     expect(r.status).toHaveBeenCalledWith(401);
-    // Espera estado 401
+    expect(r.json).toHaveBeenCalledWith({ mensaje: M.USUARIOS.INVALID_CREDENTIALS });
+    // Espera respuesta genérica para evitar enumeración de usuarios
+  });
+
+  test("login con email inexistente => 401 genérico", async () => {
+    Usuario.findOne.mockResolvedValue(null);
+    const r = res();
+    await loginUsuario({ body: { email: "noexiste@mail.com", password: "x" } }, r);
+    expect(r.status).toHaveBeenCalledWith(401);
+    expect(r.json).toHaveBeenCalledWith({ mensaje: M.USUARIOS.INVALID_CREDENTIALS });
   });
 
   test("forgot sin email => 400", async () => {

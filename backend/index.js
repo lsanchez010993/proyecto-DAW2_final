@@ -11,9 +11,12 @@ const resenasRoutes = require("./routes/resenasRoutes");
 
 const app = express();
 
-// Middlewares
-app.use(cors());
-app.use(express.json());
+
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://lsanchez.up.railway.app']
+  }));
+
+  app.use(express.json());
 
 // Conexión a BD
 mongoose.connect(process.env.MONGO_URI)

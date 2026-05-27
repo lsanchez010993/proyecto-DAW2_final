@@ -170,8 +170,7 @@ describe("registro basico", () => {
     });
   });
 
-  test("si no llega rol, asigna 'usuario' por defecto", async () => {
-    // Comprueba la asignación del rol por defecto en creación.
+  test("fuerza rol 'cliente' aunque se envíe otro rol en el body", async () => {
     const save = jest.fn().mockResolvedValue(undefined);
     let instanciaCreada;
 
@@ -187,10 +186,10 @@ describe("registro basico", () => {
     const r = res();
 
     await registrarUsuario(
-      { body: { email: "nuevo@mail.com", password: "Clave123", nombre: "Luis" } },
+      { body: { email: "nuevo@mail.com", password: "Clave123", nombre: "Luis", rol: "admin" } },
       r
     );
 
-    expect(instanciaCreada.rol).toBe("usuario");
+    expect(instanciaCreada.rol).toBe("cliente");
   });
 });

@@ -29,9 +29,10 @@ function MenuExplorar() {
   }
 
   return (
-    <div
-      className={`animate__animated animate__fadeInDown ${styles.contenedorCentrado}`}
-    >
+    <nav
+    aria-label="Explorar catálogo"
+    className={`animate__animated animate__fadeInDown ${styles.contenedorCentrado}`}
+  >
       <div className={styles.menuPildora}>
         <NavLink
           to="/categorias"
@@ -80,7 +81,7 @@ function MenuExplorar() {
           Libros
         </NavLink>
       </div>
-    </div>
+    </nav>
   );
 }
 

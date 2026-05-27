@@ -23,6 +23,7 @@ function Home() {
     resultadosBusqueda,
     buscandoBusqueda,
   } = useHome();
+
   if (cargando) {
     return (
       <div className="d-flex flex-column justify-content-center align-items-center" style={{ height: "60vh" }}>
@@ -31,24 +32,30 @@ function Home() {
       </div>
     );
   }
-  return (
-    
-    <div className="mt-4">
-      <div className="text-center mb-5 pb-3">
-        <h1 className="fw-bold mb-3">{M.HERO_TITULO}</h1>
-        <p className="text-muted">{M.HERO_SUBTITULO}</p>
-      </div>
 
-      <BuscadorLibrosHome
-        valor={textoBusqueda}
-        onChange={(e) => setTextoBusqueda(e.target.value)}
-      />
+  return (
+    // Main para indicar el contenido principal de la página
+    <section  className="mt-4">
+      
+     
+      <header className="text-center mb-5 pb-3">
+        <h1 className="fw-bold mb-3">{M.HERO_TITULO}</h1>
+        <p className="text-muted mb-4">{M.HERO_SUBTITULO}</p>
+        
+       
+        <div className="d-flex justify-content-end w-100">
+          <BuscadorLibrosHome
+            valor={textoBusqueda}
+            onChange={(e) => setTextoBusqueda(e.target.value)}
+          />
+        </div>
+      </header>
 
       {textoBusqueda.trim() && (
-        <div className="mb-5">
-          <h4 className="border-bottom pb-2">
+        <section className="mb-5" aria-labelledby="titulo-resultados">
+          <h2 id="titulo-resultados" className="h4 border-bottom pb-2">
             Resultados de búsqueda ({resultadosBusqueda.length})
-          </h4>
+          </h2>
           {buscandoBusqueda ? (
             <p className="text-muted mb-0">Buscando en todo el catálogo...</p>
           ) : resultadosBusqueda.length > 0 ? (
@@ -64,62 +71,66 @@ function Home() {
               No se han encontrado libros que coincidan con tu búsqueda.
             </p>
           )}
-        </div>
+        </section>
       )}
+
       {/* === SECCIÓN PERSONALIZADA === */}
       {usuario && (
-        <div className="mb-5">
-          {/* Lógica por Libro */}
+        <section className="mb-5" aria-labelledby="titulo-personalizado">
+          {/* Título invisible para los lectores de pantalla que agrupa la sección */}
+          <h2 id="titulo-personalizado" className="visually-hidden">Recomendaciones personalizadas</h2>
+          
+          {/* Al estar dentro de un h2 invisible, los carruseles pasan a ser h3 lógicamente, pero se ven como h4 */}
           {tituloReferencia && recomendadosPorLibro.length > 0 && (
-            <div className="mb-5">
-              <h4 className="border-bottom pb-2">{`${M.PORQUE_LEISTE_PREFIJO}${tituloReferencia}${M.PORQUE_LEISTE_SUFIX}`}</h4>
+            <article className="mb-5">
+              <h3 className="h4 border-bottom pb-2">{`${M.PORQUE_LEISTE_PREFIJO}${tituloReferencia}${M.PORQUE_LEISTE_SUFIX}`}</h3>
               <CarruselLibros libros={recomendadosPorLibro} />
-            </div>
+            </article>
           )}
 
-          {/* Lógica por Género */}
           {generoReferencia && recomendadosPorGenero.length > 0 && (
-            <div className="mb-5">
-              <h4 className="border-bottom pb-2">{`${M.PORQUE_TE_GUSTA} ${formatearGenero(generoReferencia)}`}</h4>
+            <article className="mb-5">
+              <h3 className="h4 border-bottom pb-2">{`${M.PORQUE_TE_GUSTA} ${formatearGenero(generoReferencia)}`}</h3>
               <CarruselLibros libros={recomendadosPorGenero} />
-            </div>
+            </article>
           )}
-        </div>
+        </section>
       )}
 
-      {/* === SECCIÓN GLOBAL */}
+      {/* === SECCIÓN GLOBAL === */}
+      <section aria-labelledby="titulo-catalogo">
+        <h2 id="titulo-catalogo" className="visually-hidden">Explora nuestro catálogo</h2>
 
-      {/* ===  MEJOR VALORADOS === */}
-      {/* Si hay libros mejor valorados, los muestra en el carrusel */}
-      
-      {mejorValorados.length > 0 && (
-      <div className="mb-5">
-        <h4 className="border-bottom pb-2">{M.MEJOR_VALORADOS}</h4>
-        <CarruselLibros libros={mejorValorados} />
-      </div>
-      )}
-      {/* === TENDENCIAS DE LA SEMANA === */}
-    {tendencias.length > 0 && (
-      <div className="mb-5">
-        <h4 className="border-bottom pb-2">{M.TENDENCIAS}</h4>
-        <CarruselLibros libros={tendencias} />
-      </div>
-      )}
-      {/* === TOP VENTAS GLOBAL === */}
-    {topVentas.length > 0 && (
-      <div className="mb-5">
-        <h4 className="border-bottom pb-2">{M.TOP_VENTAS}</h4>
-        <CarruselLibros libros={topVentas} />
-      </div>
-      )}
-      {/* === NOVEDADES === */}
-    {novedades.length > 0 && (  
-      <div className="mb-5">
-        <h4 className="border-bottom pb-2">{M.NOVEDADES}</h4>
-        <CarruselLibros libros={novedades} />
-      </div>
-      )}
-    </div>
+        {mejorValorados.length > 0 && (
+        <article className="mb-5">
+          <h3 className="h4 border-bottom pb-2">{M.MEJOR_VALORADOS}</h3>
+          <CarruselLibros libros={mejorValorados} />
+        </article>
+        )}
+
+        {tendencias.length > 0 && (
+        <article className="mb-5">
+          <h3 className="h4 border-bottom pb-2">{M.TENDENCIAS}</h3>
+          <CarruselLibros libros={tendencias} />
+        </article>
+        )}
+
+        {topVentas.length > 0 && (
+        <article className="mb-5">
+          <h3 className="h4 border-bottom pb-2">{M.TOP_VENTAS}</h3>
+          <CarruselLibros libros={topVentas} />
+        </article>
+        )}
+
+        {novedades.length > 0 && (  
+        <article className="mb-5">
+          <h3 className="h4 border-bottom pb-2">{M.NOVEDADES}</h3>
+          <CarruselLibros libros={novedades} />
+        </article>
+        )}
+      </section>
+
+    </section>
   );
 }
 
