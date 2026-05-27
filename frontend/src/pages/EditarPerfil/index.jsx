@@ -41,8 +41,10 @@ export default function EditarPerfil() {
               {APP_MESSAGES.EDITAR_PERFIL.VISTA.TITULO}
             </h2>
 
-            <div className={styles.contenedorPestanas}>
-              <ul className="nav nav-pills nav-fill border-0">
+            <nav
+              className={styles.contenedorPestanas}
+              aria-label="Secciones del perfil"
+>              <ul className="nav nav-pills nav-fill border-0">
                 <li className="nav-item">
                   <button
                     className={`nav-link ${styles.botonPestana} ${
@@ -64,7 +66,7 @@ export default function EditarPerfil() {
                   </button>
                 </li>
               </ul>
-            </div>
+            </nav>
           </div>
 
           <div className="card-body p-4">
