@@ -72,7 +72,7 @@ function App() {
           <Toaster position="top-center" reverseOrder={false} />
 
           
-          <div className="container mt-4 mb-5" style={{ minHeight: "75vh" }}>
+          <main className="container mt-4 mb-5" style={{ minHeight: "75vh" }}>
             <MenuExplorar />
             <Routes>
               <Route path="/afegirLibro" element={<AfegirLibroPage />} />
@@ -98,7 +98,7 @@ function App() {
               <Route path="/favoritos" element={<FavoritosPage />} />
               <Route path="*" element={<Pagina404 />} />
             </Routes>
-          </div>
+          </main>
 
           <Footer />
         </CarritoProvider>

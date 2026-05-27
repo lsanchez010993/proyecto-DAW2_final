@@ -28,7 +28,7 @@ function CategoriasPage() {
             ========================================= */}
         <div className="col-md-3 mb-4 h-100">
           <div className={`shadow-sm ${styles.panelLateral}`}>
-            <h5 className="fw-bold mb-3">{M.BUSCAR_TITULO}</h5>
+            <h2 className="h5 fw-bold mb-3">{M.BUSCAR_TITULO}</h2>
 
             <div className="mb-3">
               <input
@@ -89,14 +89,14 @@ function CategoriasPage() {
           </div>
 
           <div>
-            <h4 className="mb-4 border-bottom pb-2">
+            <h2 className="h4 mb-4 border-bottom pb-2">
               {seleccionadas.length === 0 ? M.CATALOGO_GENERAL : M.RESULTADOS_ENCONTRADOS}
-            </h4>
+            </h2>
 
             {/* DIBUJAR LIBROS POR CATEGORÍA */}
             {Object.entries(librosPorCategoria).length === 0 && !cargandoFilas ? (
               <div className={`text-center text-muted w-100 mt-5`}>
-                <h1 style={{ fontSize: "4rem" }}>🧭</h1>
+                <div aria-hidden="true" className="display-1">🧭</div>
                 <p className="mt-3">{M.VACIO}</p>
               </div>
             ) : (
