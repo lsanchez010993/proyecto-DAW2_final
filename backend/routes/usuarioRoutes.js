@@ -19,6 +19,13 @@ const requireAdmin = (req, res, next) => {
     next();
   };
 
+const requireAdminOrEditorial = (req, res, next) => {
+  if (req?.usuario?.rol !== "admin" && req?.usuario?.rol !== "editorial") {
+    return res.status(403).json({ message: MESSAGES.USUARIOS.UNAUTHORIZED });
+  }
+  next();
+};
+
 
 
 // ==========================================
@@ -55,7 +62,8 @@ router.post("/interaccion", verificarToken, controllerUusuario.registrarInteracc
 // ==========================================
 
 router.get("/", verificarToken, requireAdmin, adminUsuariosController.obtenerUsuarios);
-router.get("/admin/historial", verificarToken, requireAdmin, adminUsuariosController.obtenerHistorialUsuarios);
+router.get("/admin/historial", verificarToken, requireAdminOrEditorial, adminUsuariosController.obtenerHistorialUsuarios);
+router.patch("/admin/compras/:usuarioId/:compraId/estado", verificarToken, requireAdminOrEditorial, controllerUusuario.actualizarEstadoCompra);
 router.delete("/:id", verificarToken, requireAdmin, adminUsuariosController.eliminarUsuario);
 router.put("/:id", verificarToken, requireAdmin,adminUsuariosController.cambiarRolYEditorial);
   

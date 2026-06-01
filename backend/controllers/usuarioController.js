@@ -4,6 +4,8 @@ const MESSAGES = require("../constants/messages");
 const Libro = require("../models/Libro");
 const Interaccion = require("../models/Interaccion");
 
+const ESTADOS_PEDIDO_VALIDOS = ["en_preparacion", "en_envio", "entregado"];
+
 // ==========================================
 // ACTUALIZAR PERFIL
 // ==========================================
@@ -164,7 +166,7 @@ async function listarCompras(req, res) {
     const usuario = await Usuario.findById(req.usuario.id)
       .populate({
         path: "biblioteca_digital.libro",
-        select: "titulo autor portada_url precio editorial categorias",
+        select: "titulo autor portada_url precio editorial categorias contenido_gratuito",
       })
       .select("biblioteca_digital");
 
@@ -174,10 +176,12 @@ async function listarCompras(req, res) {
 
     const compras = (usuario.biblioteca_digital || [])
       .map((item) => ({
+        _id: item._id,
         fecha_compra: item.fecha_compra,
         tipo_compra: item.tipo_compra,
         cantidad: item.cantidad,
         precio_unitario: item.precio_unitario,
+        estado_pedido: item.estado_pedido || "en_preparacion",
         libro: item.libro || null,
       }))
       .sort((a, b) => new Date(b.fecha_compra) - new Date(a.fecha_compra));
@@ -243,6 +247,7 @@ async function compraSimulada(req, res) {
         tipo_compra: it.tipo_compra,
         cantidad: it.cantidad,
         precio_unitario: precioUnitario,
+        estado_pedido: "en_preparacion",
         fecha_compra: new Date(),
       });
 
@@ -254,6 +259,52 @@ async function compraSimulada(req, res) {
     return res.status(201).json({ message: "Compra registrada correctamente." });
   } catch (error) {
     console.error("Error al registrar compra:", error);
+    return res.status(500).json({ message: MESSAGES.GENERAL.SERVER_ERROR });
+  }
+}
+
+// ==========================================
+// ACTUALIZAR ESTADO DE PEDIDO (Admin / Editorial)
+// ==========================================
+async function actualizarEstadoCompra(req, res) {
+  try {
+    const { usuarioId, compraId } = req.params;
+    const { estado_pedido } = req.body;
+
+    if (!ESTADOS_PEDIDO_VALIDOS.includes(estado_pedido)) {
+      return res.status(400).json({ message: "Estado de pedido no valido." });
+    }
+
+    const cliente = await Usuario.findById(usuarioId).populate({
+      path: "biblioteca_digital.libro",
+      select: "usuario",
+    });
+
+    if (!cliente) {
+      return res.status(404).json({ message: MESSAGES.USUARIOS.NOT_FOUND });
+    }
+
+    const compra = cliente.biblioteca_digital.id(compraId);
+    if (!compra) {
+      return res.status(404).json({ message: "Compra no encontrada." });
+    }
+
+    // Si es editorial, solo puede gestionar compras de sus libros
+    if (req.usuario.rol === "editorial") {
+      const creadorLibro = compra?.libro?.usuario?.toString();
+      if (!creadorLibro || creadorLibro !== req.usuario.id) {
+        return res.status(403).json({
+          message: "No tienes permiso para gestionar esta compra.",
+        });
+      }
+    }
+
+    compra.estado_pedido = estado_pedido;
+    await cliente.save();
+
+    return res.json({ message: "Estado de pedido actualizado correctamente." });
+  } catch (error) {
+    console.error("Error al actualizar estado de compra:", error);
     return res.status(500).json({ message: MESSAGES.GENERAL.SERVER_ERROR });
   }
 }
@@ -357,6 +408,7 @@ module.exports = {
   listarCompras,
   listarDescargasGratuitas,
   compraSimulada,
+  actualizarEstadoCompra,
   registrarDescargasGratuitas,
   registrarInteraccionYSumarAfinidad,
 };

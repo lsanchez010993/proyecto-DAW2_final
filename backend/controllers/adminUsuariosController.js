@@ -19,15 +19,40 @@ async function obtenerUsuarios (req, res) {
 // ==========================================
 async function obtenerHistorialUsuarios(req, res) {
   try {
-    const usuarios = await Usuario.find()
+    const esAdmin = req?.usuario?.rol === "admin";
+    const esEditorial = req?.usuario?.rol === "editorial";
+
+    if (!esAdmin && !esEditorial) {
+      return res.status(403).json({ message: MESSAGES.USUARIOS.UNAUTHORIZED });
+    }
+
+    let usuarios = await Usuario.find()
       .select(
         "nombre apellidos email rol biblioteca_digital historial_descargas_gratuitas createdAt",
       )
       .populate({
         path: "biblioteca_digital.libro",
-        select: "titulo autor editorial portada_url",
+        select: "titulo autor editorial portada_url usuario",
       })
       .sort({ createdAt: -1 });
+
+    // Un editor solo ve las compras de libros que le pertenecen
+    if (esEditorial) {
+      const editorialId = req.usuario.id;
+      usuarios = usuarios
+        .map((u) => {
+          const comprasFiltradas = (u.biblioteca_digital || []).filter((c) => {
+            const creadorLibro = c?.libro?.usuario?.toString();
+            return creadorLibro === editorialId;
+          });
+          return {
+            ...u.toObject(),
+            biblioteca_digital: comprasFiltradas,
+            historial_descargas_gratuitas: [],
+          };
+        })
+        .filter((u) => (u.biblioteca_digital || []).length > 0);
+    }
 
     return res.json(usuarios);
   } catch (error) {

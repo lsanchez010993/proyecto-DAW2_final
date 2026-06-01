@@ -16,10 +16,27 @@ function formatearFecha(fecha) {
   }
 }
 
+function formatearEstado(estado, M) {
+  if (estado === "entregado") return M.ESTADO_ENTREGADO;
+  if (estado === "en_envio") return M.ESTADO_ENVIO;
+  return M.ESTADO_PREPARACION;
+}
+
+function obtenerEstiloEstado(estado) {
+  if (estado === "entregado") {
+    return { className: "badge bg-success text-white" };
+  }
+  if (estado === "en_envio") {
+    return { className: "badge text-dark", style: { backgroundColor: "#fd7e14" } };
+  }
+  return { className: "badge bg-warning-subtle text-dark" };
+}
+
 function AdministrarCompras() {
   const M = APP_MESSAGES.PAGES.ADMIN_COMPRAS;
   const { usuario } = useAuth();
-  const { usuarios, cargando, error } = useAdministrarCompras();
+  const { usuarios, cargando, error, actualizarEstadoCompra } =
+    useAdministrarCompras();
 
   if (!usuario) {
     return (
@@ -36,13 +53,11 @@ function AdministrarCompras() {
     );
   }
 
-  if (usuario.rol !== "admin") {
+  if (usuario.rol !== "admin" && usuario.rol !== "editorial") {
     return (
       <div className="container mt-5">
         <h2 className="mb-3">{M.TITULO}</h2>
-        <div className="alert alert-danger">
-          {M.SIN_PERMISOS}
-        </div>
+        <div className="alert alert-danger">{M.SIN_PERMISOS}</div>
       </div>
     );
   }
@@ -64,9 +79,7 @@ function AdministrarCompras() {
     return (
       <div className="container mt-5">
         <h2 className="mb-3">{M.TITULO}</h2>
-        <div className="alert alert-danger">
-          {M.ERROR_CARGA}
-        </div>
+        <div className="alert alert-danger">{M.ERROR_CARGA}</div>
       </div>
     );
   }
@@ -76,11 +89,11 @@ function AdministrarCompras() {
       <div className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
         <div>
           <h2 className="mb-1">{M.TITULO}</h2>
-          <p className="text-muted mb-0">
-            {M.SUBTITULO}
-          </p>
+          <p className="text-muted mb-0">{M.SUBTITULO}</p>
         </div>
-        <span className="badge bg-dark">{M.USUARIOS} {usuarios.length}</span>
+        <span className="badge bg-dark">
+          {M.USUARIOS} {usuarios.length}
+        </span>
       </div>
 
       <div className="table-responsive shadow-sm rounded">
@@ -90,13 +103,11 @@ function AdministrarCompras() {
               <th>{M.COLUMNA_USUARIO}</th>
               <th>{M.COLUMNA_EMAIL}</th>
               <th>{M.COLUMNA_COMPRAS}</th>
-              <th>{M.COLUMNA_DESCARGAS}</th>
             </tr>
           </thead>
           <tbody>
             {usuarios.map((u) => {
               const compras = u.biblioteca_digital || [];
-              const descargas = u.historial_descargas_gratuitas || [];
 
               return (
                 <tr key={u._id}>
@@ -115,22 +126,21 @@ function AdministrarCompras() {
                       <div>
                         <p className="fw-bold mb-1">{u.nombre}</p>
                         <p className="text-muted mb-0 small">
-                          {M.ROL_LABEL} <span className="text-capitalize">{u.rol}</span>
+                          {M.ROL_LABEL}{" "}
+                          <span className="text-capitalize">{u.rol}</span>
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="text-nowrap">{u.email}</td>
 
-                  <td style={{ minWidth: "320px" }}>
+                  <td style={{ minWidth: "520px" }}>
                     <div className="d-flex align-items-center justify-content-between gap-2">
                       <span className="badge bg-info text-white">
                         {compras.length}
                       </span>
                       <details className="flex-grow-1">
-                        <summary className="text-primary">
-                          {M.VER_COMPRAS}
-                        </summary>
+                        <summary className="text-primary">{M.VER_COMPRAS}</summary>
                         <ul className="mt-2 mb-0 ps-3 small">
                           {compras.length === 0 ? (
                             <li className="text-muted">{M.SIN_COMPRAS}</li>
@@ -154,44 +164,40 @@ function AdministrarCompras() {
                                       ? ` · ${formatearFecha(c.fecha_compra)}`
                                       : ""}
                                   </span>
-                                </li>
-                              ))
-                          )}
-                        </ul>
-                      </details>
-                    </div>
-                  </td>
-
-                  <td style={{ minWidth: "320px" }}>
-                    <div className="d-flex align-items-center justify-content-between gap-2">
-                      <span className="badge bg-secondary">
-                        {descargas.length}
-                      </span>
-                      <details className="flex-grow-1">
-                        <summary className="text-primary">
-                          {M.VER_DESCARGAS}
-                        </summary>
-                        <ul className="mt-2 mb-0 ps-3 small">
-                          {descargas.length === 0 ? (
-                            <li className="text-muted">{M.SIN_DESCARGAS}</li>
-                          ) : (
-                            descargas
-                              .slice()
-                              .sort(
-                                (a, b) =>
-                                  new Date(b.fecha_descarga) -
-                                  new Date(a.fecha_descarga),
-                              )
-                              .map((d, idx) => (
-                                <li key={d._id || idx}>
-                                  <span className="fw-semibold">
-                                    {d.titulo_guardado || M.TITULO_NO_DISPONIBLE}
-                                  </span>{" "}
-                                  <span className="text-muted">
-                                    {d.fecha_descarga
-                                      ? `· ${formatearFecha(d.fecha_descarga)}`
-                                      : ""}
-                                  </span>
+                                  <div className="mt-2 d-flex flex-wrap align-items-center gap-2">
+                                    {c.tipo_compra === "fisico" && (
+                                      <>
+                                        <span
+                                          className={`${obtenerEstiloEstado(c.estado_pedido).className} text-uppercase`}
+                                          style={obtenerEstiloEstado(c.estado_pedido).style}
+                                        >
+                                          {formatearEstado(c.estado_pedido, M)}
+                                        </span>
+                                        <select
+                                          className="form-select form-select-sm"
+                                          style={{ width: "190px" }}
+                                          value={c.estado_pedido || "en_preparacion"}
+                                          onChange={(e) =>
+                                            actualizarEstadoCompra(
+                                              u._id,
+                                              c._id,
+                                              e.target.value,
+                                            )
+                                          }
+                                        >
+                                          <option value="en_preparacion">
+                                            {M.ESTADO_PREPARACION}
+                                          </option>
+                                          <option value="en_envio">
+                                            {M.ESTADO_ENVIO}
+                                          </option>
+                                          <option value="entregado">
+                                            {M.ESTADO_ENTREGADO}
+                                          </option>
+                                        </select>
+                                      </>
+                                    )}
+                                  </div>
                                 </li>
                               ))
                           )}
@@ -202,6 +208,13 @@ function AdministrarCompras() {
                 </tr>
               );
             })}
+            {usuarios.length === 0 && (
+              <tr>
+                <td colSpan={3} className="text-center text-muted py-4">
+                  {M.SIN_COMPRAS}
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -210,4 +223,3 @@ function AdministrarCompras() {
 }
 
 export default AdministrarCompras;
-
