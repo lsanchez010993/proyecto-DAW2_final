@@ -27,6 +27,11 @@ const usuarioSchema = mongoose.Schema(
         tipo_compra: { type: String, enum: ["fisico", "digital"], default: "digital" },
         cantidad: { type: Number, default: 1 },
         precio_unitario: { type: Number, default: 0 },
+        estado_pedido: {
+          type: String,
+          enum: ["en_preparacion", "en_envio", "entregado"],
+          default: "en_preparacion",
+        },
         fecha_compra: { type: Date, default: Date.now },
       },
     ],

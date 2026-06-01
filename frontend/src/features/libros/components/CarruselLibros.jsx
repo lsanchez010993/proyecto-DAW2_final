@@ -32,9 +32,13 @@ function CarruselLibros({ libros }) {
                 <h6 className="fw-bold mb-1 text-truncate" title={libro.titulo}>{libro.titulo}</h6>
                 <p className="text-muted small mb-2 text-truncate" title={libro.autor}>{libro.autor}</p>
               </div>
-              <Link to={`/libro/${libro._id}`} className="btn btn-outline-dark btn-sm rounded-pill mt-2 w-100">
-                Ver Detalles
-              </Link>
+              <Link
+          to={`/libro/${libro._id}`}
+          className="btn btn-outline-dark btn-sm rounded-pill mt-2 w-100"
+          aria-label={`Mas informacion sobre ${libro.titulo}`}
+        >
+          Ver Detalles
+        </Link>
             </div>
           </div>
 

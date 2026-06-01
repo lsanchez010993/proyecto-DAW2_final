@@ -124,19 +124,11 @@ function Navbar() {
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
-                        <h6 className="dropdown-header">Historial</h6>
+                        <h6 className="dropdown-header">Administrar</h6>
                       </li>
                       <li className="ps-3">
-                        <Link className="dropdown-item" to="/historial/compras">
-                          ↳ Compras
-                        </Link>
-                      </li>
-                      <li className="ps-3">
-                        <Link
-                          className="dropdown-item"
-                          to="/historial/descargas"
-                        >
-                          ↳ Descargas
+                        <Link className="dropdown-item" to="/admin/compras">
+                          ↳ Administrar compras
                         </Link>
                       </li>
                     </>
