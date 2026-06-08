@@ -154,6 +154,7 @@ function HistorialComprasPage() {
                       type="button"
                       className="btn btn-sm btn-outline-primary"
                       onClick={() => toast.success(M.DESCARGA_SIMULADA)}
+                      aria-label={ `${compra.libro?.titulo || ""}`}
                     >
                       {M.DESCARGAR_LIBRO}
                     </button>

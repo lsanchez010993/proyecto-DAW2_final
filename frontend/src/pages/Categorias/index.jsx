@@ -29,17 +29,23 @@ function CategoriasPage() {
         <div className="col-md-3 mb-4 h-100">
           <div className={`shadow-sm ${styles.panelLateral}`}>
             <h2 className="h5 fw-bold mb-3">{M.BUSCAR_TITULO}</h2>
-
-            <div className="mb-3">
+            <form role="search" className="mb-3" onSubmit={(e) => e.preventDefault()}>
+              
+              <label htmlFor="buscador-categorias" className="visually-hidden">
+                {M.BUSCAR_PLACEHOLDER}
+              </label>
+              
               <input
-                type="text"
+                id="buscador-categorias"
+                type="search"
                 className="form-control rounded-pill bg-white"
                 placeholder={M.BUSCAR_PLACEHOLDER}
+                aria-label={M.BUSCAR_PLACEHOLDER}
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
               />
-            </div>
-
+              
+            </form>
             <div className={styles.listaResultados}>
               {buscando ? (
                 <p className="text-center text-muted small mt-4">{M.BUSCANDO}</p>

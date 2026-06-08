@@ -16,7 +16,10 @@ router.get("/autor/:nombreAutor", libroController.buscarPorAutor);
 
 router.get("/autores/todos", libroController.obtenerAutores);
 
+router.get("/autores/letra", libroController.buscarAutoresPorLetra);
+
 router.get("/autores/buscar", libroController.buscarAutoresPorNombre);
+
 
 router.get("/editoriales/unicas", libroController.obtenerEditorialesUnicas);
 
