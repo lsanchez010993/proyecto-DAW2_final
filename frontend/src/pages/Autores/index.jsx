@@ -41,15 +41,23 @@ function AutoresPage() {
             <h5 className="fw-bold m-0">{M.TITULO_PANEL}</h5>
           </div>
           
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control rounded-pill bg-white"
-              placeholder={M.BUSCAR_PLACEHOLDER}
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
-          </div>
+          <form role="search" className="mb-3" onSubmit={(e) => e.preventDefault()}>
+              
+              <label htmlFor="buscador-categorias" className="visually-hidden">
+                {M.BUSCAR_PLACEHOLDER}
+              </label>
+              
+              <input
+                id="buscador-categorias"
+                type="search"
+                className="form-control rounded-pill bg-white"
+                placeholder={M.BUSCAR_PLACEHOLDER}
+                aria-label={M.BUSCAR_PLACEHOLDER}
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
+              
+            </form>
 
           <div className={styles.listaAutores}>
             {buscando ? (

@@ -34,8 +34,8 @@ function Home() {
   }
 
   return (
-    // Main para indicar el contenido principal de la página
-    <section  className="mt-4">
+  
+    <div  className="mt-4">
       
      
       <header className="text-center mb-5 pb-3">
@@ -130,7 +130,7 @@ function Home() {
         )}
       </section>
 
-    </section>
+    </div>
   );
 }
 
