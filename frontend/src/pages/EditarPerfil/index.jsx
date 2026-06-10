@@ -35,42 +35,47 @@ export default function EditarPerfil() {
   return (
     <>
       <div className="container mt-5 mb-5 d-flex justify-content-center">
-        <div className={`card shadow-sm border-0 ${styles.tarjetaPerfil}`}>
-          <div className="card-header bg-white border-0 pt-4 pb-0">
-            <h2 className="display-6 text-center mb-4 fw-bold">
+        <section className={`card shadow-sm border-0 ${styles.tarjetaPerfil}`} aria-labelledby="titulo-perfil">
+          <header className="card-header bg-white border-0 pt-4 pb-0">
+            <h1 id="titulo-perfil" className="display-6 text-center mb-4 fw-bold">
               {APP_MESSAGES.EDITAR_PERFIL.VISTA.TITULO}
-            </h2>
+            </h1>
 
             <nav
               className={styles.contenedorPestanas}
               aria-label="Secciones del perfil"
->              <ul className="nav nav-pills nav-fill border-0">
+            >
+              <ul className="nav nav-pills nav-fill border-0">
                 <li className="nav-item">
                   <button
+                    type="button"
                     className={`nav-link ${styles.botonPestana} ${
                       pestañaActiva === "datos" ? styles.pestanaActiva : styles.pestanaInactiva
                     }`}
                     onClick={() => setPestañaActiva("datos")}
+                    aria-current={pestañaActiva === "datos" ? "page" : undefined}
                   >
                     {APP_MESSAGES.EDITAR_PERFIL.VISTA.TAB_DATOS}
                   </button>
                 </li>
                 <li className="nav-item">
                   <button
+                    type="button"
                     className={`nav-link ${styles.botonPestana} ${
                       pestañaActiva === "envio" ? styles.pestanaActiva : styles.pestanaInactiva
                     }`}
                     onClick={() => setPestañaActiva("envio")}
+                    aria-current={pestañaActiva === "envio" ? "page" : undefined}
                   >
                     {APP_MESSAGES.EDITAR_PERFIL.VISTA.TAB_ENVIO}
                   </button>
                 </li>
               </ul>
             </nav>
-          </div>
+          </header>
 
-          <div className="card-body p-4">
-            <form onSubmit={handleSubmit}>
+          <div className="card-body p-4" aria-live="polite">
+            <form onSubmit={handleSubmit} noValidate>
               {pestañaActiva === "datos" && (
                 <DatosPersonalesForm 
                   esEditorial={esEditorial}
@@ -104,7 +109,7 @@ export default function EditarPerfil() {
               </div>
             </form>
           </div>
-        </div>
+        </section>
       </div>
 
       <PasswordModal 

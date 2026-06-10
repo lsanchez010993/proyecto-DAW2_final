@@ -44,19 +44,19 @@ export default function DatosPersonalesForm({
   }, [fotoPerfil]);
 
   return (
-    <div className="animate__animated animate__fadeIn">
+    <section className="animate__animated animate__fadeIn" aria-label="Formulario de datos personales">
       
       {esEditorial && (
         <div className="mb-3">
-          <label className="big text-muted fw-bold">
+          <span className="h6 text-muted fw-bold d-block">
             {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.EDITORIAL_LABEL} {editorial}
-          </label>
+          </span>
         </div>
       )}
 
       <div className="mb-4">
         <div className="text-center">
-          <label className="small fw-bold">
+          <label htmlFor="avatarInput" className="small fw-bold">
             {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.FOTO_PERFIL_LABEL}
           </label>
         </div>
@@ -65,13 +65,13 @@ export default function DatosPersonalesForm({
           id="avatarInput"
           type="file"
           accept="image/*"
-          className="d-none"
+          className="visually-hidden"
           onChange={(e) => setFotoPerfil(e.target.files?.[0] || null)}
         />
 
         {previewUrl ? (
           <>
-            <div className="d-flex justify-content-center my-2">
+            <div className="d-flex justify-content-center my-2" aria-hidden="true">
               <img
                 src={previewUrl}
                 alt={APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.FOTO_PERFIL_ALT}
@@ -107,48 +107,56 @@ export default function DatosPersonalesForm({
                 if (file) setFotoPerfil(file);
               }}
             >
-              <div className="fw-semibold">
+              <span className="fw-semibold d-block">
                 {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.DROPZONE_TITULO}
-              </div>
-              <div className="small text-muted">
+              </span>
+              <span className="small text-muted d-block">
                 {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.DROPZONE_SUBTITULO}
-              </div>
+              </span>
             </label>
           </div>
         )}
       </div>
 
       <div className="mb-3">
-        <label className="small text-muted">
+        <label htmlFor="perfil-nombre" className="small text-muted">
           {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.NOMBRE_LABEL}
         </label>
         <input
+          id="perfil-nombre"
           type="text"
           className="form-control rounded-pill"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
+          autoComplete="given-name"
         />
       </div>
+      
       <div className="mb-3">
-        <label className="small text-muted">
+        <label htmlFor="perfil-apellidos" className="small text-muted">
           {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.APELLIDOS_LABEL}
         </label>
         <input
+          id="perfil-apellidos"
           type="text"
           className="form-control rounded-pill"
           value={apellidos}
           onChange={(e) => setApellidos(e.target.value)}
+          autoComplete="family-name"
         />
       </div>
+      
       <div className="mb-4">
-        <label className="small text-muted">
+        <label htmlFor="perfil-email" className="small text-muted">
           {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.EMAIL_LABEL}
         </label>
         <input
+          id="perfil-email"
           type="email"
           className="form-control rounded-pill"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
         />
       </div>
 
@@ -162,24 +170,28 @@ export default function DatosPersonalesForm({
         </button>
       </div>
 
-      <hr />
-      <h5 className="text-center my-3">
-        {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.PREFERENCIAS_TITULO}
-      </h5>
-      <div className="d-flex flex-wrap justify-content-center gap-2">
-        {opcionesPreferencias.map((g) => (
-          <button
-            key={g}
-            type="button"
-            onClick={() => togglePreferencia(g)}
-            className={`btn btn-sm rounded-pill ${styles.preferenciaBtn} ${
-              preferencias.includes(g) ? "btn-primary" : "btn-outline-secondary"
-            }`}
-          >
-            {g}
-          </button>
-        ))}
-      </div>
-    </div>
+      <hr aria-hidden="true" />
+      
+      <fieldset className="mt-4">
+        <legend className="h5 text-center my-3 w-100 float-none">
+          {APP_MESSAGES.EDITAR_PERFIL.DATOS_PERSONALES.PREFERENCIAS_TITULO}
+        </legend>
+        <div className="d-flex flex-wrap justify-content-center gap-2">
+          {opcionesPreferencias.map((g) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => togglePreferencia(g)}
+              aria-pressed={preferencias.includes(g)}
+              className={`btn btn-sm rounded-pill ${styles.preferenciaBtn} ${
+                preferencias.includes(g) ? "btn-primary" : "btn-outline-secondary"
+              }`}
+            >
+              {g}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+    </section>
   );
 }
