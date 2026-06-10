@@ -27,9 +27,9 @@ function CheckoutSimulacionPage() {
 
   if (requiereLogin) {
     return (
-      <div className="container mt-4">
-        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
-        <div className="alert alert-warning">
+      <div className="container mt-4 text-center">
+        <h1 className="h2 mb-3 fw-bold">{M.TITULO}</h1>
+        <div className="alert alert-warning" role="alert">
           {`${M.LOGIN_REQUERIDO} `}
           <Link to="/login" className="alert-link">
             {M.LINK_LOGIN}
@@ -43,7 +43,7 @@ function CheckoutSimulacionPage() {
   if (carritoVacio) {
     return (
       <div className="container mt-4 text-center">
-        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
+        <h1 className="h2 mb-3 fw-bold">{M.TITULO}</h1>
         <div className="text-muted mb-3">{M.CARRITO_VACIO}</div>
         <Link to="/" className="btn btn-primary">
           {M.VOLVER_TIENDA}
@@ -53,10 +53,10 @@ function CheckoutSimulacionPage() {
   }
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+    <div className="container mt-4" aria-labelledby="titulo-checkout">
+      <header className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
         <div>
-          <h2 className="mb-1 fw-bold">{M.TITULO}</h2>
+          <h1 id="titulo-checkout" className="h2 mb-1 fw-bold">{M.TITULO}</h1>
           <p className="text-muted mb-0">
             {M.SUBTITULO}
           </p>
@@ -64,62 +64,76 @@ function CheckoutSimulacionPage() {
         <Link to="/carrito" className="btn btn-outline-dark">
           {M.VOLVER_CARRITO}
         </Link>
-      </div>
+      </header>
 
       <div className="row g-4">
-        <div className="col-12 col-lg-7">
+        {/* Formulario principal de pago */}
+        <section className="col-12 col-lg-7" aria-labelledby="titulo-datos-pago">
           <div className="card border-0 shadow-sm rounded-4">
             <div className="card-body p-4">
-              <h5 className="fw-bold mb-3">{M.DATOS_PAGO}</h5>
+              <h2 id="titulo-datos-pago" className="h5 fw-bold mb-3">{M.DATOS_PAGO}</h2>
 
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (!enviando) setModalAbierto(true);
                 }}
+                noValidate
               >
                 <div className="mb-3">
-                  <label className="form-label">{M.TARJETA_LABEL}</label>
+                  <label htmlFor="pago-tarjeta" className="form-label">{M.TARJETA_LABEL}</label>
                   <input
+                    id="pago-tarjeta"
                     className="form-control"
                     value={tarjeta}
                     onChange={(e) => setTarjeta(e.target.value)}
                     placeholder={M.TARJETA_PLACEHOLDER}
-                    autoComplete="off"
+                    autoComplete="cc-number"
+                    required
+                    aria-required="true"
                   />
                 </div>
 
                 <div className="row">
                   <div className="col-12 col-md-6 mb-3">
-                    <label className="form-label">{M.VENCIMIENTO_LABEL}</label>
+                    <label htmlFor="pago-vencimiento" className="form-label">{M.VENCIMIENTO_LABEL}</label>
                     <input
+                      id="pago-vencimiento"
                       className="form-control"
                       value={vencimiento}
                       onChange={(e) => setVencimiento(e.target.value)}
                       placeholder={M.VENCIMIENTO_PLACEHOLDER}
-                      autoComplete="off"
+                      autoComplete="cc-exp"
+                      required
+                      aria-required="true"
                     />
                   </div>
                   <div className="col-12 col-md-6 mb-3">
-                    <label className="form-label">{M.CVV_LABEL}</label>
+                    <label htmlFor="pago-cvv" className="form-label">{M.CVV_LABEL}</label>
                     <input
+                      id="pago-cvv"
                       className="form-control"
                       value={cvv}
                       onChange={(e) => setCvv(e.target.value)}
                       placeholder={M.CVV_PLACEHOLDER}
-                      autoComplete="off"
+                      autoComplete="cc-csc"
+                      required
+                      aria-required="true"
                     />
                   </div>
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">{M.TITULAR_LABEL}</label>
+                  <label htmlFor="pago-titular" className="form-label">{M.TITULAR_LABEL}</label>
                   <input
+                    id="pago-titular"
                     className="form-control"
                     value={titular}
                     onChange={(e) => setTitular(e.target.value)}
                     placeholder={M.TITULAR_PLACEHOLDER}
-                    autoComplete="off"
+                    autoComplete="cc-name"
+                    required
+                    aria-required="true"
                   />
                 </div>
 
@@ -127,19 +141,22 @@ function CheckoutSimulacionPage() {
                   className="btn btn-success btn-lg w-100"
                   type="submit"
                   disabled={enviando}
+                  aria-busy={enviando}
                 >
                   {enviando ? M.REGISTRANDO : M.REALIZAR_COMPRA}
                 </button>
               </form>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="col-12 col-lg-5">
+        {/* Resumen de compra lateral */}
+        <aside className="col-12 col-lg-5" aria-labelledby="titulo-resumen">
           <div className="card border-0 shadow-sm rounded-4">
             <div className="card-body p-4">
-              <h5 className="fw-bold mb-3">{M.RESUMEN}</h5>
-              <ul className="list-group list-group-flush">
+              <h2 id="titulo-resumen" className="h5 fw-bold mb-3">{M.RESUMEN}</h2>
+              
+              <ul className="list-group list-group-flush" aria-label="Lista de artículos en el pedido">
                 {resumen.lineas.map((l, idx) => (
                   <li
                     key={`${l._id}-${l.tipo}-${idx}`}
@@ -157,18 +174,18 @@ function CheckoutSimulacionPage() {
                   </li>
                 ))}
               </ul>
-              <hr />
+              
+              <hr aria-hidden="true" />
+              
               <div className="d-flex justify-content-between align-items-center">
                 <span className="fw-bold">{M.TOTAL}</span>
-                <span className="fw-bold text-primary">{resumen.total} €</span>
-              </div>
-              <div className="text-muted small mt-2">
-                
+                <span className="fw-bold text-primary" aria-live="polite">{resumen.total} €</span>
               </div>
             </div>
           </div>
-        </div>
+        </aside>
       </div>
+
       <ModalConfirmacion
         isOpen={modalAbierto}
         titulo={M.MODAL_TITULO}
