@@ -4,7 +4,7 @@ import { useState } from "react";
 import RecuperarPassword from "./RecuperarPassword";
 import { APP_MESSAGES } from "../../constants/messages";
 
-import BotonIniciarSesiónGoogle from "../../components/BotonInicioSesionGoogle.jsx";
+import BotonIniciarSesionGoogle from "../../components/BotonInicioSesionGoogle.jsx";
 
 function IniciarSesionPage() {
   const M = APP_MESSAGES.PAGES.INICIAR_SESION;
@@ -26,36 +26,54 @@ function IniciarSesionPage() {
 
   return (
     <>
-      {/* CONTENEDOR PRINCIPAL */}
-      <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f0f2f5" }}>
-        {/* TARJETA BLANCA CENTRADA */}
-        <div className="card border-0 shadow-sm p-4" style={{ width: "100%", maxWidth: "400px" }}>
-          <h3 className="text-center mb-4 fw-bold">{M.TITULO}</h3>
+      <main
+        className="d-flex justify-content-center align-items-center min-vh-100"
+        style={{ backgroundColor: "#f0f2f5" }}
+      >
+        <section
+          className="card border-0 shadow-sm p-4"
+          style={{ width: "100%", maxWidth: "400px" }}
+          aria-labelledby="titulo-login"
+        >
+          <h1 id="titulo-login" className="h3 text-center mb-4 fw-bold">
+            {M.TITULO}
+          </h1>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             {/* INPUT EMAIL */}
             <div className="mb-3">
+              <label htmlFor="login-email" className="visually-hidden">
+                {M.EMAIL_PLACEHOLDER || "Correo electrónico"}
+              </label>
               <input
+                id="login-email"
                 type="email"
                 className="form-control py-2"
                 placeholder={M.EMAIL_PLACEHOLDER}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                aria-required="true"
               />
             </div>
 
             {/* INPUT PASSWORD */}
             <div className="mb-3">
+              <label htmlFor="login-password" className="visually-hidden">
+                {M.PASSWORD_PLACEHOLDER || "Contraseña"}
+              </label>
               <input
+                id="login-password"
                 type="password"
                 className="form-control py-2"
                 placeholder={M.PASSWORD_PLACEHOLDER}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                aria-required="true"
               />
             </div>
+
             <div className="mb-3 form-check d-flex justify-content-between align-items-center">
               <div>
                 <input
@@ -89,13 +107,13 @@ function IniciarSesionPage() {
           </form>
 
           {/* SEPARADOR */}
-          <div className="d-flex align-items-center my-3">
+          <div className="d-flex align-items-center my-3" aria-hidden="true">
             <hr className="flex-grow-1" />
             <span className="mx-3 text-muted small">{M.SEPARADOR}</span>
             <hr className="flex-grow-1" />
           </div>
 
-          <BotonIniciarSesiónGoogle text="signin_with" onCredential={loginWithGoogle} />
+          <BotonIniciarSesionGoogle text="signin_with" onCredential={loginWithGoogle} />
 
           {/* ENLACE A REGISTRO */}
           <div className="text-center mt-4">
@@ -104,8 +122,8 @@ function IniciarSesionPage() {
               {M.REGISTRATE}
             </Link>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
 
       {isRecoveryOpen && (
         <RecuperarPassword
@@ -119,4 +137,5 @@ function IniciarSesionPage() {
     </>
   );
 }
+
 export default IniciarSesionPage;

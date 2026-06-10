@@ -53,51 +53,74 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f0f2f5" }}>
-      <div className="card border-0 shadow-sm p-4" style={{ width: "100%", maxWidth: "420px" }}>
-        <h3 className="text-center mb-2 fw-bold">{M.TITULO}</h3>
-        <p className="text-muted text-center mb-4" style={{ fontSize: "0.95rem" }}>
-          {M.SUBTITULO}
-        </p>
+    <main className="d-flex justify-content-center align-items-center min-vh-100" style={{ backgroundColor: "#f0f2f5" }}>
+      
+      <section 
+        className="card border-0 shadow-sm p-4" 
+        style={{ width: "100%", maxWidth: "420px" }}
+        aria-labelledby="titulo-reset"
+      >
+        <header>
+          <h1 id="titulo-reset" className="h3 text-center mb-2 fw-bold">{M.TITULO}</h1>
+          <p className="text-muted text-center mb-4" style={{ fontSize: "0.95rem" }}>
+            {M.SUBTITULO}
+          </p>
+        </header>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} noValidate>
+          
           <div className="mb-3">
+            <label htmlFor="reset-pass1" className="visually-hidden">
+              {M.PLACEHOLDER_PASSWORD || "Nueva contraseña"}
+            </label>
             <input
+              id="reset-pass1"
               type="password"
               className="form-control py-2"
               placeholder={M.PLACEHOLDER_PASSWORD}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              aria-required="true"
+              aria-describedby="help-pass1" 
             />
-            <small className="text-muted d-block mt-2">
+            <small id="help-pass1" className="text-muted d-block mt-2">
               {M.AYUDA_PASSWORD}
             </small>
           </div>
 
           <div className="mb-3">
+            <label htmlFor="reset-pass2" className="visually-hidden">
+              {M.PLACEHOLDER_PASSWORD_REPEAT || "Repetir nueva contraseña"}
+            </label>
             <input
+              id="reset-pass2"
               type="password"
               className="form-control py-2"
               placeholder={M.PLACEHOLDER_PASSWORD_REPEAT}
               value={password2}
               onChange={(e) => setPassword2(e.target.value)}
               required
+              aria-required="true"
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-100 py-2 fw-bold" disabled={isSubmitting}>
+          <button 
+            type="submit" 
+            className="btn btn-primary w-100 py-2 fw-bold" 
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+          >
             {isSubmitting ? M.GUARDANDO : M.GUARDAR}
           </button>
         </form>
 
-        <div className="text-center mt-3">
+        <footer className="text-center mt-3">
           <Link to="/login" className="text-primary text-decoration-none small">
             {M.VOLVER_LOGIN}
           </Link>
-        </div>
-      </div>
-    </div>
+        </footer>
+      </section>
+    </main>
   );
 }
-

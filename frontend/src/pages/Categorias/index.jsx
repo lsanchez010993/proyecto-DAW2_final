@@ -20,17 +20,22 @@ function CategoriasPage() {
     toggleCategoria,
     toggleExpandir,
   } = useCategorias();
+
   return (
     <div className="container-fluid px-4 mt-4">
       <div className="row">
-        {/* =========================================
-            COLUMNA IZQUIERDA: Buscador
-            ========================================= */}
-        <div className="col-md-3 mb-4 h-100">
+        
+        {/* =========================================================
+            COLUMNA IZQUIERDA: <aside> (Semántica de panel lateral)
+            ========================================================= */}
+        <aside className="col-md-3 mb-4 h-100" aria-labelledby="titulo-panel-busqueda">
           <div className={`shadow-sm ${styles.panelLateral}`}>
-            <h2 className="h5 fw-bold mb-3">{M.BUSCAR_TITULO}</h2>
+            {/* Mantener jerarquía inicial de la barra lateral */}
+            <h2 id="titulo-panel-busqueda" className="h5 fw-bold mb-3">
+              {M.BUSCAR_TITULO}
+            </h2>
+            
             <form role="search" className="mb-3" onSubmit={(e) => e.preventDefault()}>
-              
               <label htmlFor="buscador-categorias" className="visually-hidden">
                 {M.BUSCAR_PLACEHOLDER}
               </label>
@@ -44,15 +49,17 @@ function CategoriasPage() {
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
               />
-              
             </form>
+
             <div className={styles.listaResultados}>
               {buscando ? (
                 <p className="text-center text-muted small mt-4">{M.BUSCANDO}</p>
               ) : busqueda === "" ? (
                 <p className="text-center text-muted small mt-4">{M.AYUDA_BUSQUEDA}</p>
               ) : resultadosBusqueda.length === 0 ? (
-                <p className="text-center text-muted small mt-4">{`${M.SIN_COINCIDENCIAS_PREFIJO}${busqueda}${M.SIN_COINCIDENCIAS_SUFIX}`}</p>
+                <p className="text-center text-muted small mt-4">
+                  {`${M.SIN_COINCIDENCIAS_PREFIJO}${busqueda}${M.SIN_COINCIDENCIAS_SUFIX}`}
+                </p>
               ) : (
                 resultadosBusqueda.map((libro) => (
                   <Link key={libro._id} to={`/libro/${libro._id}`} className={styles.itemResultado}>
@@ -67,20 +74,25 @@ function CategoriasPage() {
               )}
             </div>
           </div>
-        </div>
+        </aside>
 
-        {/* =========================================
-            COLUMNA DERECHA: Escaparate 
-            ========================================= */}
+        {/* =========================================================
+            COLUMNA DERECHA: Contenido y secciones de escaparate
+            ========================================================= */}
         <div className="col-md-9">
-          <div className={`shadow-sm p-4 mb-4 ${styles.tarjetaNube} animate__animated animate__fadeIn`}>
+          
+          {/* Bloque superior: Filtros por píldora */}
+          <section 
+            className={`shadow-sm p-4 mb-4 ${styles.tarjetaNube} animate__animated animate__fadeIn`}
+            aria-label="Filtros de categorías disponibles"
+          >
             <p className="text-muted text-center mb-4">{M.FILTRO_HINT}</p>
 
             <div className="d-flex flex-wrap justify-content-center gap-2">
               {listaCategoriasGlobal.map((cat) => (
                 <button
                   key={cat}
-                  aria-label={cat}
+                  aria-label={`Filtrar por ${cat}`}
                   onClick={() => toggleCategoria(cat)}
                   className={`btn rounded-pill px-4 py-2 shadow-sm ${styles.botonPildora} ${
                     seleccionadas.includes(cat)
@@ -92,17 +104,19 @@ function CategoriasPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="h4 mb-4 border-bottom pb-2">
+          {/* Bloque inferior: Listado de resultados principales */}
+          <section aria-live="polite" aria-labelledby="titulo-seccion-catalogo">
+            <h2 id="titulo-seccion-catalogo" className="h4 mb-4 border-bottom pb-2">
               {seleccionadas.length === 0 ? M.CATALOGO_GENERAL : M.RESULTADOS_ENCONTRADOS}
             </h2>
 
             {/* DIBUJAR LIBROS POR CATEGORÍA */}
             {Object.entries(librosPorCategoria).length === 0 && !cargandoFilas ? (
-              <div className={`text-center text-muted w-100 mt-5`}>
-                <div aria-hidden="true" className="display-1">🧭</div>
+              <div className="text-center text-muted w-100 mt-5">
+                {/* CORRECCIÓN: Uso de span semántico para elementos gráficos inconexos */}
+                <span aria-hidden="true" className="display-1 d-block">🧭</span>
                 <p className="mt-3">{M.VACIO}</p>
               </div>
             ) : (
@@ -110,22 +124,31 @@ function CategoriasPage() {
                 const estaExpandida = categoriasExpandidas[nombreCategoria];
                 const mostrarVerMas = librosDeCategoria.length > 5;
                 const librosAMostrar = estaExpandida ? librosDeCategoria : librosDeCategoria.slice(0, 5);
+                
+                // Generamos un ID único seguro para vincular el título con su sección
+                const idSeccionCat = `cat-${nombreCategoria.toLowerCase().replace(/\s+/g, "-")}`;
 
                 return (
-                  <div key={nombreCategoria} className="mb-5 animate__animated animate__fadeInUp">
-                    <h5 className="mb-3 d-flex justify-content-between align-items-center">
-                      <span className="fw-bold text-uppercase" style={{ letterSpacing: "1px" }}>
+                  // CORRECCIÓN: Cada bloque de categoría con libros es una subsección con identidad propia
+                  <section key={nombreCategoria} className="mb-5 animate__animated animate__fadeInUp" aria-labelledby={idSeccionCat}>
+                    <div className="mb-3 d-flex justify-content-between align-items-center">
+                      
+                      {/* CORRECCIÓN: Ajustamos a h3 para respetar la jerarquía de títulos del documento, 
+                          aplicando clase .h5 de Bootstrap para conservar el tamaño visual exacto que tenías */}
+                      <h3 id={idSeccionCat} className="h5 fw-bold text-uppercase m-0" style={{ letterSpacing: "1px" }}>
                         {nombreCategoria}
-                      </span>
+                      </h3>
+                      
                       {mostrarVerMas && (
                         <button
                           className="btn btn-sm btn-outline-dark rounded-pill px-3"
                           onClick={() => toggleExpandir(nombreCategoria)}
+                          aria-expanded={estaExpandida}
                         >
                           {estaExpandida ? M.OCULTAR : M.VER_TODO}
                         </button>
                       )}
-                    </h5>
+                    </div>
 
                     {estaExpandida ? (
                       <div className="row g-4 animate__animated animate__fadeIn">
@@ -138,11 +161,11 @@ function CategoriasPage() {
                     ) : (
                       <CarruselLibros libros={librosAMostrar} />
                     )}
-                  </div>
+                  </section>
                 );
               })
             )}
-          </div>
+          </section>
         </div>
       </div>
     </div>

@@ -40,6 +40,7 @@ function HistorialComprasPage() {
   const { usuario } = useAuth();
   const { compras, cargando, error } = useHistorialCompras();
   const [pestanaActiva, setPestanaActiva] = useState("digitales");
+  
   const comprasValidas = useMemo(
     () => (compras || []).filter((c) => c?.libro),
     [compras],
@@ -58,8 +59,8 @@ function HistorialComprasPage() {
   if (!usuario) {
     return (
       <div className="container mt-4">
-        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
-        <div className="alert alert-warning">
+        <h1 className="h2 mb-3 fw-bold">{M.TITULO}</h1>
+        <div className="alert alert-warning" role="alert">
           {`${M.LOGIN_REQUERIDO} `}
           <Link to="/login" className="alert-link">
             {M.LINK_LOGIN}
@@ -86,8 +87,8 @@ function HistorialComprasPage() {
   if (error) {
     return (
       <div className="container mt-4">
-        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
-        <div className="alert alert-danger">
+        <h1 className="h2 mb-3 fw-bold">{M.TITULO}</h1>
+        <div className="alert alert-danger" role="alert">
           {M.ERROR_CARGA}
         </div>
       </div>
@@ -95,44 +96,49 @@ function HistorialComprasPage() {
   }
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
-        <div>
-          <h2 className="mb-1 fw-bold">{M.TITULO}</h2>
-          <p className="text-muted mb-0">
-            {M.DESCRIPCION}
-          </p>
-        </div>
-      </div>
 
-      <ul className="nav nav-pills mb-4">
-        <li className="nav-item me-2">
-          <button
-            type="button"
-            className={`btn ${pestanaActiva === "digitales" ? "btn-dark" : "btn-outline-dark"}`}
-            onClick={() => setPestanaActiva("digitales")}
-          >
-            {M.TAB_DIGITALES}
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            type="button"
-            className={`btn ${pestanaActiva === "fisicos" ? "btn-dark" : "btn-outline-dark"}`}
-            onClick={() => setPestanaActiva("fisicos")}
-          >
-            {M.TAB_FISICOS}
-          </button>
-        </li>
-      </ul>
+    <section className="container mt-4" aria-labelledby="titulo-historial">
+      
+      {/* Cabecera semántica de la página */}
+      <header className="mb-4">
+        <h1 id="titulo-historial" className="h2 fw-bold mb-1">{M.TITULO}</h1>
+        <p className="text-muted mb-0">{M.DESCRIPCION}</p>
+      </header>
+
+
+      <nav aria-label="Tipos de formato de compra" className="mb-4">
+        <ul className="nav nav-pills">
+          <li className="nav-item me-2">
+            <button
+              type="button"
+              className={`btn ${pestanaActiva === "digitales" ? "btn-dark" : "btn-outline-dark"}`}
+              onClick={() => setPestanaActiva("digitales")}
+              aria-current={pestanaActiva === "digitales" ? "page" : undefined}
+            >
+              {M.TAB_DIGITALES}
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              type="button"
+              className={`btn ${pestanaActiva === "fisicos" ? "btn-dark" : "btn-outline-dark"}`}
+              onClick={() => setPestanaActiva("fisicos")}
+              aria-current={pestanaActiva === "fisicos" ? "page" : undefined}
+            >
+              {M.TAB_FISICOS}
+            </button>
+          </li>
+        </ul>
+      </nav>
 
       {comprasMostradas.length === 0 ? (
-        <div className="text-center mt-5 text-muted">
-          <h4 className="mb-2">
+        // Estado vacío corregido secuencialmente a h2
+        <div className="text-center mt-5 text-muted py-5">
+          <h2 className="h4 mb-2">
             {pestanaActiva === "digitales"
               ? M.VACIO_DIGITALES_TITULO
               : M.VACIO_FISICOS_TITULO}
-          </h4>
+          </h2>
           <p className="mb-0">
             {pestanaActiva === "digitales"
               ? M.VACIO_DIGITALES_DESCRIPCION
@@ -140,56 +146,64 @@ function HistorialComprasPage() {
           </p>
         </div>
       ) : (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 gx-4 gy-5">
+        // Cuadrícula de resultados principales
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 gx-4 gy-5" aria-live="polite">
           {comprasMostradas.map((compra, idx) => (
             <div
-              className="col mb-2"
+              className="col"
               key={compra._id || `${compra.libro?._id}-${idx}`}
             >
-              <div className="h-100">
+   
+              <div className="card border-0 bg-transparent h-100">
+                
                 <TarjetaLibro libro={compra.libro} />
-                {pestanaActiva === "digitales" ? (
-                  <div className="mt-3 d-flex justify-content-between align-items-center gap-2">
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => toast.success(M.DESCARGA_SIMULADA)}
-                      aria-label={ `${compra.libro?.titulo || ""}`}
-                    >
-                      {M.DESCARGAR_LIBRO}
-                    </button>
-                    <small className="text-muted text-nowrap">
-                      {formatearFecha(compra.fecha_compra)}
-                    </small>
-                  </div>
-                ) : (
-                  <div className="mt-3 d-flex justify-content-between align-items-center gap-2">
-                    <span
-                      className={obtenerEstiloEstado(compra.estado_pedido).className}
-                      style={obtenerEstiloEstado(compra.estado_pedido).style}
-                    >
-                      {M.ESTADO_LABEL}: {formatearEstado(compra.estado_pedido, M)}
-                    </span>
-                    <small className="text-muted text-nowrap">
-                      {formatearFecha(compra.fecha_compra)}
-                    </small>
-                  </div>
-                )}
-                {pestanaActiva !== "digitales" && compra.cantidad > 1 && (
-                  <div className="mt-1 d-flex justify-content-start align-items-center gap-2">
-                    <span className="badge bg-info text-white text-capitalize">
-                      x{compra.cantidad}
-                    </span>
-                  </div>
-                )}
+                
+     
+                <footer className="mt-auto pt-3">
+                  {pestanaActiva === "digitales" ? (
+                    <div className="d-flex justify-content-between align-items-center gap-2">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        onClick={() => toast.success(M.DESCARGA_SIMULADA)}
+                        aria-label={`${M.DESCARGAR_LIBRO}: ${compra.libro?.titulo || ""}`}
+                      >
+                        {M.DESCARGAR_LIBRO}
+                      </button>
+                      <small className="text-muted text-nowrap">
+                        {formatearFecha(compra.fecha_compra)}
+                      </small>
+                    </div>
+                  ) : (
+                    <div className="d-flex justify-content-between align-items-center gap-2">
+                      <span
+                        className={obtenerEstiloEstado(compra.estado_pedido).className}
+                        style={obtenerEstiloEstado(compra.estado_pedido).style}
+                      >
+                        {M.ESTADO_LABEL}: {formatearEstado(compra.estado_pedido, M)}
+                      </span>
+                      <small className="text-muted text-nowrap">
+                        {formatearFecha(compra.fecha_compra)}
+                      </small>
+                    </div>
+                  )}
+                  
+                  {pestanaActiva !== "digitales" && compra.cantidad > 1 && (
+                    <div className="mt-2 d-flex justify-content-start align-items-center">
+                      <span className="badge bg-info text-white">
+                        {M.CANTIDAD_LABEL || "Cantidad:"} x{compra.cantidad}
+                      </span>
+                    </div>
+                  )}
+                </footer>
+
               </div>
             </div>
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
 export default HistorialComprasPage;
-

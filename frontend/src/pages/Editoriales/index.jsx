@@ -21,7 +21,7 @@ export default function Editoriales() {
     cargarMas
   } = useEditoriales();
 
-  // Envolvemos en useCallback para que la referencia no cambie en cada render
+
   const handleCargarMas = useCallback(() => {
     cargarMas();
   }, [cargarMas]);
@@ -37,10 +37,10 @@ export default function Editoriales() {
     <div className="container-fluid px-4 mt-4">
       <div className="row">
         
-        {/* =========================================
-            COLUMNA IZQUIERDA: Buscador de Editoriales
-            ========================================= */}
-        <div className="col-md-3 mb-4 h-100">
+        {/* =========================================================
+            COLUMNA IZQUIERDA: 
+            ========================================================= */}
+        <aside className="col-md-3 mb-4 h-100" aria-label="Buscador y filtros de editoriales">
           <BuscadorEditoriales 
             busqueda={busqueda}
             setBusqueda={setBusqueda}
@@ -48,12 +48,15 @@ export default function Editoriales() {
             seleccionadas={seleccionadas}
             setSeleccionadas={setSeleccionadas}
           />
-        </div>
+        </aside>
 
-        {/* =========================================
-            COLUMNA DERECHA: Escaparate Netflix
-            ========================================= */}
-        <div className="col-md-9">
+        {/* =========================================================
+            COLUMNA DERECHA:             ========================================================= */}
+          <section 
+            className="col-md-9" 
+            aria-live="polite" 
+            aria-label="Catálogo de libros organizado por editoriales"
+          >
           <ListaEditoriales 
             listaEditoriales={listaEditoriales}
             seleccionadas={seleccionadas}
@@ -63,7 +66,8 @@ export default function Editoriales() {
             editorialesExpandidas={editorialesExpandidas}
             toggleExpandir={toggleExpandir}
           />
-        </div>
+        </section>
+        
       </div>
     </div>
   );
