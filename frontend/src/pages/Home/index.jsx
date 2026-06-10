@@ -36,13 +36,10 @@ function Home() {
   return (
   
     <div  className="mt-4">
-      
-     
       <header className="text-center mb-5 pb-3">
         <h1 className="fw-bold mb-3">{M.HERO_TITULO}</h1>
         <p className="text-muted mb-4">{M.HERO_SUBTITULO}</p>
         
-       
         <div className="d-flex justify-content-end w-100">
           <BuscadorLibrosHome
             valor={textoBusqueda}

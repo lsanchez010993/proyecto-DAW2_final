@@ -30,23 +30,36 @@ function DetalleLibro() {
   if (cargando || !libro) return <div className="text-center mt-5">{M.CARGANDO}</div>;
 
   return (
-    <div className="container mt-5 mb-5">
-      <Link to="/" className="btn btn-outline-secondary mb-3">{M.VOLVER_CATALOGO}</Link>
-
-      <div className="row">
-        <div className="col-md-4">
-          <img src={libro.portada_url} alt={libro.titulo} className="img-fluid rounded shadow" />
+      <article className="container mt-5 mb-5">
+      <Link to="/" className="btn btn-outline-secondary mb-3">{M.VOLVER_CATALOGO}</Link>  
+      <header className="row">
+        <div className="col-md-4 mb-4 mb-md-0">
+          <img 
+            src={libro.portada_url} 
+            alt={`Portada del libro: ${libro.titulo}`} 
+            className="img-fluid rounded shadow" 
+          />
         </div>
         <div className="col-md-8">
-          <h1>{libro.titulo}</h1>
-          <h3 className="text-muted">{libro.autor}</h3>
+      
+          <h1 className="fw-bold">{libro.titulo}</h1>
+          
+       
+          <h2 className="h3 text-muted fw-normal">{libro.autor}</h2>
           <hr />
+          
           <p className="lead">{libro.sinopsis}</p>
-          <p className="mb-3 text-secondary"><span className="fw-bold">{M.EDITORIAL_LABEL}</span> {libro.editorial}</p>
+          <p className="mb-3 text-secondary">
+            <span className="fw-bold">{M.EDITORIAL_LABEL}</span> {libro.editorial}
+          </p>
 
           {/* Etiquetas de categorías */}
-          <div className="mb-4 d-flex flex-wrap gap-2">
-            {libro.categorias?.map(cat => <span key={cat} className="badge bg-dark rounded-pill px-3 py-2">{cat}</span>)}
+          <div className="mb-4 d-flex flex-wrap gap-2" aria-label="Categorías del libro">
+            {libro.categorias?.map(cat => (
+              <span key={cat} className="badge bg-dark rounded-pill px-3 py-2">
+                {cat}
+              </span>
+            ))}
           </div>
 
           <OpcionesCompra 
@@ -56,34 +69,47 @@ function DetalleLibro() {
             onInteraccion={registrarInteraccion} 
           />
         </div>
-      </div>
+      </header>
 
-      <SeccionRelacionados 
-        tituloSeccion={tituloSeccion} 
-        libros={librosRelacionados} 
-        onAbrirModal={() => setMostrarModal(true)} 
-      />
-
-      {mostrarModal && (
-        <ContenidoGratuito 
-          categoria={libro.categorias?.[0]} 
-          onClose={() => setMostrarModal(false)} 
-          onDescarga={(libroGuten) => {
-            registrarInteraccion("descarga_gratuita");
-            registrarDescarga(libroGuten?.titulo, libro.categorias?.[0]);
-          }}
+      {/* =========================================================
+          SECCIÓN: Libros Relacionados 
+          ========================================================= */}
+      <section className="mt-5" aria-label="Libros relacionados">
+        <SeccionRelacionados 
+          tituloSeccion={tituloSeccion} 
+          libros={librosRelacionados} 
+          onAbrirModal={() => setMostrarModal(true)} 
         />
+      </section>
+
+      {/* Modal interactivo de descargas (Se abre en un portal o condicional) */}
+      {mostrarModal && (
+        <div role="dialog" aria-modal="true">
+          <ContenidoGratuito 
+            categoria={libro.categorias?.[0]} 
+            onClose={() => setMostrarModal(false)} 
+            onDescarga={(libroGuten) => {
+              registrarInteraccion("descarga_gratuita");
+              registrarDescarga(libroGuten?.titulo, libro.categorias?.[0]);
+            }}
+          />
+        </div>
       )}
 
-      <SeccionResenas
-        key={`${id}-${permisoResena?.review?._id || "sin-resena"}-${permisoResena?.review?.updatedAt || ""}`}
-        resenas={resenas}
-        resumenResenas={resumenResenas}
-        permisoResena={permisoResena}
-        guardandoResena={guardandoResena}
-        onGuardarResena={guardarResena}
-      />
-    </div>
+      {/* =========================================================
+          SECCIÓN: Reseñas y Comentarios del producto
+          ========================================================= */}
+      <section className="mt-5" aria-label="Opiniones de los lectores">
+        <SeccionResenas
+          key={`${id}-${permisoResena?.review?._id || "sin-resena"}-${permisoResena?.review?.updatedAt || ""}`}
+          resenas={resenas}
+          resumenResenas={resumenResenas}
+          permisoResena={permisoResena}
+          guardandoResena={guardandoResena}
+          onGuardarResena={guardarResena}
+        />
+      </section>
+    </article>
   );
 }
 

@@ -26,8 +26,8 @@ function HistorialDescargasPage() {
   if (!usuario) {
     return (
       <div className="container mt-4">
-        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
-        <div className="alert alert-warning">
+        <h1 className="h2 mb-3 fw-bold">{M.TITULO}</h1>
+        <div className="alert alert-warning" role="alert">
           {`${M.LOGIN_REQUERIDO} `}
           <Link to="/login" className="alert-link">
             {M.LINK_LOGIN}
@@ -43,6 +43,8 @@ function HistorialDescargasPage() {
       <div
         className="d-flex justify-content-center align-items-center"
         style={{ height: "50vh" }}
+        aria-busy="true"
+        aria-live="polite"
       >
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">{M.CARGANDO}</span>
@@ -54,8 +56,8 @@ function HistorialDescargasPage() {
   if (error) {
     return (
       <div className="container mt-4">
-        <h2 className="mb-3 fw-bold">{M.TITULO}</h2>
-        <div className="alert alert-danger">
+        <h1 className="h2 mb-3 fw-bold">{M.TITULO}</h1>
+        <div className="alert alert-danger" role="alert">
           {M.ERROR_CARGA}
         </div>
       </div>
@@ -63,31 +65,37 @@ function HistorialDescargasPage() {
   }
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+    <section className="container mt-4" aria-labelledby="titulo-descargas">
+      
+      <header className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
         <div>
-          <h2 className="mb-1 fw-bold">{M.TITULO}</h2>
+          <h1 id="titulo-descargas" className="h2 mb-1 fw-bold">{M.TITULO}</h1>
           <p className="text-muted mb-0">
             {M.DESCRIPCION}
           </p>
         </div>
-        <span className="badge bg-dark">{M.TOTAL} {descargas.length}</span>
-      </div>
+        {/* Etiqueta accesible para el contador */}
+        <span className="badge bg-dark" aria-label={`Total de descargas: ${descargas.length}`}>
+          {M.TOTAL} {descargas.length}
+        </span>
+      </header>
 
       {descargas.length === 0 ? (
         <div className="text-center mt-5 text-muted">
-          <h4 className="mb-2">{M.VACIO_TITULO}</h4>
+
+          <h2 className="h4 mb-2">{M.VACIO_TITULO}</h2>
           <p className="mb-0">
             {M.VACIO_DESCRIPCION}
           </p>
         </div>
       ) : (
         <div className="table-responsive">
-          <table className="table table-bordered table-hover align-middle">
+ 
+          <table className="table table-bordered table-hover align-middle" aria-label="Registro de libros descargados">
             <thead className="table-light">
               <tr>
-                <th>{M.COLUMNA_TITULO}</th>
-                <th className="text-nowrap">{M.COLUMNA_FECHA}</th>
+                <th scope="col">{M.COLUMNA_TITULO}</th>
+                <th scope="col" className="text-nowrap">{M.COLUMNA_FECHA}</th>
               </tr>
             </thead>
             <tbody>
@@ -105,9 +113,8 @@ function HistorialDescargasPage() {
           </table>
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
 export default HistorialDescargasPage;
-

@@ -63,7 +63,7 @@ const usuarioSchema = mongoose.Schema(
     resetPasswordTokenHash: { type: String, default: null },
     resetPasswordExpires: { type: Date, default: null },
 
-    googleId: { type: String, default: null, sparse: true, unique: true },
+    googleId: { type: String, sparse: true, unique: true },
   },
   {
     timestamps: true,
